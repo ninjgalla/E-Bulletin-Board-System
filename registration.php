@@ -40,7 +40,14 @@
             background-color: maroon;
             color: #fff;
             cursor: pointer;
+            margin-bottom: 10px; /* Add margin to the bottom of the button */
         }
+
+        /* Apply margin to the "Register" button */
+        form button:first-child {
+            margin-bottom: 10px;
+        }
+
         form button:hover {
             background-color: #800000;
         }
@@ -49,7 +56,7 @@
 <body>
     <div class="container">
         <h2>Registration</h2>
-        <form action="register.php" method="post">
+        <form action="registration_process.php" method="post">
             <label for="first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name" required><br>
             <label for="last_name">Last Name:</label>
@@ -61,7 +68,14 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required><br>
             <button type="submit">Register</button>
+            <button type="button" onclick="goBack()">Back</button>
         </form>
     </div>
+
+    <script>
+        function goBack() {
+            window.location.href = "index.php"; // Change "previous_page.html" to the desired page
+        }
+    </script>
 </body>
 </html>
