@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
+
+html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        /* Inherit font-family for all other elements */
+        * {
+            font-family: inherit;
+        }
         body {
             display: flex;
             justify-content: center;

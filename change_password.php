@@ -99,16 +99,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Password</title>
+    <title>Profile Settings</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0; /* Reset the default margin */
+       html, body {
+            margin: 0;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        /* Inherit font-family for all other elements */
+        * {
+            font-family: inherit;
         }
 
         .container {
             max-width: 400px;
-            margin: 50px auto;
+            margin: -30px auto 0; /* Adjusted margin for positioning */
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -161,62 +166,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Style for navbar and side navbar */
         .navbar {
-            background-color: maroon;
-            color: white;
-            padding: 10px 20px;
+            background-color: white; /* Set navbar background color */
+            color: maroon;
+            padding: 15px 40px; /* Adjust padding to increase width */
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
         .navbar a {
-            color: white;
+            color: maroon;
             text-decoration: none;
-            margin-right: 20px; /* Adjust the margin to add space between menu items */
+            margin-right: 15px;
             position: relative;
+            transition: font-weight 0s; /* Add transition effect */
+            font-weight: normal; /* Set normal font weight */
         }
 
+        .navbar a:hover {
+            font-weight: bold; /* Make text bold on hover */
+        }
         .navbar a:hover::after {
             content: '';
             position: absolute;
             left: 0;
-            bottom: -3px; /* Adjust the value to control the distance of the underline from text */
+            bottom: -3px;
             width: 100%;
             height: 2px;
-            background-color: white;
+            background-color: maroon;
         }
-
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
-
         .closebtn {
             position: absolute;
             top: 0;
             right: 25px;
             font-size: 36px;
             margin-left: 50px;
-        }
-
-        .sidenav a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 25px;
-            color: white;
-            display: block;
-            transition: 0.3s;
-        }
-
-        .sidenav a:hover {
-            background-color: #444;
         }
 
         /* CSS for popup form */
@@ -274,6 +258,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 5px 10px;
             cursor: pointer;
         }
+
+        /* Additional styling for icons */
+        .user-icon,
+        .key-icon {
+            width: 27px; /* Adjust the size of the icon */
+            margin-right: 5px; /* Adjust the spacing between the icon and text */
+            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        }
+
+        .user-icon {
+            margin-bottom: 10px; /* Add margin-bottom for space between icons */
+        }
+
+        .navbar-icons {
+            display: flex;
+            align-items: center;
+            margin-left: 35px;
+            margin-top: 25px; /* Add margin-top for space */
+        }
+
+        .navbar-icons-container {
+            display: flex;
+            align-items: center;
+            flex-direction: column; /* Align icons vertically */
+        }
+
+        .navbar-icons-container a {
+            text-decoration: none; /* Remove underline from profile link */
+            color: black; /* Change text color of profile link */
+        }
     </style>
 </head>
 <body>
@@ -281,19 +295,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="navbar">
         <div>
             <a href="user_dashboard.php">Home</a>
-            <a href="#" onclick="openNav()">Profile</a>
+            <a href="profile_settings.php" onclick="openNav()">Profile</a>
             <a href="#" onclick="openFeedbackPopup()">Feedback</a>
         </div>
-        <div></div> <!-- Placeholder for menu options on the right if needed -->
+        <div>
+            <a href="logout.php">Logout</a>
+        </div>
     </div>
 
-    <!-- Side navbar content -->
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Profile Settings</a>
-        <a href="change_password.php">Change Password</a>
-        <a href="logout.php">Logout</a> <!-- Logout button -->
+     <!-- Icons below the navbar -->
+<div class="navbar-icons">
+    <div class="navbar-icons-container">
+        <!-- User icon -->
+        <img class="user-icon" src="user_Icon.png" alt="User Icon" onclick="location.href='profile_settings.php';">
+        <!-- Key icon -->
+        <img class="key-icon" src="key_icon.png" alt="Key Icon" onclick="location.href='change_password.php';">
     </div>
+</div>
 
      <!-- Feedback popup form -->
      <div id="feedbackPopup" class="feedback-popup">
@@ -338,15 +356,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
-        // Function to open the side navbar
-        function openNav() {
-            document.getElementById("mySidenav").style.width = "250px";
-        }
-
-        // Function to close the side navbar
-        function closeNav() {
-            document.getElementById("mySidenav").style.width = "0";
-        }
 
          // Function to open the feedback popup
          function openFeedbackPopup() {
