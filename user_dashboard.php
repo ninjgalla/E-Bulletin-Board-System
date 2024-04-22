@@ -24,82 +24,86 @@ $username = $_SESSION['username'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <style>
-        /* Your existing CSS styles */
-        body {
+         html, body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: Helvetica, Arial, sans-serif;
         }
+
+        /* Inherit font-family for all other elements */
+        * {
+            font-family: inherit;
+        }
+       
         .navbar {
-            background-color: maroon;
-            color: white;
-            padding: 10px 20px;
+            background-color: white; /* Set navbar background color */
+            color: maroon;
+            padding: 15px 40px; /* Adjust padding to increase width */
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
         .navbar a {
-            color: white;
+            color: maroon;
             text-decoration: none;
-            margin-right: 20px; /* Adjust the margin to add space between menu items */
+            margin-right: 15px;
             position: relative;
+            transition: font-weight 0s; /* Add transition effect */
+            font-weight: normal; /* Set normal font weight */
         }
 
+        .navbar a:hover {
+            font-weight: bold; /* Make text bold on hover */
+        }
         .navbar a:hover::after {
             content: '';
             position: absolute;
             left: 0;
-            bottom: -3px; /* Adjust the value to control the distance of the underline from text */
+            bottom: -3px;
             width: 100%;
             height: 2px;
-            background-color: white;
+            background-color: maroon;
         }
 
-        .file-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; /* Hide overflow content */
-            position: relative; /* Position relative for absolute positioning */
-            height: 100vh; /* Full height */
-            max-width: 800px; /* Adjust max width as needed */
-            margin: 0 auto; /* Center horizontally */
+         .file-container {
+            overflow: hidden;
+            position: absolute; /* Position the container */
+            right: 100px; /* Adjust the distance from the right side */
+            top: 55%; /* Position from the vertical center */
+            transform: translateY(-50%); /* Adjust to vertically center */
+            
         }
         .file-inner {
             display: flex;
             flex-direction: column;
-            transition: transform 0.5s ease; /* Smooth slide transition */
         }
+
+       /* Updated CSS for file-item */
+                /* CSS for file-item */
         .file-item {
+            display: flex;
+            align-items: center;
             padding: 10px; /* Adjust spacing */
-            text-align: center;
             margin: 10px 0; /* Adjust margin to add space between items */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
-        .file-item img,
-        .file-item video {
-            max-width: 100%;
-            max-height: 200px;
-            margin-bottom: 10px;
-            border-radius: 8px; /* Add border radius */
-        }
-        .file-content {
-            text-align: center;
+
+        /* CSS for file-media */
+        .file-media {
+            flex-shrink: 0; /* Prevent media from shrinking */
         }
 
-        /* Style for side navbar */
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
+        /* CSS for file-media img and video */
+        .file-media img,
+        .file-media video {
+            width: 100%; /* Set width to 100% */
+            height: auto; /* Let the height adjust proportionally */
+            max-width: 200%; /* Adjust as needed */
+            max-height: 400px; /* Adjust as needed */
+            border-radius: 8px; /* Add border radius */
         }
+
 
         /* Close button style */
         .closebtn {
@@ -109,23 +113,8 @@ $username = $_SESSION['username'];
             font-size: 36px;
             margin-left: 50px;
         }
-
-        /* Side navbar links */
-        .sidenav a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 25px;
-            color: white;
-            display: block;
-            transition: 0.3s;
-        }
-
-        /* Side navbar links on hover */
-        .sidenav a:hover {
-            background-color: #444;
-        }
         
-        /* CSS for popup form */
+        /* CSS for feedback popup form */
         .feedback-popup {
             display: none;
             position: fixed;
@@ -183,50 +172,88 @@ $username = $_SESSION['username'];
 
         .active {
             display: block;
+        } 
+
+        .file-info {
+            float: left;
+            width: 600px; /* Adjust width as needed */
+            padding-right: 20px; /* Add some spacing */
+            text-align: center; /* Center-align text */
+            margin-top: 40px;
+            position: fixed; /* Fix position */
+            left: 50px; /* Adjust left spacing */
         }
+
+        .file-info h2 {
+            text-transform: uppercase; /* Convert text to uppercase */
+            color: maroon;
+            text-align: center;
+            
+            
+        }
+
+
+        .file-description {
+            margin-bottom: 20px; /* Add some spacing between items */
+        }
+
+
+        .file-container {
+            overflow: hidden;
+            
+        }
+
+        .file-info p {
+            font-size: 19px;
+            text-align: justify;
+            white-space: pre-wrap; /* Preserve spaces and line breaks */
+        }
+
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div>
-            <a href="user_dashboard.php">Home</a>
-            <a href="#" onclick="openNav()">Profile</a>
-            <a href="#" onclick="openFeedbackPopup()">Feedback</a>
-        </div>
-        <div></div> <!-- Placeholder for menu options on the right if needed -->
+<div class="navbar">
+    <div>
+        <a href="user_dashboard.php">Home</a>
+        <a href="profile_settings.php">Profile</a>
+        <a href="#" onclick="openFeedbackPopup()">Feedback</a>
+        <a href="bulletin_feed.php">Bulletin Feed</a>
     </div>
-
-    <!-- Side navbar content -->
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Profile Settings</a>
-        <a href="change_password.php">Change Password</a>
-        <a href="logout.php">Logout</a> <!-- Logout button -->
+    <div>
+        <a href="logout.php">Logout</a>
     </div>
+</div>
 
-    <!-- Feedback popup form -->
-    <div id="feedbackPopup" class="feedback-popup">
-        <form class="feedback-form" action="submit_feedback.php" method="post">
-            <h2>Feedback Form</h2>
-            <label for="feedback">Your Feedback:</label>
-            <textarea id="feedback" name="feedback" required></textarea>
-            <input type="submit" value="Submit">
-            <button type="button" class="close-btn" onclick="closeFeedbackPopup()">Close</button>
-        </form>
-    </div>
+<!-- Feedback popup form -->
+<div id="feedbackPopup" class="feedback-popup">
+    <form class="feedback-form" action="submit_feedback.php" method="post">
+        <h2>Feedback Form</h2>
+        <label for="feedback">Your Feedback:</label>
+        <textarea id="feedback" name="feedback" required></textarea>
+        <input type="submit" value="Submit">
+        <button type="button" class="close-btn" onclick="closeFeedbackPopup()">Close</button>
+    </form>
+</div>
 
-    <h2>Welcome, <?php echo $username; ?></h2>
+<div class="file-info">
+    <!-- Placeholder for title and description -->
+    <h2 id="fileTitle"></h2>
+    <p id="fileDescription"></p>
+</div>
 
-    <div class="file-container">
-        <div class="file-inner" id="fileInner">
-            <?php
-            // Fetch uploaded files from the database
-            $sql = "SELECT * FROM bulletin_files ORDER BY upload_time DESC";
-            $result = $conn->query($sql);
+<div class="file-container">
+    <div class="file-inner" id="fileInner">
+        <?php
+        // Fetch uploaded files from the database
+        $sql = "SELECT * FROM bulletin_files ORDER BY upload_time DESC";
+        $result = $conn->query($sql);
+        $count = 0;
 
-            // Display uploaded files
-            while ($row = $result->fetch_assoc()): ?>
-                <div class="file-item">
+        // Display uploaded files
+        while ($row = $result->fetch_assoc()): ?>
+            <div class="file-item<?php echo ($count == 0) ? ' active' : ''; ?>" style="display: <?php echo ($count == 0) ? 'block' : 'none'; ?>;" 
+                data-title="<?php echo $row["title"]; ?>" data-description="<?php echo $row["description"]; ?>">
+                <div class="file-media">
                     <?php if ($row["filetype"] == "photo"): ?>
                         <img src="uploads/<?php echo $row["filename"]; ?>" alt="<?php echo $row["title"]; ?>">
                     <?php elseif ($row["filetype"] == "video"): ?>
@@ -235,54 +262,71 @@ $username = $_SESSION['username'];
                             Your browser does not support the video tag.
                         </video>
                     <?php endif; ?>
-                    <div class="file-content">
-                        <h3><?php echo $row["title"]; ?></h3>
-                        <p><?php echo $row["description"]; ?></p>
-                    </div>
                 </div>
-            <?php endwhile; ?>
-        </div>
+            </div>
+            <?php $count++; ?>
+        <?php endwhile; ?>
     </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const items = document.querySelectorAll('.file-item');
+    let currentIndex = -1;
+
+    function showNextItem() {
+        currentIndex = (currentIndex + 1) % items.length;
+
+        items.forEach(item => {
+            item.style.display = 'none';
+        });
+
+        items[currentIndex].style.display = 'block';
+
+        const currentVideo = items[currentIndex].querySelector('video');
+
+        if (currentVideo) {
+            currentVideo.autoplay = true;
+            currentVideo.muted = true;
+
+            currentVideo.currentTime = 0;
+            currentVideo.play();
+
+            currentVideo.addEventListener('ended', function() {
+                showNextItem(); // Call showNextItem() when the video ends
+            });
+
+            currentVideo.onerror = function() {
+                setTimeout(showNextItem, 3000);
+            };
+        } else {
+            setTimeout(showNextItem, 3000);
+        }
+
+        // Update title and description
+        const titleElement = document.getElementById('fileTitle');
+        const descriptionElement = document.getElementById('fileDescription');
+
+        const currentFile = items[currentIndex];
+        const title = currentFile.dataset.title;
+        const description = currentFile.dataset.description;
+
+        titleElement.textContent = title;
+        descriptionElement.textContent = description;
+    }
+
+    showNextItem();
+});
+</script>
 
     <script>
-        // Function to create carousel slide effect
-        function carouselSlide() {
-            const container = document.getElementById('fileInner');
-            const items = container.querySelectorAll('.file-item');
-            const totalItems = items.length;
-            const itemHeight = items[0].offsetHeight;
-            let currentIndex = 0;
+    function openFeedbackPopup() {
+        document.getElementById("feedbackPopup").style.display = "block";
+    }
 
-            function moveNext() {
-                currentIndex = (currentIndex + 1) % totalItems;
-                container.style.transition = 'transform 0.5s ease';
-                container.style.transform = `translateY(-${currentIndex * itemHeight}px)`;
-            }
-
-            // Automatically switch between items every 7 seconds
-            setInterval(moveNext, 7000);
-        }
-
-        carouselSlide(); // Call the function to initialize carousel slide
-    </script>
-
-    <script>
-        // Other JavaScript functions for navbar and popup forms
-        function openNav() {
-            document.getElementById("mySidenav").style.width = "250px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidenav").style.width = "0";
-        }
-
-        function openFeedbackPopup() {
-            document.getElementById("feedbackPopup").style.display = "block";
-        }
-
-        function closeFeedbackPopup() {
-            document.getElementById("feedbackPopup").style.display = "none";
-        }
-    </script>
+    function closeFeedbackPopup() {
+        document.getElementById("feedbackPopup").style.display = "none";
+    }
+</script>
 </body>
 </html>
