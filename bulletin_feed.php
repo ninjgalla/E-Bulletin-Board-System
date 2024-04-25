@@ -1,3 +1,21 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['username'])) {
+    // Redirect the user to the login page
+    header("Location: index.php");
+    exit; // Stop further execution
+}
+
+// Include database connection
+include('config.php');
+
+// Fetch username from the session
+$username = $_SESSION['username'];
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -104,7 +122,7 @@
 }
 
 .comment-field {
-    flex: 1;
+    flex: 1; /* Make the comment field flex to occupy available space */
     padding: 8px;
     margin-top: 10px;
     margin-right: 5px; /* Adjusted to create space between field and button */
@@ -113,7 +131,6 @@
     box-sizing: border-box;
     transition: border-color 0.3s;
     position: relative; /* Positioning for the placeholder */
-    width: calc(100% - 100px); /* Extend the width to occupy the available space */
 }
 
 .comment-field:focus {
@@ -175,7 +192,7 @@
 include "config.php"; // Include the database connection file
 
 // Query to fetch data from the bulletin_files table
-$sql = "SELECT title, description, filename, filetype FROM bulletin_files WHERE is_archived = 0"; // Assuming you only want non-archived files
+$sql = "SELECT id, title, description, filename, filetype FROM bulletin_files WHERE is_archived = 0"; // Assuming you only want non-archived files
 $result = mysqli_query($conn, $sql);
 
 // Check if there are any rows returned
@@ -204,12 +221,16 @@ if (mysqli_num_rows($result) > 0) {
             echo 'Your browser does not support the video tag.';
             echo '</video>';
         }
-        // Add a comment container with text field and button
+       // Add a comment container with text field and button
         echo '<div class="comment-container">';
-        echo '<input type="text" class="comment-field" placeholder="Add a comment...">';
-        echo '<button class="comment-button">Post</button>';
+        echo '<form method="post" action="submit_comment.php">'; // Set the action to submit_comment.php
+        echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
+        echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
+        echo '<button type="submit" class="comment-button">Post</button>';
+        echo '</form>'; // Close form
         echo '</div>'; // Close comment-container
         echo '</div>'; // Close post-container
+        
     }
 } else {
     // If no rows are returned, display a message
@@ -235,6 +256,7 @@ mysqli_close($conn);
             post.querySelector('.less').style.display = 'inline';
             this.style.display = 'none';
             post.querySelector('.see-less').style.display = 'inline'; // Show "See less"
+            console.log("See more clicked");
         });
     });
 
@@ -247,10 +269,11 @@ mysqli_close($conn);
             post.querySelector('.more').style.display = 'inline';
             post.querySelector('.see-more').style.display = 'inline'; // Show "See more"
             this.style.display = 'none';
+            console.log("See less clicked");
         });
     });
-</script>
 
+</script>
 
 </body>
 </html>
