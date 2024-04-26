@@ -321,7 +321,7 @@ html, body {
         </div>
 
 
-            <!-- Upload file pop-up form -->
+          <!-- Upload file pop-up form -->
         <div id="uploadForm" class="upload-form">
             <span class="close" onclick="closeUploadForm()">&times;</span>
             <div class="form-content">
@@ -333,6 +333,8 @@ html, body {
                     <input type="text" name="title" id="title" required><br>
                     <label for="description">Description:</label>
                     <textarea name="description" id="description" rows="4" required></textarea><br>
+                    <label for="schedule">Schedule:</label>
+                    <input type="datetime-local" name="schedule" id="schedule" required><br> <!-- Added scheduling input -->
                     <input type="submit" value="Upload" name="submit">
                 </form>
             </div>
