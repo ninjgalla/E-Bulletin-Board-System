@@ -22,27 +22,38 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])) {
         $stmt_update->close();
         
         // Fetch the archived file information
-        $sql_fetch = "SELECT * FROM bulletin_files WHERE id = ?";
+        $sql_fetch = "SELECT filename FROM bulletin_files WHERE id = ?";
         $stmt_fetch = $db->prepare($sql_fetch);
         $stmt_fetch->bind_param("i", $fileId);
         $stmt_fetch->execute();
         $result = $stmt_fetch->get_result();
 
-        // Move the file to admin_archived.php
+        // Check if file exists and move it to admin_archived.php
         if ($row = $result->fetch_assoc()) {
             $filename = $row['filename'];
-            // Move the file to admin_archived.php
-            rename("uploads/$filename", "admin_archived/$filename");
+            $oldFilePath = "uploads/$filename";
+            $newFilePath = "admin_archived/$filename";
+            if (file_exists($oldFilePath)) {
+                if (rename($oldFilePath, $newFilePath)) {
+                    echo "File moved to archive directory";
+                } else {
+                    echo "Error moving file to archive directory";
+                }
+            } else {
+                echo "File does not exist in uploads directory";
+            }
+        } else {
+            echo "Error fetching file information";
         }
 
         // Close prepared statement
         $stmt_fetch->close();
-
-        // Close the database connection
-        $db->close();
     } else {
         echo "Error archiving file: " . $db->error;
     }
+
+    // Close the database connection
+    $db->close();
 } else {
     echo "Invalid file ID";
 }
