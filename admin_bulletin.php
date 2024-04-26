@@ -178,7 +178,7 @@ $username = $_SESSION['username'];
     <div class="file-inner" id="fileInner">
         <?php
         // Fetch uploaded files from the database
-        $sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 ORDER BY upload_time DESC"; // Modify the query to fetch only non-archived files
+        $sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 AND schedule <= NOW() ORDER BY upload_time DESC"; // Modify the query to fetch only non-archived files with a schedule in the past or current time
         $result = $conn->query($sql);
         $count = 0;
 
