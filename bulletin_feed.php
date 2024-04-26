@@ -183,6 +183,8 @@ $username = $_SESSION['username'];
         <div>
             <a href="user_dashboard.php">Home</a>
             <a href="profile_settings.php">Profile</a>
+            <a href="#" onclick="openFeedbackPopup()">Feedback</a>
+            <a href="bulletin_feed.php">Bulletin Feed</a>
         </div>
         <div>
             <a href="logout.php">Logout</a>
