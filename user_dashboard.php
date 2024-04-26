@@ -245,7 +245,7 @@ $username = $_SESSION['username'];
     <div class="file-inner" id="fileInner">
         <?php
         // Fetch uploaded files from the database
-        $sql = "SELECT * FROM bulletin_files ORDER BY upload_time DESC";
+        $sql = "SELECT * FROM bulletin_files WHERE schedule <= NOW() ORDER BY upload_time DESC";
         $result = $conn->query($sql);
         $count = 0;
 
