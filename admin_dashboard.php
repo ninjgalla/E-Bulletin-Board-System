@@ -263,6 +263,16 @@ html, body {
             background-color: #800000; /* Darken the maroon color on hover */
         }
 
+         /* CSS for schedule input field */
+        input[type="datetime-local"] {
+            margin-bottom: 15px;
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+    }
+
     </style>
 </head>
 <body>
