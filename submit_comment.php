@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (mysqli_query($conn, $sql)) {
              // Redirect back to the dashboard after successful submission
-                header("Location: bulletin_feed.php");
+                header("Location: user_bulletin_feed.php");
                 exit;
         } else {
             // Error inserting comment
