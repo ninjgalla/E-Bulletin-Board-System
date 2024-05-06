@@ -293,11 +293,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <!-- Navbar -->
     <div class="navbar">
-        <div>
-            <a href="user_dashboard.php">Home</a>
-            <a href="profile_settings.php" onclick="openNav()">Profile</a>
-            <a href="#" onclick="openFeedbackPopup()">Feedback</a>
-        </div>
+    <div>
+        <a href="user_bulletin_feed.php">Home</a>
+        <a href="profile_settings.php">Profile</a>
+    </div>
         <div>
             <a href="logout.php">Logout</a>
         </div>
