@@ -22,7 +22,7 @@ $username = $_SESSION['username'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>Home</title>
     <style>
          html, body {
             margin: 0;
@@ -215,7 +215,7 @@ $username = $_SESSION['username'];
 <div class="navbar">
     <div>
         <a href="user_bulletin_feed.php">Home</a>
-        <a href="profile_settings.php">Profile</a>
+        <a href="user_profile_settings.php">Profile</a>
         
         
     </div>
@@ -224,16 +224,6 @@ $username = $_SESSION['username'];
     </div>
 </div>
 
-<!-- Feedback popup form -->
-<div id="feedbackPopup" class="feedback-popup">
-    <form class="feedback-form" action="submit_feedback.php" method="post">
-        <h2>Feedback Form</h2>
-        <label for="feedback">Your Feedback:</label>
-        <textarea id="feedback" name="feedback" required></textarea>
-        <input type="submit" value="Submit">
-        <button type="button" class="close-btn" onclick="closeFeedbackPopup()">Close</button>
-    </form>
-</div>
 
 <div class="file-info">
     <!-- Placeholder for title and description -->
