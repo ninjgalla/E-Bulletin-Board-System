@@ -214,10 +214,10 @@ $username = $_SESSION['username'];
 <body>
 <div class="navbar">
     <div>
-        <a href="user_dashboard.php">Home</a>
+        <a href="user_bulletin_feed.php">Home</a>
         <a href="profile_settings.php">Profile</a>
-        <a href="#" onclick="openFeedbackPopup()">Feedback</a>
-        <a href="user_bulletin_feed.php">Bulletin Feed</a>
+        
+        
     </div>
     <div>
         <a href="logout.php">Logout</a>
