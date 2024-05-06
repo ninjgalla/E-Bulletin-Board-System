@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['feedback'])) {
         $stmt->close();
 
         // Redirect back to the dashboard after successful submission
-        header("Location: user_dashboard.php");
+        header("Location: user_bulletin_feed.php");
         exit;
     } else {
         // Handle database error
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['feedback'])) {
     }
 } else {
     // Redirect back to the dashboard if form is not submitted
-    header("Location: user_dashboard.php");
+    header("Location: user_bulletin_feed.php");
     exit;
 }
 ?>
