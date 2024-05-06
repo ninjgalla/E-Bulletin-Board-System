@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "UPDATE bulletin_files SET title='$title', description='$description' WHERE id='$id'";
         if ($db->query($sql) === TRUE) {
             // Redirect back to the page where the user can view the files
-            header("Location: admin_dashboard.php");
+            header("Location: admin_upload.php");
             exit;
         } else {
             echo "Error updating record: " . $db->error;
