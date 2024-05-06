@@ -24,46 +24,41 @@ $username = $_SESSION['username'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Settings</title>
     <style>
-
-html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Helvetica, Arial, sans-serif;
-        }
-
-        /* Inherit font-family for all other elements */
-        * {
-            font-family: inherit;
-        }
         
         body {
             margin: 0;
             padding: 0;
-    
+            font-family: Arial, sans-serif;
         }
         .navbar {
-            background-color: maroon;
-            color: white;
-            padding: 10px 20px;
+            background-color: white; /* Set navbar background color */
+            color: maroon;
+            padding: 15px 40px; /* Adjust padding to increase width */
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
         .navbar a {
-            color: white;
+            color: maroon;
             text-decoration: none;
-            margin-right: 20px; /* Adjust the margin to add space between menu items */
+            margin-right: 15px;
             position: relative;
+            transition: font-weight 0s; /* Add transition effect */
+            font-weight: normal; /* Set normal font weight */
         }
 
+        .navbar a:hover {
+            font-weight: bold; /* Make text bold on hover */
+        }
         .navbar a:hover::after {
             content: '';
             position: absolute;
             left: 0;
-            bottom: -3px; /* Adjust the value to control the distance of the underline from text */
+            bottom: -3px;
             width: 100%;
             height: 2px;
-            background-color: white;
+            background-color: maroon;
         }
 
         .file-container {
@@ -270,11 +265,13 @@ html, body {
 <body>
 <div class="navbar">
         <div>
-            <a href="admin_dashboard.php">Home</a>
-            <a href="profile_settings.php" >Profile</a>
-            <a href="#" onclick="openFeedbackPopup()">Feedback</a>
+            <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
         </div>
         <div>
+            
+            <a href="admin_upload.php">Upload</a>
+            <a href="admin_archive.php">Archive</a>
+            <a href="admin_profile_settings.php">Profile</a>
             <a href="logout.php">Logout</a>
         </div>
     </div>
