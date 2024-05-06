@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Upload</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
     <style>
 
@@ -338,7 +338,7 @@ html, body {
             <span class="close" onclick="closeUploadForm()">&times;</span>
             <div class="form-content">
                 <h2>Upload File</h2>
-                <form action="upload_process.php" method="post" enctype="multipart/form-data">
+                <form action="admin_upload_process.php" method="post" enctype="multipart/form-data">
                     <label for="fileToUpload">Select File:</label>
                     <input type="file" name="fileToUpload" id="fileToUpload" required><br>
                     <label for="title">Title:</label>
@@ -425,7 +425,7 @@ html, body {
                     }
                 }
             };
-            xhr.open("GET", "archive_file.php?id=" + id, true);
+            xhr.open("GET", "admin_archive_file.php?id=" + id, true);
             xhr.send();
         }
 }
