@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Archive</title>
     <style>
 
 html, body {
@@ -234,7 +234,7 @@ html, body {
     <script>
 
 function redirectToUploadPage() {
-    window.location.href = "upload.html";
+    window.location.href = "admin_upload.php";
 }
 
 function redirectToAdminBulletin() {
@@ -263,7 +263,7 @@ function permanentlyDelete(id) {
                 }
             }
         };
-        xhr.open("GET", "permanently_delete.php?id=" + id, true);
+        xhr.open("GET", "admin_permanently_delete.php?id=" + id, true);
         xhr.send();
     }
 }
@@ -284,7 +284,7 @@ function restore(id) {
                 }
             }
         };
-        xhr.open("GET", "restore_file.php?id=" + id, true);
+        xhr.open("GET", "admin_restore_file.php?id=" + id, true);
         xhr.send();
     }
 }
