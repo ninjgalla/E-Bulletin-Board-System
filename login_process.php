@@ -29,7 +29,7 @@ if (mysqli_num_rows($result) == 1) {
             header("Location: moderator_dashboard.php");
             break;
         case 3: // User role
-            header("Location: user_dashboard.php");
+            header("Location: user_bulletin_feed.php");
             break;
         default:
             // Invalid role, redirect back to login page
