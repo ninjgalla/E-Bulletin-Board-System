@@ -24,7 +24,7 @@ $username = $_SESSION['username'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Include Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <title>Bulletin Feed</title>
+    <title>EBBS</title>
     <style>
     body {
         margin: 0;
@@ -266,7 +266,7 @@ $username = $_SESSION['username'];
     <div class="navbar">
     <div>
         <a href="user_bulletin_feed.php">Home</a>
-        <a href="profile_settings.php">Profile</a>
+        <a href="user_profile_settings.php">Profile</a>
     </div>
         <div>
             <a href="logout.php">Logout</a>
