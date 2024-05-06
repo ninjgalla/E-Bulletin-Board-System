@@ -65,12 +65,14 @@ html, body {
     </style>
 </head>
 <body>
-    <div class="navbar">
+<div class="navbar">
         <div>
             <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
         </div>
         <div>
-            <a href="">Archive</a>
+            
+            <a href="admin_upload.php">Upload</a>
+            <a href="admin_archive.php">Archive</a>
             <a href="#" onclick="openFeedbackPopup()">Feedback</a>
             <a href="logout.php">Logout</a>
         </div>
