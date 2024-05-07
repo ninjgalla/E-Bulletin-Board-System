@@ -372,7 +372,7 @@ html, body {
                     echo '<img class="file-photo" src="uploads/' . $row["filename"] . '" alt="' . $row["title"] . '">';
                     echo '</a>';
                     echo '<i class="fas fa-trash delete-icon" onclick="archiveFile(' . $row["id"] . ')"></i>';
-                    echo '<img src="edit.png" alt="Edit Icon" class="edit-icon">';
+                    echo '<img src="edit.png" alt="Edit Icon" class="edit-icon" onclick="openAdminEdit()">';
                     echo '</div>';
                 } elseif ($row["filetype"] == "video") {
                     echo '<div class="video-container">';
@@ -381,7 +381,7 @@ html, body {
                     echo 'Your browser does not support the video tag.';
                     echo '</video>';
                     echo '<i class="fas fa-trash delete-icon" onclick="archiveFile(' . $row["id"] . ')"></i>';
-                    echo '<img src="edit.png" alt="Edit Icon" class="edit-icon">';
+                    echo '<img src="edit.png" alt="Edit Icon" class="edit-icon" onclick="openAdminEdit()">';
                     echo '</div>';
                 }
                 
@@ -428,8 +428,13 @@ html, body {
             };
             xhr.open("GET", "admin_archive_file.php?id=" + id, true);
             xhr.send();
-        }
-}
+        }     
+    }
 </script>
-</body>
+<script>
+    // JavaScript function to open "admin_edit_function.php"
+    function openAdminEdit() {
+        window.location.href = "admin_edit_function.php";
+    }
+</script>
 </html>
