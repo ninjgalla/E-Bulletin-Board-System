@@ -105,18 +105,19 @@ html, body {
     </style>
 </head>
 <body>
-    <div class="navbar">
+<div class="navbar">
         <div>
             <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
         </div>
         <div>
             
             <a href="admin_upload.php">Upload</a>
+            <a href="admin_bulletin_feed.php">Bulletin Feed</a>
             <a href="admin_archive.php">Archive</a>
             <a href="admin_profile_settings.php">Profile</a>
             <a href="logout.php">Logout</a>
         </div>
-    </div>
+</div>
 
     <div class="main-content">
         <h2>Post Interaction Statistics</h2>
