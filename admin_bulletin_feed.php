@@ -86,55 +86,38 @@ html, body {
         }
 
         .post-container {
-        max-width: 500px; /* Maximum width for post container */
-        width: 100%; /* Ensure full width on smaller screens */
-        margin: 20px auto; /* Center the container */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 50px;
-        margin-top: 50px;
-    }
+            max-width: 500px; /* Maximum width for post container */
+            width: 100%; /* Ensure full width on smaller screens */
+            margin: 20px auto; /* Center the container */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 50px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
 
-    .post-title {
-        text-align: center;
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
+        .post-title {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
 
-    .post-media {
-        max-width: 100%;
-        margin-bottom: 10px;
-    }
+        .post-media {
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
 
-    .post-description {
-        text-align: left;
-        overflow: hidden;
-        max-height: 100px;
-        margin-bottom: 10px;
-    }
-
-    .see-more {
-        color: blue;
-        cursor: pointer;
-        display: inline; /* Ensure "See more" is initially visible */
-    }
-
-    .see-less {
-        color: blue;
-        cursor: pointer;
-        display: none;
-    }
-
-    .more,
-    .less {
-        cursor: pointer;
-        color: blue;
-    }
+        .post-description {
+            text-align: left;
+            margin-bottom: 10px;
+            white-space: pre-wrap; /* Preserve line breaks and wrap long lines */
+            overflow: visible;
+        }
 
     /* Comment field  */
     .comment-container {
@@ -310,14 +293,8 @@ if (mysqli_num_rows($result) > 0) {
         // Generate HTML for each post container dynamically
         echo '<div class="post-container">';
         echo '<h2 class="post-title">' . $row['title'] . '</h2>';
-        // Check if the description is long
-        if (strlen($row['description']) > 100) {
-            echo '<p class="post-description">' . substr($row['description'], 0, 100) . ' <span class="more">... <a href="#" class="see-more">See more</a></span></p>';
-            echo '<p class="full-description" style="display: none;">' . $row['description'] . ' <span class="less" style="display: none;"><a href="#" class="see-less">See less</a></span></p>';
-        } else {
-            // If description is short, display it without "See more" link
-            echo '<p class="post-description">' . $row['description'] . '</p>';
-        }
+        echo '<p class="post-description">' . $row['description'] . '</p>'; // Simply display the description without "See more"
+        
         // Check if the file type is an image or video and display accordingly
         if (strpos($row['filetype'], 'photo') !== false) {
             echo '<img class="post-media" src="uploads/' . $row['filename'] . '" alt="' . $row['title'] . '">';
@@ -334,13 +311,12 @@ if (mysqli_num_rows($result) > 0) {
         // Add a comment container with text field and button (hidden initially)
         echo '<div class="comment-container" style="display: none;">';
         echo '<form method="post" action="admin_submit_comment.php">'; // Set the action to submit_comment.php
-       
         echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
         echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
         echo '<button type="submit" class="post-button">Post</button>';
         echo '</form>'; // Close form
 
-       // Container to display comments
+        // Container to display comments
         echo '<div class="comments-section">'; 
 
         // Fetch comments for the post from the server using AJAX
@@ -374,35 +350,29 @@ mysqli_close($conn);
 
 <!-- JavaScript code... -->
 <script>
-    // Function to handle "See more" and "See less" clicks
-    function toggleDescription(event) {
-        if (event.target.classList.contains('see-more')) {
-            event.preventDefault(); // Prevent default link behavior
-            
-            console.log("See more clicked");
-            
-            var fullDescription = event.target.parentElement.nextElementSibling; // Get the full description element
-            
-            // Toggle full description visibility
-            fullDescription.style.display = 'block';
-            event.target.style.display = 'none'; // Hide "See more" link
-            event.target.parentElement.nextElementSibling.querySelector('.see-less').style.display = 'inline'; // Show "See less" link
-        } else if (event.target.classList.contains('see-less')) {
-            event.preventDefault(); // Prevent default link behavior
-            
-            console.log("See less clicked");
-            
-            var fullDescription = event.target.parentElement.parentElement.querySelector('.full-description'); // Get the full description element
-            
-            // Toggle full description visibility
-            fullDescription.style.display = 'none';
-            event.target.style.display = 'none'; // Hide "See less" link
-            event.target.parentElement.previousElementSibling.querySelector('.see-more').style.display = 'inline'; // Show "See more" link
-        }
-    }
+     document.querySelectorAll('.comment-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var postId = this.getAttribute('data-post-id');
+            var commentContainer = this.nextElementSibling;
 
-    // Add event listener to the document to handle click events on "See more" and "See less" links
-    document.addEventListener('click', toggleDescription);
+            // Capture the current scroll position
+            var scrollPos = window.scrollY || window.pageYOffset;
+
+            // Toggle the visibility of the comment container
+            if (commentContainer.style.display === 'none') {
+                // Show the comment container
+                commentContainer.style.display = 'block';
+            } else {
+                // Hide the comment container
+                commentContainer.style.display = 'none';
+            }
+
+            // Restore the scroll position after a short delay
+            setTimeout(function() {
+                window.scrollTo(0, scrollPos);
+            }, 100);
+        });
+    });
 </script>
 </body>
 </html>
