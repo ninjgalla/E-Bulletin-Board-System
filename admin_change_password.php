@@ -250,11 +250,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div>
             
             <a href="admin_upload.php">Upload</a>
+            <a href="admin_bulletin_feed.php">Bulletin Feed</a>
             <a href="admin_archive.php">Archive</a>
             <a href="admin_profile_settings.php">Profile</a>
             <a href="logout.php">Logout</a>
         </div>
-    </div>
+</div>
 
      <!-- Icons below the navbar -->
 <div class="navbar-icons">
