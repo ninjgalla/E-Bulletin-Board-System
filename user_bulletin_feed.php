@@ -66,64 +66,47 @@ $username = $_SESSION['username'];
     }
 
     .post-container {
-        max-width: 500px; /* Maximum width for post container */
-        width: 100%; /* Ensure full width on smaller screens */
-        margin: 20px auto; /* Center the container */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 50px;
-        margin-top: 50px;
-    }
+            max-width: 500px; /* Maximum width for post container */
+            width: 100%; /* Ensure full width on smaller screens */
+            margin: 20px auto; /* Center the container */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 50px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
 
-    .post-title {
-        text-align: center;
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
+        .post-title {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
 
-    .post-media {
-        max-width: 100%;
-        margin-bottom: 10px;
-    }
+        .post-media {
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
 
-    .post-description {
-        text-align: left;
-        overflow: hidden;
-        max-height: 100px;
-        margin-bottom: 10px;
-    }
-
-    .see-more {
-        color: blue;
-        cursor: pointer;
-        display: inline; /* Ensure "See more" is initially visible */
-    }
-
-    .see-less {
-        color: blue;
-        cursor: pointer;
-        display: none;
-    }
-
-    .more,
-    .less {
-        cursor: pointer;
-        color: blue;
-    }
+        .post-description {
+            text-align: left;
+            margin-bottom: 10px;
+            white-space: pre-wrap; /* Preserve line breaks and wrap long lines */
+            overflow: visible;
+        }
 
     /* Comment field  */
     .comment-container {
-    display: flex;
-    flex-direction: column; /* Change to column layout for comments */
-    align-items: stretch; /* Stretch items to fill container width */
-    width: 100%; /* Extend the width to occupy the full container */
-    margin-top: 10px; /* Adjust the top margin to create space */
-}
+        display: flex;
+        flex-direction: column; /* Change to column layout for comments */
+        align-items: stretch; /* Stretch items to fill container width */
+        width: 100%; /* Extend the width to occupy the full container */
+        margin-top: 10px; /* Adjust the top margin to create space */
+    }
 
     .comment {
         margin-top: 10px; /* Add margin between comments */
@@ -140,18 +123,18 @@ $username = $_SESSION['username'];
     }
 
     .comment-field {
-    flex: 1; /* Make the comment field flex to occupy available space */
-    padding: 8px;
-    margin-top: 1px; /* Adjust the top margin */
-    margin-right: 10px; /* Adjusted to create space between field and button */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-    position: relative; /* Positioning for the placeholder */
-    width: calc(100% - 100px); /* Adjust the width of the comment field */
-    /* Subtract the width of the post button from 100% */
-}
+        flex: 1; /* Make the comment field flex to occupy available space */
+        padding: 8px;
+        margin-top: 1px; /* Adjust the top margin */
+        margin-right: 10px; /* Adjusted to create space between field and button */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+        position: relative; /* Positioning for the placeholder */
+        width: calc(100% - 100px); /* Adjust the width of the comment field */
+        /* Subtract the width of the post button from 100% */
+    }
 
     .comment-field:focus {
         outline: none;
@@ -169,16 +152,16 @@ $username = $_SESSION['username'];
     }
 
     .comment-button {
-    padding: 5px 12px;
-    border: none;
-    margin-top: 10px; /* Adjust the top margin */
-    background-color: inherit; /* Use the same color as the container background */
-    color: black; /* Set font color to black */
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    position: relative; /* Position the line relative to the button */
-}
+        padding: 5px 12px;
+        border: none;
+        margin-top: 10px; /* Adjust the top margin */
+        background-color: inherit; /* Use the same color as the container background */
+        color: black; /* Set font color to black */
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        position: relative; /* Position the line relative to the button */
+    }
 
     .comment-button::before {
         content: '';
@@ -195,27 +178,27 @@ $username = $_SESSION['username'];
     }
 
     .comment-button::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #ccc; /* Color of the line */
-    bottom: -10px; /* Adjust to position the line below the button */
-}
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #ccc; /* Color of the line */
+        bottom: -10px; /* Adjust to position the line below the button */
+    }
 
-.post-button {
-    padding: 8px 12px;
-    border: none;
-    margin-top: 10px; /* Adjust the top margin */
-    background-color: blue; /* Change the background color of the post button */
-    color: white; /* Set font color to white */
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100px; /* Set a fixed width for the post button */
-    margin-left: 10px; /* Add some margin to separate the post button from the comment field */
-}
+    .post-button {
+        padding: 8px 12px;
+        border: none;
+        margin-top: 10px; /* Adjust the top margin */
+        background-color: blue; /* Change the background color of the post button */
+        color: white; /* Set font color to white */
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 100px; /* Set a fixed width for the post button */
+        margin-left: 10px; /* Add some margin to separate the post button from the comment field */
+    }
 
     .post-button:hover {
         background-color: navy; /* Darker background color when hovering */
@@ -228,7 +211,7 @@ $username = $_SESSION['username'];
         border-radius: 5px;
         margin-top: 1px;
         margin-left: -8px;
-       
+
     }
 
     @media only screen and (max-width: 600px) {
@@ -287,14 +270,8 @@ if (mysqli_num_rows($result) > 0) {
         // Generate HTML for each post container dynamically
         echo '<div class="post-container">';
         echo '<h2 class="post-title">' . $row['title'] . '</h2>';
-        // Check if the description is long
-        if (strlen($row['description']) > 100) {
-            echo '<p class="post-description">' . substr($row['description'], 0, 100) . ' <span class="more">... <a href="#" class="see-more">See more</a></span></p>';
-            echo '<p class="full-description" style="display: none;">' . $row['description'] . ' <span class="less" style="display: none;"><a href="#" class="see-less">See less</a></span></p>';
-        } else {
-            // If description is short, display it without "See more" link
-            echo '<p class="post-description">' . $row['description'] . '</p>';
-        }
+        // Display the full description without any truncation
+        echo '<p class="post-description">' . $row['description'] . '</p>';
         // Check if the file type is an image or video and display accordingly
         if (strpos($row['filetype'], 'photo') !== false) {
             echo '<img class="post-media" src="uploads/' . $row['filename'] . '" alt="' . $row['title'] . '">';
@@ -311,7 +288,7 @@ if (mysqli_num_rows($result) > 0) {
         // Add a comment container with text field and button (hidden initially)
         echo '<div class="comment-container" style="display: none;">';
         echo '<form method="post" action="submit_comment.php">'; // Set the action to submit_comment.php
-       
+
         echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
         echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
         echo '<button type="submit" class="post-button">Post</button>';
