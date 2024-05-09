@@ -104,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
        html, body {
             margin: 0;
             font-family: Helvetica, Arial, sans-serif;
+            background-color: #f5f5f5;
         }
 
         /* Inherit font-family for all other elements */
