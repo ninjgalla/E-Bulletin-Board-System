@@ -20,10 +20,10 @@ html, body {
         body {
             margin: 0;
             padding: 0;
-            background-color: #e4f2f2; /* Set background color */
+            background-color: #f5f5f5; /* Set background color */
         }
         .navbar {
-            background-color: #e4f2f2; /* Set navbar background color */
+            background-color: #800000; /* Set navbar background color */
             color: maroon;
             padding: 15px 40px; /* Adjust padding to increase width */
             display: flex;
@@ -32,12 +32,13 @@ html, body {
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
         .navbar a {
-            color: maroon;
+            color: white;
             text-decoration: none;
             margin-right: 15px;
             position: relative;
             transition: font-weight 0s; /* Add transition effect */
             font-weight: normal; /* Set normal font weight */
+            text-shadow: black;
         }
         .navbar .logo {
             font-weight: bold; /* Added bold font weight */
@@ -53,7 +54,7 @@ html, body {
             bottom: -3px;
             width: 100%;
             height: 2px;
-            background-color: maroon;
+            background-color: white;
         }
 
         .navbar .logo {
@@ -120,7 +121,7 @@ html, body {
         .content {
             width: 900px;
             height: 490px;
-            background-color: #f1f8f8;
+            background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-left: auto; /* Align the rectangle to the center-right */
