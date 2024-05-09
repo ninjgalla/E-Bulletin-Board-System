@@ -101,46 +101,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Password</title>
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Helvetica, Arial, sans-serif;
-        }
-
-        /* Inherit font-family for all other elements */
+          /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
         }
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5; /* Set background color */
         }
         .navbar {
-            background-color: #800000; /* Set navbar background color */
+            background-color: #800000;
             color: maroon;
-            padding: 15px 40px; /* Adjust padding to increase width */
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
         }
+
         .navbar a {
             color: white;
             text-decoration: none;
             margin-right: 15px;
             position: relative;
-            transition: font-weight 0s; /* Add transition effect */
-            font-weight: normal; /* Set normal font weight */
+            transition: font-weight 0s;
+            font-weight: normal;
         }
+
         .navbar .logo {
-            font-weight: bold; /* Added bold font weight */
-            margin-left: 10px; /* Adjusted left margin */
+            font-weight: bold;
+            margin-left: 10px;
         }
+
         .navbar a:hover {
-            font-weight: bold; /* Make text bold on hover */
+            font-weight: bold;
         }
+
         .navbar a:hover::after {
             content: '';
             position: absolute;
@@ -152,45 +150,94 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .navbar .logo {
-            font-weight: bold; /* Added bold font weight */
-            margin-left: -10px; /* Adjusted left margin */
-            font-size: 20px; /* Increased font size */
+            font-weight: bold;
+            margin-left: -10px;
+            font-size: 20px;
+        }
+
+        .sidebar {
+            height: calc(100vh - 60px);
+            width: 250px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            background-color: white;
+            padding-top: 0;
+            box-shadow: 2px 0 rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            margin-top: -7px;
+        }
+
+        .sidebar a {
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            color: maroon;
+            transition: 0.3s;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-size: larger;
+            margin-top: 30px;
+        }
+
+        .sidebar a:hover {
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: maroon;
         }
 
         .container {
-            max-width: 400px;
-            margin: -30px auto 0; /* Adjusted margin for positioning */
+            max-width: 500px;
+            margin: 60px auto 30px;
+            background-color: #fff;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: white; /* Set background color */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            justify-items: center;
         }
 
         label {
-            display: block;
-            margin-bottom: 5px;
+            font-weight: bold;
+            
+            
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: maroon;
         }
 
         input[type="text"],
         input[type="password"] {
-            width: calc(100% - 10px); /* Adjusted to leave space on the right */
+            width: calc(100% - 10px);
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 3px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-right: 100px;
+            
         }
 
         input[type="submit"] {
+            width: auto;
+            padding: 10px 20px;
             background-color: maroon;
             color: #fff;
-            padding: 10px 20px;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
-            width: 100%;
+            transition: background-color 0.3s;
+            grid-column: span 2;
         }
 
         input[type="submit"]:hover {
@@ -206,38 +253,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: red;
         }
 
-        /* Make the username text color gray */
-        #username {
-            color: gray;
-        }
-        /* Additional styling for icons */
-        .user-icon,
-        .key-icon {
-            width: 27px; /* Adjust the size of the icon */
-            margin-right: 5px; /* Adjust the spacing between the icon and text */
-            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        .success-message {
+            color: green;
         }
 
-        .user-icon {
-            margin-bottom: 10px; /* Add margin-bottom for space between icons */
+        .profile-picture {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 20px;
         }
 
-        .navbar-icons {
-            display: flex;
-            align-items: center;
-            margin-left: 35px;
-            margin-top: 25px; /* Add margin-top for space */
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid maroon;
         }
 
-        .navbar-icons-container {
-            display: flex;
-            align-items: center;
-            flex-direction: column; /* Align icons vertically */
+        input[type="file"] {
+            display: none;
         }
 
-        .navbar-icons-container a {
-            text-decoration: none; /* Remove underline from profile link */
-            color: black; /* Change text color of profile link */
+        .profile-picture label {
+            cursor: pointer;
+            background-color: maroon;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .profile-picture label:hover {
+            background-color: #800000;
+        }
+
+        .empty-profile {
+            background-color: red;
         }
 
     </style>
@@ -257,47 +310,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 </div>
 
-     <!-- Icons below the navbar -->
-<div class="navbar-icons">
-    <div class="navbar-icons-container">
-        <!-- User icon -->
-        <img class="user-icon" src="user_Icon.png" alt="User Icon" onclick="location.href='admin_profile_settings.php';">
-        <!-- Key icon -->
-        <img class="key-icon" src="key_icon.png" alt="Key Icon" onclick="location.href='admin_change_password.php';">
+<div class="sidebar">
+    <div class="profile-picture">
+        <img src="user.png" alt="User Profile Picture" class="profile-img" id="profile-picture">
+        <input type="file" id="profile-image-upload" accept="image/*">
+        
     </div>
+
+    <a href="admin_profile_settings.php">User Info</a>
+    <a href="admin_change_username.php">Change Username</a>
+    <a href="admin_change_password.php">Change Password</a>
 </div>
 
 
-    <div class="container">
-        <h2>Change Password</h2>
-        <?php if (!empty($message)): ?>
-            <div class="message <?php echo ($password_change_successful ? '' : 'error-message'); ?>"><?php echo htmlspecialchars($message); ?></div>
-        <?php endif; ?>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly>
-            </div>
-            <div class="form-group">
-                <label for="current_password">Current Password:</label>
-                <input type="password" name="current_password" id="current_password">
-                <span class="error-message"><?php echo $current_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <label for="new_password">New Password:</label>
-                <input type="password" name="new_password" id="new_password">
-                <span class="error-message"><?php echo $new_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <label for="confirm_new_password">Confirm New Password:</label>
-                <input type="password" name="confirm_new_password" id="confirm_new_password">
-                <span class="error-message"><?php echo $confirm_new_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Change Password">
-            </div>
-        </form>
-    </div>
+
+
+<div class="container">
+    <h1>Change Password</h1>
+    <?php if (!empty($message)): ?>
+        <div class="message <?php echo ($password_change_successful ? '' : 'error-message'); ?>"><?php echo htmlspecialchars($message); ?></div>
+    <?php endif; ?>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly>
+            <!-- Empty placeholder element to ensure consistent grid gap -->
+            <div></div>
+        </div>
+        <div class="form-group">
+            <label for="current_password">Current Password:</label>
+            <input type="password" name="current_password" id="current_password" aria-describedby="current_password_err">
+            <span class="error-message" id="current_password_err"><?php echo $current_password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <label for="new_password">New Password:</label>
+            <input type="password" name="new_password" id="new_password" aria-describedby="new_password_err">
+            <span class="error-message" id="new_password_err"><?php echo $new_password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <label for="confirm_new_password">Confirm New Password:</label>
+            <input type="password" name="confirm_new_password" id="confirm_new_password" aria-describedby="confirm_new_password_err">
+            <span class="error-message" id="confirm_new_password_err"><?php echo $confirm_new_password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Change Password">
+        </div>
+    </form>
+</div>
+
 
 
     <script>
