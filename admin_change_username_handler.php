@@ -84,6 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Close connection
 $conn->close();
 // Redirect back to profile_settings.php
-header("Location: admin_profile_settings.php?message=" . urlencode($message));
+header("Location: admin_change_username.php?message=" . urlencode($message));
 exit;
 ?>
