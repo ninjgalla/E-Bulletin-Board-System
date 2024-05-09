@@ -20,7 +20,7 @@ html, body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #e4f2f2; /* Set background color */
+            background-color: #f5f5f5; /* Set background color */
         }
         .navbar {
             background-color: #e4f2f2; /* Set navbar background color */
