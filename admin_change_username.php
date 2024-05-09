@@ -252,7 +252,7 @@ $username = $_SESSION['username'];
     <form action="admin_change_username_handler.php" method="post">
         <div class="form-group">
             <label for="current_username">Current Username:</label>
-            <input type="text" name="current_username" id="current_username" value="<?php echo htmlspecialchars($username); ?>" readonly>
+            <input type="text" name="current_username" id="current_username" value="<?php echo htmlspecialchars($username); ?>" readonly style="color: gray;">
             <!-- Empty placeholder element to ensure consistent grid gap -->
             <div></div>
         </div>
