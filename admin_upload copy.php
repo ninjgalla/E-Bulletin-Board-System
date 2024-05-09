@@ -20,10 +20,10 @@ html, body {
         body {
             margin: 0;
             padding: 0;
-            background-color: #e4f2f2; /* Set background color */
+            background-color: #f5f5f5; /* Set background color */
         }
         .navbar {
-            background-color: #e4f2f2; /* Set navbar background color */
+            background-color: #800000; /* Set navbar background color */
             color: maroon;
             padding: 15px 40px; /* Adjust padding to increase width */
             display: flex;
@@ -32,7 +32,7 @@ html, body {
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
         .navbar a {
-            color: maroon;
+            color: white;
             text-decoration: none;
             margin-right: 15px;
             position: relative;
