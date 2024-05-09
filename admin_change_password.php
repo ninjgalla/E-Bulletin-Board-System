@@ -333,7 +333,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly>
+            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly style="color: gray;">
             <!-- Empty placeholder element to ensure consistent grid gap -->
             <div></div>
         </div>
