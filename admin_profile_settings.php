@@ -1,21 +1,47 @@
 <?php
-// Start the session
-session_start();
+// Database connection parameters
+$host = "localhost"; // Assuming your database is hosted locally
+$username = "root"; // Your database username
+$password = ""; // Your database password
+$database = "ebulletin_system"; // Your database name
 
-// Check if the user is not logged in
-if (!isset($_SESSION['username'])) {
-    // Redirect the user to the login page
-    header("Location: index.php");
-    exit; // Stop further execution
+// Establish database connection
+$connection = mysqli_connect($host, $username, $password, $database);
+
+// Check if the connection is successful
+if (!$connection) {
+    die("Error: Database connection failed. " . mysqli_connect_error());
 }
 
-// Include database connection
-include('config.php');
+// Initialize variables to prevent undefined variable warnings
+$username = $firstName = $lastName = $email = $tupId = '';
 
-// Fetch username from the session
-$username = $_SESSION['username'];
+// Query to fetch user details from the 'users' table
+$sql = "SELECT username, first_name, last_name, email, TUP_id FROM users";
 
+// Execute the query
+$result = mysqli_query($connection, $sql);
+
+// Check if the query was successful
+if ($result) {
+    // Fetch data (assuming there's only one row)
+    $row = mysqli_fetch_assoc($result);
+    
+    // Assign fetched data to variables
+    $username = $row['username'];
+    $firstName = $row['first_name'];
+    $lastName = $row['last_name'];
+    $email = $row['email'];
+    $tupId = $row['TUP_id'];
+} else {
+    // If the query fails, log the error or display a user-friendly message
+    error_log("Error: " . mysqli_error($connection));
+}
+
+// Close the connection
+mysqli_close($connection);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,46 +49,50 @@ $username = $_SESSION['username'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Settings</title>
     <style>
-        html, body {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            font-family: Helvetica, Arial, sans-serif;
         }
 
-        /* Inherit font-family for all other elements */
-        * {
-            font-family: inherit;
+        .container {
+            max-width: 500px;
+            margin: 60px auto 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #e4f2f2; /* Set background color */
-        }
+
         .navbar {
-            background-color: #e4f2f2; /* Set navbar background color */
+            background-color: #800000;
             color: maroon;
-            padding: 15px 40px; /* Adjust padding to increase width */
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
         }
+
         .navbar a {
-            color: maroon;
+            color: white;
             text-decoration: none;
             margin-right: 15px;
             position: relative;
-            transition: font-weight 0s; /* Add transition effect */
-            font-weight: normal; /* Set normal font weight */
+            transition: font-weight 0s;
+            font-weight: normal;
         }
+
         .navbar .logo {
-            font-weight: bold; /* Added bold font weight */
-            margin-left: 10px; /* Adjusted left margin */
+            font-weight: bold;
+            margin-left: 10px;
         }
+
         .navbar a:hover {
-            font-weight: bold; /* Make text bold on hover */
+            font-weight: bold;
         }
+
         .navbar a:hover::after {
             content: '';
             position: absolute;
@@ -74,193 +104,175 @@ $username = $_SESSION['username'];
         }
 
         .navbar .logo {
-            font-weight: bold; /* Added bold font weight */
-            margin-left: -10px; /* Adjusted left margin */
-            font-size: 20px; /* Increased font size */
+            font-weight: bold;
+            margin-left: -10px;
+            font-size: 20px;
         }
 
-        /* Updated CSS for file-item */
-        .file-item {
-            display: flex;
-            align-items: center;
-            padding: 10px; /* Adjust spacing */
-            margin: 10px 0; /* Adjust margin to add space between items */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+        .sidebar {
+            height: calc(100vh - 60px);
+            width: 250px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            background-color: white;
+            padding-top: 0;
+            box-shadow: 2px 0 rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            margin-top: -7px;
         }
 
-        /* CSS for file-details */
-        .file-details {
-            flex: 1; /* Take remaining space */
-            padding-right: 20px; /* Add space between text and image */
+        .sidebar a {
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            color: maroon;
+            transition: 0.3s;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-size: larger;
+            margin-top: 30px;
         }
 
-        /* CSS for file-media */
-        .file-media {
-            flex-shrink: 0; /* Prevent media from shrinking */
+        .sidebar a:hover {
+            font-weight: bold;
         }
 
-        /* CSS for file-media img and video */
-        .file-media img,
-        .file-media video {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 8px; /* Add border radius */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: maroon;
         }
 
-        /* Close button style */
-        .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: maroon;
         }
 
-        .container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: white; /* Set background color */
-        }
-
-        .form-group {
-            margin-bottom: 20px;
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            justify-items: center;
         }
 
         label {
-            display: block;
-            margin-bottom: 5px;
+            font-weight: bold;
         }
 
         input[type="text"],
-        input[type="password"] {
-            width: calc(100% - 10px); /* Adjusted to leave space on the right */
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: calc(100% - 10px);
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 3px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-right: 100px;
         }
 
         input[type="submit"] {
+            width: auto;
+            padding: 10px 20px;
             background-color: maroon;
             color: #fff;
-            padding: 10px 20px;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
-            width: 100%;
+            transition: background-color 0.3s;
+            grid-column: span 2;
         }
 
         input[type="submit"]:hover {
             background-color: #800000;
         }
 
-        .message {
+        .profile-picture {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
             margin-bottom: 10px;
-            color: green; /* Default color */
+            border: 2px solid maroon;
         }
 
-        .error-message {
-            color: green;
+        input[type="file"] {
+            display: none;
         }
 
-        .success-message {
-            color: green;
+        .profile-picture label {
+            cursor: pointer;
+            background-color: maroon;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
 
-        /* Additional styling for icons */
-        .user-icon,
-        .key-icon {
-            width: 27px; /* Adjust the size of the icon */
-            margin-right: 5px; /* Adjust the spacing between the icon and text */
-            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        .profile-picture label:hover {
+            background-color: #800000;
         }
 
-        .user-icon {
-            margin-bottom: 10px; /* Add margin-bottom for space between icons */
-        }
-
-        .navbar-icons {
-            display: flex;
-            align-items: center;
-            margin-left: 35px;
-            margin-top: 25px; /* Add margin-top for space */
-        }
-
-        .navbar-icons-container {
-            display: flex;
-            align-items: center;
-            flex-direction: column; /* Align icons vertically */
-        }
-
-        .navbar-icons-container a {
-            text-decoration: none; /* Remove underline from profile link */
-            color: black; /* Change text color of profile link */
+        .empty-profile {
+            background-color: red;
         }
 
     </style>
 </head>
 <body>
+
 <div class="navbar">
-        <div>
-            <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
-        </div>
-        <div>
-            
-            <a href="admin_upload.php">Upload</a>
-            <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-            <a href="admin_archive.php">Archive</a>
-            <a href="admin_profile_settings.php">Profile</a>
-            <a href="logout.php">Logout</a>
-        </div>
+    <div>
+        <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+    </div>
+    <div>
+        <a href="admin_upload.php">Upload</a>
+        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="admin_archive.php">Archive</a>
+        <a href="admin_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
+    </div>
 </div>
 
-<!-- Icons below the navbar -->
-<div class="navbar-icons">
-        <div class="navbar-icons-container">
-            <!-- User icon -->
-            <img class="user-icon" src="user_Icon.png" alt="User Icon" onclick="location.href='admin_profile_settings.php';">
-            <!-- Key icon -->
-            <img class="key-icon" src="key_icon.png" alt="Key Icon" onclick="location.href='admin_change_password.php';">
-        </div>
+<div class="sidebar">
+    <div class="profile-picture">
+        <img src="user.png" alt="User Profile Picture" class="profile-img" id="profile-picture">
+        <input type="file" id="profile-image-upload" accept="image/*">
+        
     </div>
 
-    <!-- Change Username form -->
-    <div class="container">
-        <h2>Change Username</h2>
-        <?php if (!empty($_GET['message'])): ?>
-            <?php $message = htmlspecialchars($_GET['message']); ?>
-            <div class="message <?php echo ($username_change_successful ? 'success-message' : 'error-message'); ?>"><?php echo $message; ?></div>
-        <?php endif; ?>
-        <form action="change_username_handler.php" method="post">
-            <div class="form-group">
-                <label for="current_username">Current Username:</label>
-                <input type="text" name="current_username" id="current_username" value="<?php echo htmlspecialchars($username); ?>" readonly>
-            </div>
-            <div class="form-group">
-                <label for="new_username">New Username:</label>
-                <input type="text" name="new_username" id="new_username">
-                <?php if (!empty($new_username_err)): ?>
-                    <span class="error-message"><?php echo $new_username_err; ?></span>
-                <?php endif; ?>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Change Username">
-            </div>
-        </form>
-    </div>
+    <a href="admin_profile_settings.php">User Info</a>
+    <a href="admin_change_username.php">Change Username</a>
+    <a href="admin_change_password.php">Change Password</a>
+</div>
 
+<div class="container">
+    <h1>User Info</h1>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+        <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>" required>
 
-    <script>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>" required>
 
-        function redirectToUploadPage() {
-            window.location.href = "admin_upload.php";
-        }
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
 
-        function redirectToAdminBulletin() {
-    window.location.href = "admin_bulletin.php";
-}
-    </script>
+        <label for="tupId">TUP ID:</label>
+        <input type="text" id="tupId" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>" required>
+
+        <input type="submit" name="submit" value="Save Changes">
+    </form>
+</div>
+
 </body>
 </html>
