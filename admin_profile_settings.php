@@ -1,4 +1,9 @@
 <?php
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Database connection parameters
 $host = "localhost"; // Assuming your database is hosted locally
 $username = "root"; // Your database username
@@ -14,12 +19,36 @@ if (!$connection) {
 }
 
 // Initialize variables to prevent undefined variable warnings
-$username = $firstName = $lastName = $email = $tupId = '';
+$userId = $firstName = $lastName = $email = $tupId = '';
+$success_message = '';
+$error_message = '';
 
-// Query to fetch user details from the 'users' table
-$sql = "SELECT username, first_name, last_name, email, TUP_id FROM users";
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $userId = $_POST['userId'];
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
+    $email = $_POST['email'];
+    $tupId = $_POST['tupId'];
 
-// Execute the query
+    // Update user information in the database
+    $update_query = "UPDATE users SET first_name='$firstName', last_name='$lastName', email='$email', TUP_id='$tupId' WHERE UserID='$userId'";
+    $update_result = mysqli_query($connection, $update_query);
+
+    // Check if the update was successful
+    if ($update_result) {
+        // Set success message
+        $success_message = "User information updated successfully.";
+    } else {
+        // If the update fails, log the error or display a user-friendly message
+        error_log("Error: " . mysqli_error($connection));
+        $error_message = "Error updating user information. Please try again later.";
+    }
+}
+
+// Fetch user details from the database
+$sql = "SELECT UserID, first_name, last_name, email, TUP_id FROM users";
 $result = mysqli_query($connection, $sql);
 
 // Check if the query was successful
@@ -28,7 +57,7 @@ if ($result) {
     $row = mysqli_fetch_assoc($result);
     
     // Assign fetched data to variables
-    $username = $row['username'];
+    $userId = $row['UserID']; // Adjusted column name here
     $firstName = $row['first_name'];
     $lastName = $row['last_name'];
     $email = $row['email'];
@@ -36,6 +65,7 @@ if ($result) {
 } else {
     // If the query fails, log the error or display a user-friendly message
     error_log("Error: " . mysqli_error($connection));
+    $error_message = "Error fetching user information.";
 }
 
 // Close the connection
@@ -143,13 +173,7 @@ mysqli_close($connection);
             margin-bottom: 30px;
             color: maroon;
         }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: maroon;
-        }
-
+        
         form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -224,6 +248,9 @@ mysqli_close($connection);
         .empty-profile {
             background-color: red;
         }
+        .success-message {
+    color: green;
+}
 
     </style>
 </head>
@@ -243,36 +270,61 @@ mysqli_close($connection);
 </div>
 
 <div class="sidebar">
-    <div class="profile-picture">
-        <img src="user.png" alt="User Profile Picture" class="profile-img" id="profile-picture">
-        <input type="file" id="profile-image-upload" accept="image/*">
-        
-    </div>
-
-    <a href="admin_profile_settings.php">User Info</a>
-    <a href="admin_change_username.php">Change Username</a>
-    <a href="admin_change_password.php">Change Password</a>
+<div class="profile-picture">
+    <!-- Display the user's profile picture from the database if available -->
+    <?php if (!empty($profilePicture)) : ?>
+        <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="User Profile Picture" class="profile-img" id="profile-picture">
+    <?php else : ?>
+        <!-- If no profile picture is available, display a default image -->
+        <img src="user.png" alt="Default Profile Picture" class="profile-img" id="profile-picture">
+    <?php endif; ?>
 </div>
+
+<a href="admin_profile_settings.php">User Info</a>
+<a href="admin_change_username.php">Change Username</a>
+<a href="admin_change_password.php">Change Password</a>
+</div>
+
 
 <div class="container">
     <h1>User Info</h1>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+    <?php if (!empty($success_message)) : ?>
+        <p class="success-message"><?php echo $success_message; ?></p>
+    <?php endif; ?>
+    <form id="profile-update-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
         <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
+
         <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>" required>
+        <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>" readonly style="color: gray;">
 
         <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>" required>
+        <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>" readonly style="color: gray;">
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
 
         <label for="tupId">TUP ID:</label>
-        <input type="text" id="tupId" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>" required>
-
+        <input type="text" id="tupId" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>" readonly style="color: gray;">
+        
         <input type="submit" name="submit" value="Save Changes">
+        
     </form>
 </div>
+<script>
+document.getElementById('profile-picture').addEventListener('click', function() {
+    document.getElementById('profile-image-upload').click();
+});
+
+// Update profile picture preview
+document.getElementById('profile-image-upload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function() {
+        document.getElementById('profile-picture').src = reader.result;
+    };
+    reader.readAsDataURL(file);
+});
+</script>
 
 </body>
 </html>
