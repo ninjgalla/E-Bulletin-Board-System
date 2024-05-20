@@ -306,7 +306,7 @@ mysqli_close($connection);
         <label for="tupId">TUP ID:</label>
         <input type="text" id="tupId" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>" readonly style="color: gray;">
         
-        <input type="submit" name="submit" value="Save Changes">
+        <input type="submit" name="submit" value="Save Changes"> 
         
     </form>
 </div>
