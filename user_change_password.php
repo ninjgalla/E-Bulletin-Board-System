@@ -99,52 +99,145 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Settings</title>
+    <title>Change Password</title>
     <style>
-       html, body {
-            margin: 0;
-            font-family: Helvetica, Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        /* Inherit font-family for all other elements */
+          /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
         }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #800000;
+            color: maroon;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+            position: relative;
+            transition: font-weight 0s;
+            font-weight: normal;
+        }
+
+        .navbar .logo {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .navbar a:hover {
+            font-weight: bold;
+        }
+
+        .navbar a:hover::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 100%;
+            height: 2px;
+            background-color: maroon;
+        }
+
+        .navbar .logo {
+            font-weight: bold;
+            margin-left: -10px;
+            font-size: 20px;
+        }
+
+        .sidebar {
+            height: calc(100vh - 60px);
+            width: 250px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            background-color: white;
+            padding-top: 0;
+            box-shadow: 2px 0 rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            margin-top: -7px;
+        }
+
+        .sidebar a {
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            color: maroon;
+            transition: 0.3s;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-size: larger;
+            margin-top: 30px;
+        }
+
+        .sidebar a:hover {
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: maroon;
+        }
 
         .container {
-            max-width: 400px;
-            margin: -30px auto 0; /* Adjusted margin for positioning */
+            max-width: 500px;
+            margin: 60px auto 30px;
+            background-color: #fff;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            justify-items: center;
         }
 
         label {
-            display: block;
-            margin-bottom: 5px;
+            font-weight: bold;
+            
+            
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: maroon;
         }
 
         input[type="text"],
         input[type="password"] {
-            width: calc(100% - 10px); /* Adjusted to leave space on the right */
+            width: calc(100% - 10px);
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 3px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-right: 100px;
+            
         }
 
         input[type="submit"] {
+            width: auto;
+            padding: 10px 20px;
             background-color: maroon;
             color: #fff;
-            padding: 10px 20px;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
-            width: 100%;
+            transition: background-color 0.3s;
+            grid-column: span 2;
         }
 
         input[type="submit"]:hover {
@@ -160,202 +253,114 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: red;
         }
 
-        /* Make the username text color gray */
-        #username {
-            color: gray;
+        .success-message {
+            color: green;
         }
 
-        /* Style for navbar and side navbar */
-        .navbar {
-            background-color: white; /* Set navbar background color */
-            color: maroon;
-            padding: 15px 40px; /* Adjust padding to increase width */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
-        }
-        .navbar a {
-            color: maroon;
-            text-decoration: none;
-            margin-right: 15px;
-            position: relative;
-            transition: font-weight 0s; /* Add transition effect */
-            font-weight: normal; /* Set normal font weight */
+        .profile-picture {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 20px;
         }
 
-        .navbar a:hover {
-            font-weight: bold; /* Make text bold on hover */
-        }
-        .navbar a:hover::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -3px;
-            width: 100%;
-            height: 2px;
-            background-color: maroon;
-        }
-        .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
-        /* CSS for popup form */
-        .feedback-popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .feedback-form {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .feedback-form h2 {
-            margin-top: 0;
-        }
-
-        .feedback-form label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .feedback-form textarea {
-            width: 100%;
+        .profile-img {
+            width: 100px;
             height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
             margin-bottom: 10px;
+            border: 2px solid maroon;
         }
 
-        .feedback-form input[type="submit"] {
-            display: block;
-            width: 100%;
-            padding: 10px;
+        input[type="file"] {
+            display: none;
+        }
+
+        .profile-picture label {
+            cursor: pointer;
             background-color: maroon;
             color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .feedback-form .close-btn {
-            margin-top: 10px;
-            background-color: #ccc;
-            border: none;
             padding: 5px 10px;
-            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
 
-        /* Additional styling for icons */
-        .user-icon,
-        .key-icon {
-            width: 27px; /* Adjust the size of the icon */
-            margin-right: 5px; /* Adjust the spacing between the icon and text */
-            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        .profile-picture label:hover {
+            background-color: #800000;
         }
 
-        .user-icon {
-            margin-bottom: 10px; /* Add margin-bottom for space between icons */
+        .empty-profile {
+            background-color: red;
         }
 
-        .navbar-icons {
-            display: flex;
-            align-items: center;
-            margin-left: 35px;
-            margin-top: 25px; /* Add margin-top for space */
-        }
-
-        .navbar-icons-container {
-            display: flex;
-            align-items: center;
-            flex-direction: column; /* Align icons vertically */
-        }
-
-        .navbar-icons-container a {
-            text-decoration: none; /* Remove underline from profile link */
-            color: black; /* Change text color of profile link */
-        }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <div class="navbar">
-    <div>
-        <a href="user_bulletin_feed.php">Home</a>
-        <a href="user_profile_settings.php">Profile</a>
-    </div>
+<div class="navbar">
         <div>
+            <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
+        </div>
+        <div>
+            <a href="user_profile_settings.php">Profile</a>
             <a href="logout.php">Logout</a>
         </div>
-    </div>
+</div>
 
-     <!-- Icons below the navbar -->
-<div class="navbar-icons">
-    <div class="navbar-icons-container">
-        <!-- User icon -->
-        <img class="user-icon" src="user_Icon.png" alt="User Icon" onclick="location.href='user_profile_settings.php';">
-        <!-- Key icon -->
-        <img class="key-icon" src="key_icon.png" alt="Key Icon" onclick="location.href='user_change_password.php';">
-    </div>
+<div class="sidebar">
+<div class="profile-picture">
+    <!-- Display the user's profile picture from the database if available -->
+    <?php if (!empty($profilePicture)) : ?>
+        <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="User Profile Picture" class="profile-img" id="profile-picture">
+    <?php else : ?>
+        <!-- If no profile picture is available, display a default image -->
+        <img src="user.png" alt="Default Profile Picture" class="profile-img" id="profile-picture">
+    <?php endif; ?>
+</div>
+
+<a href="user_profile_settings.php">User Info</a>
+<a href="user_change_username.php">Change Username</a>
+<a href="user_change_password.php">Change Password</a>
 </div>
 
 
-    <div class="container">
-        <h2>Change Password</h2>
-        <?php if (!empty($message)): ?>
-            <div class="message <?php echo ($password_change_successful ? '' : 'error-message'); ?>"><?php echo htmlspecialchars($message); ?></div>
-        <?php endif; ?>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly>
-            </div>
-            <div class="form-group">
-                <label for="current_password">Current Password:</label>
-                <input type="password" name="current_password" id="current_password">
-                <span class="error-message"><?php echo $current_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <label for="new_password">New Password:</label>
-                <input type="password" name="new_password" id="new_password">
-                <span class="error-message"><?php echo $new_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <label for="confirm_new_password">Confirm New Password:</label>
-                <input type="password" name="confirm_new_password" id="confirm_new_password">
-                <span class="error-message"><?php echo $confirm_new_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Change Password">
-            </div>
-        </form>
-    </div>
 
-    <script>
 
-         // Function to open the feedback popup
-         function openFeedbackPopup() {
-            document.getElementById("feedbackPopup").style.display = "block";
-        }
+<div class="container">
+    <h1>Change Password</h1>
+    <?php if (!empty($message)): ?>
+        <div class="message <?php echo ($password_change_successful ? '' : 'error-message'); ?>"><?php echo htmlspecialchars($message); ?></div>
+    <?php endif; ?>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly style="color: gray;">
+            <!-- Empty placeholder element to ensure consistent grid gap -->
+            <div></div>
+        </div>
+        <div class="form-group">
+            <label for="current_password">Current Password:</label>
+            <input type="password" name="current_password" id="current_password" aria-describedby="current_password_err">
+            <span class="error-message" id="current_password_err"><?php echo $current_password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <label for="new_password">New Password:</label>
+            <input type="password" name="new_password" id="new_password" aria-describedby="new_password_err">
+            <span class="error-message" id="new_password_err"><?php echo $new_password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <label for="confirm_new_password">Confirm New Password:</label>
+            <input type="password" name="confirm_new_password" id="confirm_new_password" aria-describedby="confirm_new_password_err">
+            <span class="error-message" id="confirm_new_password_err"><?php echo $confirm_new_password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Change Password">
+        </div>
+    </form>
+</div>
 
-        // Function to close the feedback popup
-        function closeFeedbackPopup() {
-            document.getElementById("feedbackPopup").style.display = "none";
-        }
+
+
+
     </script>
 </body>
 </html>
