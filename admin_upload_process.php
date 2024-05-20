@@ -57,6 +57,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $title = $_POST["title"];
         $description = $_POST["description"];
         $schedule = $_POST["schedule"]; // Added to retrieve scheduled date and time
+        
+        // Get uploader's username from session
+        session_start();
+        $uploader = $_SESSION["username"]; // Assuming you have a session storing the username
 
         // Generate a unique filename to prevent overwriting
         $uniqueFileName = uniqid() . '.' . $fileType;
@@ -82,9 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Attempt to move the uploaded file to the specified directory
                 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $targetPath)) {
                     // Prepare SQL statement to insert file details into the database
-                    $sql = "INSERT INTO bulletin_files (filename, title, description, filetype, schedule) VALUES (?, ?, ?, ?, ?)";
+                    $sql = "INSERT INTO bulletin_files (filename, title, description, filetype, schedule, uploader) VALUES (?, ?, ?, ?, ?, ?)";
                     $stmt = $db->prepare($sql);
-                    $stmt->bind_param("sssss", $uniqueFileName, $title, $description, $fileType, $schedule); // Bind schedule parameter
+                    $stmt->bind_param("ssssss", $uniqueFileName, $title, $description, $fileType, $schedule, $uploader); // Bind uploader parameter
 
                     // Execute the prepared statement
                     if ($stmt->execute()) {
