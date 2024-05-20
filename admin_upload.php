@@ -6,8 +6,7 @@
     <title>Upload</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
     <style>
-
-html, body {
+        html, body {
             margin: 0;
             padding: 0;
             font-family: Helvetica, Arial, sans-serif;
@@ -17,11 +16,11 @@ html, body {
         * {
             font-family: inherit;
         }
+
         body {
-            margin: 0;
-            padding: 0;
             background-color: #f5f5f5; /* Set background color */
         }
+
         .navbar {
             background-color: #800000; /* Set navbar background color */
             color: maroon;
@@ -31,6 +30,7 @@ html, body {
             align-items: center;
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
+
         .navbar a {
             color: white;
             text-decoration: none;
@@ -40,13 +40,16 @@ html, body {
             font-weight: normal; /* Set normal font weight */
             text-shadow: black;
         }
+
         .navbar .logo {
             font-weight: bold; /* Added bold font weight */
             margin-left: 10px; /* Adjusted left margin */
         }
+
         .navbar a:hover {
             font-weight: bold; /* Make text bold on hover */
         }
+
         .navbar a:hover::after {
             content: '';
             position: absolute;
@@ -95,9 +98,9 @@ html, body {
             margin-top: 30px; /* Add some space between user role and line */
             margin-bottom: 10px; /* Add some space between line and bottom */
             width: 50%; /* Set the width of the horizontal line */
-            width: 50%; /* Set the width of the horizontal line */
             margin: 10px auto; /* Center the line horizontally and add some margin */
         }
+
         .account-details {
             text-align: left; /* Left-align the text */
             margin-left: 43px;
@@ -107,6 +110,7 @@ html, body {
         .account-details p {
             margin: 5px 0; /* Add some spacing between paragraphs */
         }
+
         .button {
             background-color: maroon;
             color: white;
@@ -156,6 +160,7 @@ html, body {
             border-radius: 50%;
             cursor: pointer;
         }
+
         .edit-icon {
             position: absolute;
             top: 0;
@@ -169,10 +174,7 @@ html, body {
             display: block; /* Display as block-level element */
             margin-top: 30px;
             margin-left: 20px;
-            
-
         }
-
 
         /* Image containers for videos */
         .video-container {
@@ -190,6 +192,7 @@ html, body {
             height: 100%; /* Make the video fill the container */
             object-fit: cover; /* Cover the entire container */
         }
+
         .plus-icon {
             width: 50%; /* Make the plus icon fill the container */
             height: 50%; /* Make the plus icon fill the container */
@@ -198,7 +201,6 @@ html, body {
             cursor: pointer; /* Add cursor pointer */
         }
 
-    
         .upload-form {
             display: none;
             position: fixed;
@@ -207,10 +209,10 @@ html, body {
             top: 50%;
             transform: translate(-50%, -50%);
             width: 60%; /* Reduced width */
-            max-width: 400px; 
+            max-width: 400px;
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.5);
-        } 
+        }
 
         /* Close button */
         .close {
@@ -264,7 +266,7 @@ html, body {
             background-color: #800000; /* Darken the maroon color on hover */
         }
 
-         /* CSS for schedule input field */
+        /* CSS for schedule input field */
         input[type="datetime-local"] {
             margin-bottom: 15px;
             padding: 8px;
@@ -272,8 +274,73 @@ html, body {
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
-    }
+        }
 
+        /* CSS styles for pop-up and form */
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            max-width: 400px;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .popup .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .popup .close:hover,
+        .popup .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .popup .form-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 10px;
+        }
+        .popup input[type="text"] {
+            margin-bottom: 15px;
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .popup input[type="submit"] {
+            background-color: maroon;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .popup input[type="submit"]:hover {
+            background-color: #800000;
+        }
+
+        .file-name {
+    display: block; /* Ensure the file name is displayed as a block element */
+    width: 100%; /* Ensure the file name spans the entire width of its container */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add ellipsis (...) for overflow text */
+    white-space: nowrap; /* Prevent wrapping */
+}
     </style>
 </head>
 <body>
@@ -282,7 +349,6 @@ html, body {
             <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
         </div>
         <div>
-            
             <a href="admin_upload.php">Upload</a>
             <a href="admin_bulletin_feed.php">Bulletin Feed</a>
             <a href="admin_archive.php">Archive</a>
@@ -333,7 +399,7 @@ html, body {
         <div class="photo-container">
             <img src="plus_icon1.png" alt="Plus Icon" class="plus-icon" onclick="openUploadForm()">
         </div>
-
+ 
 
           <!-- Upload file pop-up form -->
         <div id="uploadForm" class="upload-form">
@@ -366,32 +432,56 @@ html, body {
             $result = $db->query($sql);
 
             // Display uploaded files
-            while ($row = $result->fetch_assoc()) {
-                if ($row["filetype"] == "photo") {
-                    echo '<div class="photo-container">';
-                    echo '<a href="uploads/' . $row["filename"] . '" download>';
-                    echo '<img class="file-photo" src="uploads/' . $row["filename"] . '" alt="' . $row["title"] . '">';
-                    echo '</a>';
-                    echo '<i class="fas fa-trash delete-icon" onclick="archiveFile(' . $row["id"] . ')"></i>';
-                    echo '<img src="edit.png" alt="Edit Icon" class="edit-icon" onclick="openAdminEdit()">';
-                    echo '</div>';
-                } elseif ($row["filetype"] == "video") {
-                    echo '<div class="video-container">';
-                    echo '<video class="file-video" controls>';
-                    echo '<source src="uploads/' . $row["filename"] . '" type="video/mp4">';
-                    echo 'Your browser does not support the video tag.';
-                    echo '</video>';
-                    echo '<i class="fas fa-trash delete-icon" onclick="archiveFile(' . $row["id"] . ')"></i>';
-                    echo '<img src="edit.png" alt="Edit Icon" class="edit-icon" onclick="openAdminEdit()">';
-                    echo '</div>';
-                }
-                
-            }
-
+    while ($row = $result->fetch_assoc()) {
+        if ($row["filetype"] == "photo") {
+            echo '<div class="photo-container">';
+            echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
+            echo '<span class="edit-icon" onclick="openEditForm(' . $row["id"] . ', \'' . $row["title"] . '\', \'' . $row["description"] . '\', \'' . $row["filename"] . '\', \'' . $row["schedule"] . '\')"><i class="fas fa-edit"></i></span>';
+            echo '</div>';
+        } elseif ($row["filetype"] == "video") {
+            echo '<div class="video-container">';
+            echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
+            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
+            echo '<span class="edit-icon" onclick="openEditForm(' . $row["id"] . ', \'' . $row["title"] . '\', \'' . $row["description"] . '\', \'' . $row["filename"] . '\', \'' . $row["schedule"] . '\')"><i class="fas fa-edit"></i></span>';
+            echo '</div>';
+        }
+    }
+            // Close database connection
             $db->close();
             ?>
 
+            
+<!-- Edit pop-up form -->
+<div id="editForm" class="popup">
+    <span class="close" onclick="closeEditForm()">&times;</span>
+    <div class="form-content">
+        <h2>Edit File</h2>
+        <form action="admin_edit_process.php" method="post" enctype="multipart/form-data">
+            <!-- File upload input -->
+            <label for="editFile">Upload File:</label>
+            <div class="file-input-container">
+                <input type="file" name="editFile" id="editFile" onchange="updateFileName(this)">
+            </div><br>
+            <!-- Field for displaying uploaded file name -->
+            <label for="fileUploaded">File Uploaded:</label>
+            <input type="text" id="fileUploaded" value="No file chosen" readonly><br>
+            <!-- Existing code for other input fields -->
+            <label for="editTitle">Title:</label>
+            <input type="text" name="editTitle" id="editTitle" value="<?php echo $currentTitle; ?>" required><br>
+            <label for="editDescription">Description:</label>
+            <textarea name="editDescription" id="editDescription" rows="4" required><?php echo $currentDescription; ?></textarea><br>
+            <label for="editSchedule">Schedule:</label>
+            <input type="datetime-local" name="editSchedule" id="editSchedule" value="<?php echo $currentSchedule; ?>" required><br>
+            <input type="hidden" name="editId" id="editId" value="<?php echo $postId; ?>"> <!-- Hidden field to store post ID -->
+            <input type="submit" value="Save Changes" name="submit">
+        </form>
+    </div>
 </div>
+
+
+
+
 
 <script>
     // Function to open the upload form
@@ -432,10 +522,30 @@ html, body {
         }     
     }
 </script>
+<!-- JavaScript to toggle edit form popup -->
 <script>
-    // JavaScript function to open "admin_edit_function.php"
-    function openAdminEdit() {
-        window.location.href = "admin_edit_function.php";
+    // Function to open edit form popup
+    function openEditForm(id, title, description, fileName, schedule) {
+        document.getElementById("editId").value = id; // Set file ID
+        document.getElementById("editTitle").value = title; // Set current title
+        document.getElementById("editDescription").value = description; // Set current description
+        document.getElementById("fileUploaded").value = fileName; // Set current file name
+        document.getElementById("editSchedule").value = schedule; // Set current schedule
+        document.getElementById("editForm").style.display = "block"; // Display edit form
+    }
+
+    // Function to close edit form popup
+    function closeEditForm() {
+        document.getElementById("editForm").style.display = "none"; // Hide edit form
+    } 
+
+    // Function to update the file name label
+    function updateFileName(input) {
+        var fileName = input.files[0].name; // Get the file name
+        var label = document.getElementById("selectedFileName"); // Get the label element
+        label.textContent = fileName; // Update the label text
     }
 </script>
+
+</body>
 </html>
