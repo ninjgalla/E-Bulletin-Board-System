@@ -29,12 +29,6 @@ $username = $_SESSION['username'];
     <title>EBBS</title>
     <style>
 
-html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Helvetica, Arial, sans-serif;
-        }
-
         /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
