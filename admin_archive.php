@@ -95,19 +95,23 @@ html, body {
         }
         
          /* Add styles for the menu icon container */
-        .menu-icon-container {
-            position: relative;
-            display: inline-block;
-        }
-        /* Add styles for the menu icon */
-        .menu-icon {
-            position: absolute;
-            top: 0;
-            right: 0;
-            cursor: pointer;
-            margin: 15px;
-        }
-        .menu-icon::before, .menu-icon::after, .menu-icon div {
+.menu-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Add styles for the menu icon */
+.menu-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    margin: 15px;
+}
+
+.menu-icon::before,
+.menu-icon::after,
+.menu-icon div {
     content: "";
     position: absolute;
     width: 4px;
@@ -115,22 +119,21 @@ html, body {
     background-color: maroon;
     border-radius: 50%;
     transition: all 0.3s ease;
-    
 }
 
 /* Adjust spacing between dots */
 .menu-icon::before {
     top: -7px;
-    margin-right: 7px; /* Adjust spacing between dots */
+    margin-right: 5px; /* Decreased spacing between dots */
 }
 
 .menu-icon::after {
     bottom: -7px;
-    margin-right: 7px; /* Adjust spacing between dots */
+    margin-right: 5px; /* Decreased spacing between dots */
 }
 
 .menu-icon div {
-    top: 100%;
+    top: 50%;
     transform: translateY(-50%);
 }
 
