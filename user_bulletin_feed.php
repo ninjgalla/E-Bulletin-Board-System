@@ -26,46 +26,55 @@ $username = $_SESSION['username'];
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <title>EBBS</title>
     <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-    }
+   /* Inherit font-family for all other elements */
+   * {
+            font-family: inherit;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* Set background color */
+        }
+        .navbar {
+            background-color: #800000; /* Set navbar background color */
+            color: maroon;
+            padding: 15px 40px; /* Adjust padding to increase width */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+            position: relative;
+            transition: font-weight 0s; /* Add transition effect */
+            font-weight: normal; /* Set normal font weight */
+        }
+        .navbar .logo {
+            font-weight: bold; /* Added bold font weight */
+            margin-left: 10px; /* Adjusted left margin */
+        }
+        .navbar a:hover {
+            font-weight: bold; /* Make text bold on hover */
+        }
+        .navbar a:hover::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 100%;
+            height: 2px;
+            background-color: maroon;
+        }
 
-    .navbar {
-        background-color: white;
-        color: maroon;
-        padding: 15px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar a {
-        color: maroon;
-        text-decoration: none;
-        margin-right: 15px;
-        position: relative;
-        transition: font-weight 0s;
-        font-weight: normal;
-    }
-
-    .navbar a:hover {
-        font-weight: bold;
-    }
-
-    .navbar a:hover::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: -3px;
-        width: 100%;
-        height: 2px;
-        background-color: maroon;
-    }
-
+        .navbar .logo {
+            font-weight: bold; /* Added bold font weight */
+            margin-left: -10px; /* Adjusted left margin */
+            font-size: 20px; /* Increased font size */
+        }
     .post-container {
             max-width: 500px; /* Maximum width for post container */
             width: 100%; /* Ensure full width on smaller screens */
@@ -247,15 +256,16 @@ $username = $_SESSION['username'];
 
 </head>
 <body>
-    <div class="navbar">
-    <div>
-        <a href="user_bulletin_feed.php">Home</a>
-        <a href="user_profile_settings.php">Profile</a>
-    </div>
+<div class="navbar">
         <div>
+            <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
+        </div>
+        <div>
+            
+            <a href="user_profile_settings.php">Profile</a>
             <a href="logout.php">Logout</a>
         </div>
-    </div>
+</div>
 
     <?php
 include "config.php"; // Include the database connection file
