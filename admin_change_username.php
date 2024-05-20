@@ -21,6 +21,7 @@ $username = $_SESSION['username'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
     <title>Profile Settings</title>
     <style>
         /* Inherit font-family for all other elements */
@@ -213,21 +214,93 @@ $username = $_SESSION['username'];
             background-color: red;
         }
 
+        .hamburger {
+    display: none; /* Hidden by default */
+    font-size: 24px; /* Adjust font size for hamburger icon */
+    color: white; /* Set font color to white */
+    cursor: pointer;
+}
+
+/* Side navbar styles */
+.side-navbar {
+    position: fixed;
+    top: 0;
+    right: -250px; /* Initially hide the side navbar on the right */
+    width: 250px;
+    height: 100%;
+    background-color: #800000;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    padding-top: 60px;
+    z-index: 1000;
+    transition: right 0.3s ease;
+    font-size: 16px;
+    color: white;
+}
+
+/* Close button */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    color: white;
+}
+
+.side-navbar a {
+    color: white;
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.side-navbar a:hover {
+    background-color: #575757; /* Change background on hover */
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+    .navbar a {
+        display: none; /* Hide navbar links */
+    }
+    .navbar .logo {
+        display: block; /* Ensure the logo is always displayed */
+    }
+    .hamburger {
+        display: block; /* Show hamburger menu */
+    }
+}
+
     </style>
 </head>
 <body>
 <div class="navbar">
-        <div>
-            <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
-        </div>
-        <div>
-            
-            <a href="admin_upload.php">Upload</a>
-            <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-            <a href="admin_archive.php">Archive</a>
-            <a href="admin_profile_settings.php">Profile</a>
-            <a href="logout.php">Logout</a>
-        </div>
+    <div>
+        <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+    </div>
+    <div>
+        <a href="admin_upload.php">Upload</a>
+        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="admin_archive.php">Archive</a>
+        <a href="admin_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
+    </div>
+    <div class="hamburger" onclick="toggleSideNavbar()">
+        <i class="fas fa-bars"></i>
+    </div>
+</div>
+
+<!-- Side navbar -->
+<div class="side-navbar" id="sideNavbar">
+    <div class="close-btn" onclick="toggleSideNavbar()">
+        <i class="fas fa-times"></i>
+    </div>
+    <a href="admin_upload.php">Upload</a>
+    <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+    <a href="admin_archive.php">Archive</a>
+    <a href="admin_profile_settings.php">Profile</a>
+    <a href="logout.php">Logout</a>
 </div>
 <div class="sidebar">
     <div class="profile-picture">
@@ -283,5 +356,30 @@ $username = $_SESSION['username'];
     window.location.href = "admin_bulletin.php";
 }
     </script>
+
+<script>
+    // Function to toggle side navbar
+    function toggleSideNavbar() {
+        var sideNavbar = document.getElementById('sideNavbar');
+        if (sideNavbar.style.right === '0px') {
+            sideNavbar.style.right = '-250px'; // Collapse side navbar
+        } else {
+            sideNavbar.style.right = '0px'; // Expand side navbar
+        }
+    }
+
+    // Function to automatically close side navbar on larger screens
+    function closeSideNavbarOnLargeScreen() {
+        var sideNavbar = document.getElementById('sideNavbar');
+        var screenWidth = window.innerWidth;
+        if (screenWidth > 768) { // Adjust the threshold as needed
+            sideNavbar.style.right = '-250px'; // Collapse side navbar if screen width is greater than 768px
+        }
+    }
+
+    // Call the function when the window loads and when it is resized
+    window.onload = closeSideNavbarOnLargeScreen;
+    window.onresize = closeSideNavbarOnLargeScreen;
+</script>
 </body>
 </html>
