@@ -262,9 +262,28 @@ const myChart = new Chart(ctx, {
         }
     }
 
+    // Function to handle window resize events
+    function handleResize() {
+        closeSideNavbarOnLargeScreen(); // Close side navbar if needed
+        resizeChart(); // Resize chart if needed
+    }
+
+    // Function to resize the chart
+    function resizeChart() {
+        var canvas = document.getElementById("postChart");
+        var container = canvas.parentNode;
+
+        // Set the canvas width to the container width
+        canvas.width = container.offsetWidth;
+
+        // Redraw the chart
+        myChart.resize();
+    }
+
     // Call the function when the window loads and when it is resized
-    window.onload = closeSideNavbarOnLargeScreen;
-    window.onresize = closeSideNavbarOnLargeScreen;
+    window.onload = handleResize;
+    window.onresize = handleResize;
 </script>
+
 </body>
 </html>
