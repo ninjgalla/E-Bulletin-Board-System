@@ -360,7 +360,26 @@ if (mysqli_num_rows($result) > 0) {
         // Generate HTML for each post container dynamically
         echo '<div class="post-container">';
         echo '<h2 class="post-title">' . $row['title'] . '</h2>';
-        echo '<p class="post-description">' . $row['description'] . '</p>'; // Simply display the description without "See more"
+
+        // Display truncated description with "See more" link for long descriptions
+        $description = $row['description'];
+        $maxLength = 100; // Maximum length of the description
+        if (strlen($description) > $maxLength) {
+            // Truncate the description
+            $truncatedDescription = substr($description, 0, $maxLength) . '...';
+            echo '<p class="post-description">' . $truncatedDescription;
+            // Add a "See more" link to toggle full description
+            echo '<a href="#" class="see-more-link" data-toggle="description-' . $row['id'] . '">See more</a>';
+            echo '</p>';
+            // Hidden full description
+            echo '<p class="full-description" id="description-' . $row['id'] . '" style="display: none;">' . $description;
+            // Add a "See less" link to toggle back to truncated description
+            echo '<a href="#" class="see-less-link" data-toggle="description-' . $row['id'] . '">See less</a>';
+            echo '</p>';
+        } else {
+            // Display the full description if it's short
+            echo '<p class="post-description">' . $description . '</p>';
+        }
         
         // Check if the file type is an image or video and display accordingly
         if (strpos($row['filetype'], 'photo') !== false) {
@@ -415,6 +434,7 @@ mysqli_close($conn);
 ?>
 
 
+
 <!-- JavaScript code... -->
 <script>
      document.querySelectorAll('.comment-button').forEach(function(button) {
@@ -466,5 +486,33 @@ mysqli_close($conn);
     window.onload = closeSideNavbarOnLargeScreen;
     window.onresize = closeSideNavbarOnLargeScreen;
 </script>
+
+<script>
+    // Function to toggle visibility of full and truncated descriptions
+    document.querySelectorAll('.see-more-link').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default anchor behavior
+            var targetId = this.getAttribute('data-toggle');
+            var targetElement = document.getElementById(targetId);
+            targetElement.style.display = 'block'; // Show the full description
+            this.style.display = 'none'; // Hide the "See more" link
+            var seeLessLink = document.querySelector('[data-toggle="' + targetId + '"].see-less-link');
+            seeLessLink.style.display = 'inline'; // Show the "See less" link
+        });
+    });
+
+    document.querySelectorAll('.see-less-link').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default anchor behavior
+            var targetId = this.getAttribute('data-toggle');
+            var targetElement = document.getElementById(targetId);
+            targetElement.style.display = 'none'; // Hide the full description
+            var seeMoreLink = document.querySelector('[data-toggle="' + targetId + '"].see-more-link');
+            seeMoreLink.style.display = 'inline'; // Show the "See more" link
+            this.style.display = 'none'; // Hide the "See less" link
+        });
+    });
+</script>
+
 </body>
 </html>
