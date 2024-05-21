@@ -65,72 +65,20 @@
             margin-left: -10px; /* Adjusted left margin */
             font-size: 20px; /* Increased font size */
         }
-        /* Rectangle shape with rounded corners and white background */
-        .rectangle {
-            width: 20%; /* Decreased width */
-            max-width: 1000px; /* Adjusted maximum width */
-            height: 350px; /* Added height */
-            margin: auto; /* Center the rectangle horizontally */
-            padding: 20px;
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0px 15px 15px rgba(0, 0, 0, 0.1); /* Add shadow */
-            position: fixed; /* Position the rectangle */
-            top: 50%; /* Position it vertically at 50% from the top */
-            transform: translateY(-50%); /* Center it vertically */
-            left: 27px; /* Position it 20px from the left side */
-            margin-bottom: 20px;
-            text-align: center; /* Center align text */
-            margin-top: 20px;
-        }
 
-        .username {
-            color: maroon; /* Set username color to maroon */
-        }
-
-        .user-role {
-            padding-bottom: 20px; /* Add some padding below user role */
-        }
-
-        .horizontal-line {
-            border-bottom: 1px solid #ccc; /* Add gray horizontal line */
-            margin-top: 30px; /* Add some space between user role and line */
-            margin-bottom: 10px; /* Add some space between line and bottom */
-            width: 50%; /* Set the width of the horizontal line */
-            margin: 10px auto; /* Center the line horizontally and add some margin */
-        }
-
-        .account-details {
-            text-align: left; /* Left-align the text */
-            margin-left: 43px;
-            font-size: 15px;
-        }
-
-        .account-details p {
-            margin: 5px 0; /* Add some spacing between paragraphs */
-        }
-
-        .button {
-            background-color: maroon;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: block;
-            margin: 40px auto 0; /* Center the button horizontally */
-        }
 
         .content {
-            width: 900px;
-            height: 490px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: auto; /* Align the rectangle to the center-right */
-            margin-right: 40px; /* Ensure no margin on the right */
-            margin-top: 30px; /* Add margin from the top */
-        }
+    width: calc(100% - 80px); /* Adjusted width to fill the screen with 40px margin on each side */
+    max-width: 1200px; /* Set maximum width to maintain readability */
+    height: calc(100vh - 80px); /* Adjusted height to fill the vertical space with 40px margin on top and bottom */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 40px auto; /* Center the content horizontally and provide 40px margin on top and bottom */
+    padding: 20px; /* Add padding for inner content */
+    overflow: auto; /* Add overflow to enable scrolling if content exceeds screen size */
+}
+
 
         /* Image containers for photos */
         .photo-container {
@@ -333,14 +281,7 @@
             background-color: #800000;
         }
 
-        .file-name {
-    display: block; /* Ensure the file name is displayed as a block element */
-    width: 100%; /* Ensure the file name spans the entire width of its container */
-    overflow: hidden; /* Hide overflowing text */
-    text-overflow: ellipsis; /* Add ellipsis (...) for overflow text */
-    white-space: nowrap; /* Prevent wrapping */
-}
-
+     
 .hamburger {
     display: none; /* Hidden by default */
     font-size: 24px; /* Adjust font size for hamburger icon */
@@ -399,6 +340,7 @@
     }
 }
 
+
     </style>
 </head>
 <body>
@@ -431,45 +373,6 @@
 </div>
 
 
-
-
-<div class="rectangle">
-            <?php
-            // Fetch user information from the database
-            $db = new mysqli("localhost", "root", "", "ebulletin_system");
-            if ($db->connect_error) {
-                die("Connection failed: " . $db->connect_error);
-            }
-            
-            $sql_user = "SELECT users.username, users.email, roles.RoleName 
-                        FROM users 
-                        INNER JOIN roles ON users.RoleID = roles.RoleID 
-                        WHERE users.RoleID = '1'"; // Adjust the query to fit your database schema and conditions
-            
-            $result_user = $db->query($sql_user);
-
-            if ($result_user->num_rows > 0) {
-                $userData = $result_user->fetch_assoc();
-                $username = $userData['username'];
-                $email = $userData['email'];
-                $userRole = $userData['RoleName'];
-
-                echo "<h2 class='username' style='color: maroon;'>$username</h2>";
-                echo "<p class='user-role'>$userRole</p>";
-                echo "<div class='horizontal-line'></div>"; // Add horizontal line
-                echo "<h2 style='color: maroon;'>Account details:</h2>"; // Add Account details heading with color maroon
-                echo "<div class='account-details'>"; // Open container for account details
-                echo "<p><strong>Username:</strong> $username</p>"; // Display username
-                echo "<p><strong>Email:</strong> $email</p>"; // Display email
-                echo "</div>"; // Close container for account details
-            } else {
-                echo "User not found";
-            }
-
-            $db->close();
-            ?>
-         <button class="button" onclick="redirectToAdminBulletin()">Show Announcements</button>
-</div>
 <div class="content">
       <!-- Photo container with plus icon -->
         <div class="photo-container">
@@ -494,6 +397,8 @@
                     <input type="submit" value="Upload" name="submit">
                 </form>
             </div>
+
+            
         </div>
 
             <!-- Fetch uploaded files from the bulletin_files table -->
@@ -570,10 +475,6 @@
         document.getElementById("uploadForm").style.display = "none";
     }
 
-    // Function to redirect to admin bulletin page
-    function redirectToAdminBulletin() {
-        window.location.href = "admin_bulletin.php";
-    }
 
     // Function to archive file
     function archiveFile(id) {
