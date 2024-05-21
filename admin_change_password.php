@@ -150,10 +150,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["current_password"]) &&
 $conn->close();
 ?>
 
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

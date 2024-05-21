@@ -383,10 +383,6 @@ $conn->close();
                 <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
             </form>
         </div>
-        <a href="admin_profile_settings.php">User Info</a>
-        <a href="admin_change_username.php">Change Username</a>
-        <a href="admin_change_password.php">Change Password</a>
-    </div>
 
     <a href="user_profile_settings.php">User Info</a>
     <a href="user_change_username.php">Change Username</a>
