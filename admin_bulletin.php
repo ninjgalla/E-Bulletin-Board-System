@@ -14,9 +14,7 @@ include('config.php');
 
 // Fetch username from the session
 $username = $_SESSION['username'];
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,22 +24,22 @@ $username = $_SESSION['username'];
     <title>EBBS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
     <style>
-
         html, body {
             margin: 0;
             padding: 0;
             font-family: Helvetica, Arial, sans-serif;
         }
 
-        /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
         }
+
         body {
             margin: 0;
             padding: 0;
             background-color: #f5f5f5; /* Set background color */
         }
+
         .navbar {
             background-color: #800000; /* Set navbar background color */
             color: maroon;
@@ -51,6 +49,7 @@ $username = $_SESSION['username'];
             align-items: center;
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
+
         .navbar a {
             color: white;
             text-decoration: none;
@@ -59,13 +58,16 @@ $username = $_SESSION['username'];
             transition: font-weight 0s; /* Add transition effect */
             font-weight: normal; /* Set normal font weight */
         }
+
         .navbar .logo {
             font-weight: bold; /* Added bold font weight */
             margin-left: 10px; /* Adjusted left margin */
         }
+
         .navbar a:hover {
             font-weight: bold; /* Make text bold on hover */
         }
+
         .navbar a:hover::after {
             content: '';
             position: absolute;
@@ -81,7 +83,7 @@ $username = $_SESSION['username'];
             margin-left: -10px; /* Adjusted left margin */
             font-size: 20px; /* Increased font size */
         }
-        
+
         /* For Announcements */
         .file-container {
             overflow: hidden;
@@ -89,7 +91,6 @@ $username = $_SESSION['username'];
             right: 100px; /* Adjust the distance from the right side */
             top: 55%; /* Position from the vertical center */
             transform: translateY(-50%); /* Adjust to vertically center */
-            
         }
 
         .file-inner {
@@ -97,8 +98,7 @@ $username = $_SESSION['username'];
             flex-direction: column;
         }
 
-       /* Updated CSS for file-item */
-                /* CSS for file-item */
+        /* Updated CSS for file-item */
         .file-item {
             display: flex;
             align-items: center;
@@ -123,94 +123,102 @@ $username = $_SESSION['username'];
         }
 
         .file-info {
-            float: left;
-            width: 600px; /* Adjust width as needed */
-            padding-right: 20px; /* Add some spacing */
-            text-align: center; /* Center-align text */
-            margin-top: 40px;
-            position: fixed; /* Fix position */
-            left: 50px; /* Adjust left spacing */
-        }
+    float: left;
+    width: 600px; /* Adjust width as needed */
+    padding-right: 20px; /* Add some spacing */
+    text-align: center; /* Center-align text */
+    margin-top: 40px;
+    position: fixed; /* Fix position */
+    left: 50px; /* Adjust left spacing */
+}
 
-        .file-info h2 {
-            text-transform: uppercase; /* Convert text to uppercase */
-            color: maroon;
-            text-align: center;
-            
-        }
+.file-info h2 {
+    text-transform: uppercase; /* Convert text to uppercase */
+    color: maroon;
+    text-align: center;
+   
+}
 
-
-         .file-description {
+        .file-description {
             margin-bottom: 20px; /* Add some spacing between items */
         }
 
-        .file-container {
-            overflow: hidden;
-            /* Remaining CSS styles */
-        }
-
         .file-info p {
-            font-size: 19px;
-            text-align: justify;
-            white-space: pre-wrap; /* Preserve spaces and line breaks */
+    font-size: 19px;
+    text-align: justify;
+    white-space: pre-wrap; /* Preserve spaces and line breaks */
+ 
+}
+
+        .file-info.centered {
+            text-align: center; /* Center-align text */
         }
 
         .hamburger {
-    display: none; /* Hidden by default */
-    font-size: 24px; /* Adjust font size for hamburger icon */
-    color: white; /* Set font color to white */
-    cursor: pointer;
-}
+            display: none; /* Hidden by default */
+            font-size: 24px; /* Adjust font size for hamburger icon */
+            color: white; /* Set font color to white */
+            cursor: pointer;
+        }
 
-/* Side navbar styles */
-.side-navbar {
-    position: fixed;
-    top: 0;
-    right: -250px; /* Initially hide the side navbar on the right */
-    width: 250px;
-    height: 100%;
-    background-color: #800000;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-    padding-top: 60px;
-    z-index: 1000;
-    transition: right 0.3s ease;
-    font-size: 16px;
-    color: white;
-}
+        .side-navbar {
+            position: fixed;
+            top: 0;
+            right: -250px; /* Initially hide the side navbar on the right */
+            width: 250px;
+            height: 100%;
+            background-color: #800000;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 60px;
+            z-index: 1000;
+            transition: right 0.3s ease;
+            font-size: 16px;
+            color: white;
+        }
 
-/* Close button */
-.close-btn {
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            color: white;
+        }
+
+        .side-navbar a {
+            color: white;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .side-navbar a:hover {
+            background-color: #575757; /* Change background on hover */
+        }
+
+        @media (max-width: 768px) {
+            .navbar a {
+                display: none; /* Hide navbar links */
+            }
+
+            .navbar .logo {
+                display: block; /* Ensure the logo is always displayed */
+            }
+
+            .hamburger {
+                display: block; /* Show hamburger menu */
+            }
+        }
+
+        .center-left {
     position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    color: white;
-}
-
-.side-navbar a {
-    color: white;
-    display: block;
-    padding: 10px 20px;
-    text-decoration: none;
-}
-
-.side-navbar a:hover {
-    background-color: #575757; /* Change background on hover */
-}
-
-/* Ensure responsiveness */
-@media (max-width: 768px) {
-    .navbar a {
-        display: none; /* Hide navbar links */
-    }
-    .navbar .logo {
-        display: block; /* Ensure the logo is always displayed */
-    }
-    .hamburger {
-        display: block; /* Show hamburger menu */
-    }
+    top: 40%;
+    left: 30px;
+    transform: translateY(-50%);
+    text-align: left;
+    padding: 10px;
+    border-radius: 5px;
 }
 
     </style>
@@ -232,7 +240,6 @@ $username = $_SESSION['username'];
     </div>
 </div>
 
-<!-- Side navbar -->
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
@@ -244,7 +251,7 @@ $username = $_SESSION['username'];
     <a href="logout.php">Logout</a>
 </div>
 
-    <div class="file-info">
+<div class="file-info" id="fileInfo">
     <!-- Placeholder for title and description -->
     <h2 id="fileTitle"></h2>
     <p id="fileDescription"></p>
@@ -277,6 +284,7 @@ $username = $_SESSION['username'];
         <?php endwhile; ?>
     </div>
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const items = document.querySelectorAll('.file-item');
@@ -314,6 +322,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Update title and description
         const titleElement = document.getElementById('fileTitle');
         const descriptionElement = document.getElementById('fileDescription');
+        const fileInfoElement = document.getElementById('fileInfo');
 
         const currentFile = items[currentIndex];
         const title = currentFile.dataset.title;
@@ -321,49 +330,50 @@ document.addEventListener("DOMContentLoaded", function() {
 
         titleElement.textContent = title;
         descriptionElement.textContent = description;
+
+        // Check if the title and description are short
+        if (title.length <= 20 && description.length <= 100) {
+            fileInfoElement.classList.add('center-left');
+        } else {
+            fileInfoElement.classList.remove('center-left');
+        }
     }
 
     showNextItem();
 });
-
 </script>
 
 
+<script>
+function redirectToUploadPage() {
+    window.location.href = "upload.html";
+}
 
-    <script>
-
-        function redirectToUploadPage() {
-            window.location.href = "upload.html";
-        }
-
-        function redirectToAdminBulletin() {
+function redirectToAdminBulletin() {
     window.location.href = "admin_bulletin.php";
 }
-    </script>
+</script>
 
 <script>
-    // Function to toggle side navbar
-    function toggleSideNavbar() {
-        var sideNavbar = document.getElementById('sideNavbar');
-        if (sideNavbar.style.right === '0px') {
-            sideNavbar.style.right = '-250px'; // Collapse side navbar
-        } else {
-            sideNavbar.style.right = '0px'; // Expand side navbar
-        }
+function toggleSideNavbar() {
+    var sideNavbar = document.getElementById('sideNavbar');
+    if (sideNavbar.style.right === '0px') {
+        sideNavbar.style.right = '-250px'; // Collapse side navbar
+    } else {
+        sideNavbar.style.right = '0px'; // Expand side navbar
     }
+}
 
-    // Function to automatically close side navbar on larger screens
-    function closeSideNavbarOnLargeScreen() {
-        var sideNavbar = document.getElementById('sideNavbar');
-        var screenWidth = window.innerWidth;
-        if (screenWidth > 768) { // Adjust the threshold as needed
-            sideNavbar.style.right = '-250px'; // Collapse side navbar if screen width is greater than 768px
-        }
+function closeSideNavbarOnLargeScreen() {
+    var sideNavbar = document.getElementById('sideNavbar');
+    var screenWidth = window.innerWidth;
+    if (screenWidth > 768) { // Adjust the threshold as needed
+        sideNavbar.style.right = '-250px'; // Collapse side navbar if screen width is greater than 768px
     }
+}
 
-    // Call the function when the window loads and when it is resized
-    window.onload = closeSideNavbarOnLargeScreen;
-    window.onresize = closeSideNavbarOnLargeScreen;
+window.onload = closeSideNavbarOnLargeScreen;
+window.onresize = closeSideNavbarOnLargeScreen;
 </script>
 </body>
 </html>

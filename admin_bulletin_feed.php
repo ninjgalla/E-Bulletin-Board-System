@@ -346,6 +346,7 @@ $username = $_SESSION['username'];
     <a href="admin_profile_settings.php">Profile</a>
     <a href="logout.php">Logout</a>
 </div>
+
 <?php
 include "config.php"; // Include the database connection file
 
@@ -396,7 +397,7 @@ if (mysqli_num_rows($result) > 0) {
 
         // Add a comment container with text field and button (hidden initially)
         echo '<div class="comment-container" style="display: none;">';
-        echo '<form method="post" action="admin_submit_comment.php">'; // Set the action to submit_comment.php
+        echo '<form method="post" action="admin_submit_comment.php" onsubmit="saveScrollPosition()">'; // Set the action to submit_comment.php and call saveScrollPosition() function
         echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
         echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
         echo '<button type="submit" class="post-button">Post</button>';
@@ -435,34 +436,82 @@ mysqli_close($conn);
 
 
 
+
 <!-- JavaScript code... -->
 <script>
-     document.querySelectorAll('.comment-button').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var postId = this.getAttribute('data-post-id');
-            var commentContainer = this.nextElementSibling;
+    // Function to save the current scroll position before submitting a comment
+    function saveScrollPosition() {
+        // Save the current scroll position in a session variable
+        sessionStorage.setItem('scrollPosition', window.scrollY || window.pageYOffset);
+    }
 
-            // Capture the current scroll position
-            var scrollPos = window.scrollY || window.pageYOffset;
+    // Function to restore the scroll position after the page reloads
+    function restoreScrollPosition() {
+        var scrollPos = sessionStorage.getItem('scrollPosition');
+        if (scrollPos !== null) {
+            window.scrollTo(0, parseInt(scrollPos)); // Parse the scroll position as an integer
+            sessionStorage.removeItem('scrollPosition'); // Remove the saved scroll position from session storage
+        }
+    }
 
-            // Toggle the visibility of the comment container
-            if (commentContainer.style.display === 'none') {
-                // Show the comment container
-                commentContainer.style.display = 'block';
-            } else {
-                // Hide the comment container
-                commentContainer.style.display = 'none';
-            }
+    // Call the function when the window loads
+    window.onload = function() {
+        restoreScrollPosition();
 
-            // Restore the scroll position after a short delay
-            setTimeout(function() {
-                window.scrollTo(0, scrollPos);
-            }, 100);
+        // Add event listeners to comment buttons
+        document.querySelectorAll('.comment-button').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var postId = this.getAttribute('data-post-id');
+                var commentContainer = this.nextElementSibling;
+
+                // Capture the current scroll position
+                var scrollPos = window.scrollY || window.pageYOffset;
+
+                // Toggle the visibility of the comment container
+                if (commentContainer.style.display === 'none') {
+                    // Show the comment container
+                    commentContainer.style.display = 'block';
+                } else {
+                    // Hide the comment container
+                    commentContainer.style.display = 'none';
+                }
+
+                // Restore the scroll position after a short delay
+                setTimeout(function() {
+                    window.scrollTo(0, scrollPos);
+                }, 100);
+            });
         });
-    });
-</script>
 
-<script>
+        // AJAX submission for comment form
+        document.querySelectorAll('.comment-form').forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent form submission
+                var formData = new FormData(this); // Create form data object
+                var postId = formData.get('post_id'); // Get post ID from form data
+                var commentContainer = this.parentElement.nextElementSibling; // Get the comment container
+
+                // Send AJAX request to submit the comment
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'admin_submit_comment.php', true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        // On success, reload the comment section without page reload
+                        commentContainer.innerHTML = xhr.responseText;
+                        commentContainer.style.display = 'block'; // Keep the comment section open
+                    } else {
+                        // On failure, handle the error
+                        console.error('Error submitting comment: ' + xhr.status);
+                    }
+                };
+                xhr.onerror = function() {
+                    console.error('Error submitting comment: Network error');
+                };
+                xhr.send(formData); // Send form data
+            });
+        });
+    };
+
     // Function to toggle side navbar
     function toggleSideNavbar() {
         var sideNavbar = document.getElementById('sideNavbar');
@@ -482,12 +531,9 @@ mysqli_close($conn);
         }
     }
 
-    // Call the function when the window loads and when it is resized
-    window.onload = closeSideNavbarOnLargeScreen;
+    // Call the function when the window is resized
     window.onresize = closeSideNavbarOnLargeScreen;
-</script>
 
-<script>
     // Function to toggle visibility of full and truncated descriptions
     document.querySelectorAll('.see-more-link').forEach(function(link) {
         link.addEventListener('click', function(event) {
