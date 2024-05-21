@@ -370,7 +370,7 @@ $conn->close();
     </div>
     <div class="hamburger" onclick="toggleSideNavbar()">
         <i class="fas fa-bars"></i>
-    </div>
+    </div> 
 </div>
 
 <div class="sidebar">
