@@ -221,6 +221,48 @@ $username = $_SESSION['username'];
     border-radius: 5px;
 }
 
+.dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+    background-color: #800000;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #800000;
+        }
+    </style>
+
     </style>
 </head>
 <body>
@@ -229,8 +271,16 @@ $username = $_SESSION['username'];
         <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
+        <!-- Dropdown menu for Bulletin Feed -->
+        <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
+            <button class="dropbtn">Bulletin</button>
+            <div class="dropdown-content" id="bulletinDropdown">
+                <a href="admin_bulletin.php">Bulletin Board</a>
+                <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+            </div>
+        </div>
+        <!-- End of Dropdown menu -->
         <a href="admin_upload.php">Upload</a>
-        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
         <a href="admin_archive.php">Archive</a>
         <a href="admin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
