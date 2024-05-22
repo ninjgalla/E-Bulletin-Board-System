@@ -104,77 +104,77 @@ html, body {
         }
 
         .hamburger {
-    display: none; /* Hidden by default */
-    font-size: 24px; /* Adjust font size for hamburger icon */
-    color: white; /* Set font color to white */
-    cursor: pointer;
-}
-
-/* Side navbar styles */
-.side-navbar {
-    position: fixed;
-    top: 0;
-    right: -250px; /* Initially hide the side navbar on the right */
-    width: 250px;
-    height: 100%;
-    background-color: #800000;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-    padding-top: 60px;
-    z-index: 1000;
-    transition: right 0.3s ease;
-    font-size: 16px;
-    color: white;
-}
-
-/* Close button */
-.close-btn {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    color: white;
-}
-
-.side-navbar a {
-    color: white;
-    display: block;
-    padding: 10px 20px;
-    text-decoration: none;
-}
-
-.side-navbar a:hover {
-    background-color: #575757; /* Change background on hover */
-}
-
-/* Ensure responsiveness */
-@media (max-width: 768px) {
-    .navbar a {
-        display: none; /* Hide navbar links */
-    }
-    .navbar .logo {
-        display: block; /* Ensure the logo is always displayed */
-    }
-    .hamburger {
-        display: block; /* Show hamburger menu */
-    }
-}
-.dropdown {
-            position: relative;
-            display: inline-block;
+            display: none; /* Hidden by default */
+            font-size: 24px; /* Adjust font size for hamburger icon */
+            color: white; /* Set font color to white */
+            cursor: pointer;
         }
 
-        .dropbtn {
-    background-color: #800000;
-    color: white;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}
+        /* Side navbar styles */
+        .side-navbar {
+            position: fixed;
+            top: 0;
+            right: -250px; /* Initially hide the side navbar on the right */
+            width: 250px;
+            height: 100%;
+            background-color: #800000;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 60px;
+            z-index: 1000;
+            transition: right 0.3s ease;
+            font-size: 16px;
+            color: white;
+        }
+
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            color: white;
+        }
+
+        .side-navbar a {
+            color: white;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .side-navbar a:hover {
+            background-color: #575757; /* Change background on hover */
+        }
+
+        /* Ensure responsiveness */
+        @media (max-width: 768px) {
+            .navbar a {
+                display: none; /* Hide navbar links */
+            }
+            .navbar .logo {
+                display: block; /* Ensure the logo is always displayed */
+            }
+            .hamburger {
+                display: block; /* Show hamburger menu */
+            }
+        }
+        .dropdown {
+                    position: relative;
+                    display: inline-block;
+                }
+
+                .dropbtn {
+            background-color: #800000;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
 
         .dropdown-content {
-            display: none;
+            display: none; /* Initially hide the dropdown content */
             position: absolute;
             background-color: #f9f9f9;
             min-width: 160px;
@@ -199,6 +199,24 @@ html, body {
 
         .dropdown:hover .dropbtn {
             background-color: #800000;
+        }
+
+        /* Show the dropdown content on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Hide the dropdown content when screen size is small */
+        @media only screen and (max-width: 768px) {
+            .dropdown-content {
+                display: none;
+            }
+        }
+         /* Hide the dropdown content when screen size is small */
+         @media only screen and (max-width: 768px) {
+            .dropbtn {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -232,7 +250,8 @@ html, body {
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
     </div>
-    <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="admin_bulletin.php">Bulletin Board</a>
         <a href="admin_upload.php">Upload</a>
         <a href="admin_archive.php">Archive</a>
         <a href="admin_profile_settings.php">Profile</a>

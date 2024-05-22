@@ -460,6 +460,19 @@ $conn->close();
         .dropdown:hover .dropbtn {
             background-color: #800000;
         }
+
+         /* Hide the dropdown content when screen size is small */
+         @media only screen and (max-width: 768px) {
+            .dropdown-content {
+                display: none;
+            }
+        }
+         /* Hide the dropdown content when screen size is small */
+         @media only screen and (max-width: 768px) {
+            .dropbtn {
+                display: none;
+            }
+        }
     </style>
 
     </style>
@@ -487,6 +500,19 @@ $conn->close();
     <div class="hamburger" onclick="toggleSideNavbar()">
         <i class="fas fa-bars"></i>
     </div>
+</div>
+
+<!-- Side navbar -->
+<div class="side-navbar" id="sideNavbar">
+    <div class="close-btn" onclick="toggleSideNavbar()">
+        <i class="fas fa-times"></i>
+    </div>
+        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="admin_bulletin.php">Bulletin Board</a>
+        <a href="admin_upload.php">Upload</a>
+        <a href="admin_archive.php">Archive</a>
+        <a href="admin_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
 </div>
 
 <div class="sidebar">
