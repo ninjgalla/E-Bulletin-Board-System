@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-
-html, body {
+        html, body {
             margin: 0;
             padding: 0;
             font-family: Helvetica, Arial, sans-serif;
         }
 
-        /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
         }
+
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5; /* Set background color */
+            background-color: #f5f5f5;
         }
+
         .navbar {
             background-color: #800000; /* Set navbar background color */
             color: maroon;
@@ -31,7 +29,6 @@ html, body {
             align-items: center;
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
-
         .navbar a {
             color: white;
             text-decoration: none;
@@ -39,18 +36,14 @@ html, body {
             position: relative;
             transition: font-weight 0s; /* Add transition effect */
             font-weight: normal; /* Set normal font weight */
-            text-shadow: black;
         }
-
         .navbar .logo {
             font-weight: bold; /* Added bold font weight */
             margin-left: 10px; /* Adjusted left margin */
         }
-
         .navbar a:hover {
             font-weight: bold; /* Make text bold on hover */
         }
-
         .navbar a:hover::after {
             content: '';
             position: absolute;
@@ -58,7 +51,7 @@ html, body {
             bottom: -3px;
             width: 100%;
             height: 2px;
-            background-color: white;
+            background-color: maroon;
         }
 
         .navbar .logo {
@@ -67,173 +60,254 @@ html, body {
             font-size: 20px; /* Increased font size */
         }
 
-        .file-item img,
-        .file-item video {
-            width: 300px; /* Set width to 100% */
-            height: auto; /* Let the height adjust proportionally */
-            border-radius: 8px; /* Add border radius */
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
         }
 
-        .file-info {
-            float: left;
-            width: 300px; /* Adjust width as needed */
-            padding-right: 20px; /* Add some spacing */
-            text-align: center; /* Center-align text */
-            position: fixed; /* Fix position */
-           
+        .side-navbar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #800000;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 60px;
+            z-index: 1000;
+            transition: right 0.3s ease;
+            font-size: 16px;
+            color: white;
         }
 
-        .file-info h4 {
-            text-transform: uppercase; /* Convert text to uppercase */
-            color: maroon;
-            text-align: center;
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
         }
 
-        .file-container {
-            margin-top: 50px;
+        .side-navbar a {
+            color: white;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .side-navbar a:hover {
+            background-color: #575757;
+        }
+
+        @media (max-width: 768px) {
+            .navbar a {
+                display: none;
+            }
+            .navbar .logo {
+                display: block;
+            }
+            .hamburger {
+                display: block;
+            }
+        }
+
+        .archive-container {
+            width: calc(100% - 80px);
+            max-width: 1200px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            padding: 20px;
+            overflow: auto;
             display: flex;
-            flex-wrap: wrap; /* Allow items to wrap to the next line if there isn't enough space */
-            justify-content: center; /* Center align items horizontally */
+            justify-content: center;
+            text-align: center;
+            position: relative;
         }
 
-        .file-item {
-            margin: 10px; /* Add margin between items */
+        .sorting-buttons {
+            position: absolute;
+            top: 20px; /* Adjust the top position as needed */
+            left: 20px; /* Adjust the left position as needed */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            z-index: 999; /* Ensure the buttons are above other content */
         }
-        
-         /* Add styles for the menu icon container */
-.menu-icon-container {
-    position: relative;
-    display: inline-block;
-}
 
-/* Add styles for the menu icon */
-.menu-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-    margin: 15px;
-}
+        .sorting-buttons button {
+            background-color: #800000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+            height: 30px;
+            line-height: 20px;
+        }
 
-.menu-icon::before,
-.menu-icon::after,
-.menu-icon div {
-    content: "";
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background-color: maroon;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
+        .sorting-buttons button:hover {
+            background-color: #575757;
+        }
 
-/* Adjust spacing between dots */
-.menu-icon::before {
-    top: -7px;
-    margin-right: 5px; /* Decreased spacing between dots */
-}
+        .photo-container,
+        .video-container {
+            position: relative;
+                    width: 150px; /* Set the width of the photo container */
+                    height: 150px; /* Set the height of the photo container */
+                    margin: 10px; /* Add margin around each photo container */
+                    overflow: hidden; /* Hide any overflow */
+                    border-radius: 10px; /* Add rounded corners */
+                    display: inline-block; /* Display photos in a row */
+                    margin-top: 50px;
+        }
 
-.menu-icon::after {
-    bottom: -7px;
-    margin-right: 5px; /* Decreased spacing between dots */
-}
+        .file-photo,
+        .file-video {
+            width: 100%; /* Make the photo fill the container */
+                    height: 100%; /* Make the photo fill the container */
+                    object-fit: cover; /* Cover the entire container */
+        }
 
-.menu-icon div {
-    top: 50%;
-    transform: translateY(-50%);
-}
+        .files-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-  /* Add styles for popup menu */
-   .popup-menu {
+        .file-options {
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    z-index: 1;
+                    background-color: rgba(255, 255, 255, 0.8);
+                    border-radius: 5px;
+                    display: none;
+                }
+
+                .file-menu {
+                    display: none;
+                    position: absolute;
+                    top: 30px;
+                    right: 0;
+                    background-color: #fff;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    z-index: 2;
+                }
+
+                .file-menu.show {
+                    display: block;
+                }
+
+                .file-menu button {
+                    display: block;
+                    width: 100%;
+                    padding: 5px 10px;
+                    text-align: left;
+                    border: none;
+                    background: none;
+                    cursor: pointer;
+                }
+
+                .file-menu button:hover {
+                    background-color: #f2f2f2;
+                }
+
+        .photo-container:hover .file-options {
+            display: block;
+        }
+        .file-container {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 20px; /* Adjust the top position as needed */
+            left: 20px; /* Adjust the left position as needed */
+            z-index: 1000; /* Ensure the dropdown is above other content */
+        }
+
+        /* Dropdown button */
+        .dropbtn {
+            background-color: #800000;
+            color: white;
+            padding: 10px 15px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            z-index: 1;
-            top: 0; /* Position relative to the container */
-            right: 30px; /* Adjust the distance from the right */
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
         }
 
-        .popup-menu ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .popup-menu ul li {
-            padding: 5px 0;
-        }
-
-        .popup-menu ul li a {
-            color: #333;
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
             text-decoration: none;
             display: block;
         }
 
-        .popup-menu ul li a:hover {
-            background-color: #f2f2f2;
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
         }
 
-        .hamburger {
-    display: none; /* Hidden by default */
-    font-size: 24px; /* Adjust font size for hamburger icon */
-    color: white; /* Set font color to white */
-    cursor: pointer;
+        /* Show the dropdown menu on hover */
+        .dropdown-menu:hover .dropdown-content {
+            display: block;
+        }
+
+        .file-item p {
+                color: maroon; /* Set font color to maroon */
+                text-transform: uppercase; /* Capitalize all letters */
+                font-weight: bold;
+            }
+
+            .action-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-/* Side navbar styles */
-.side-navbar {
-    position: fixed;
-    top: 0;
-    right: -250px; /* Initially hide the side navbar on the right */
-    width: 250px;
-    height: 100%;
+.action-buttons button {
     background-color: #800000;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-    padding-top: 60px;
-    z-index: 1000;
-    transition: right 0.3s ease;
-    font-size: 16px;
     color: white;
-}
-
-/* Close button */
-.close-btn {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 24px;
-    color: white;
+    border: none;
+    padding: 10px 10px; /* Reduced padding for smaller size */
+    margin: 10px 5px; /* Added space between buttons and ensured enough top and bottom margin */
     cursor: pointer;
-    color: white;
+    border-radius: 5px;
+    font-size: 12px; /* Reduced font size */
+    width: 140px; /* Set a fixed width to ensure same size */
+    height: 40px; /* Increased height for better readability */
 }
 
-.side-navbar a {
-    color: white;
-    display: block;
-    padding: 10px 20px;
-    text-decoration: none;
+.action-buttons button:hover {
+    background-color: #575757;
 }
 
-.side-navbar a:hover {
-    background-color: #575757; /* Change background on hover */
-}
 
-/* Ensure responsiveness */
-@media (max-width: 768px) {
-    .navbar a {
-        display: none; /* Hide navbar links */
-    }
-    .navbar .logo {
-        display: block; /* Ensure the logo is always displayed */
-    }
-    .hamburger {
-        display: block; /* Show hamburger menu */
-    }
-}
-    </style>
+
+
+
+</style>
 </head>
 <body>
 <div class="navbar">
@@ -252,7 +326,6 @@ html, body {
     </div>
 </div>
 
-<!-- Side navbar -->
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
@@ -264,121 +337,136 @@ html, body {
     <a href="logout.php">Logout</a>
 </div>
 
- 
-    <div class="file-container">
-    <?php
-    // Include database connection
-    include('config.php');
+<div class="file-container">
+    <div class="archive-container">
+        <div class="dropdown-menu">
+            <button class="dropbtn">Sort</button>
+            <div class="dropdown-content">
+                <a href="#" onclick="sortFiles('date')">Sort by Date</a>
+                <a href="#" onclick="sortFiles('alphabetical')">Sort Alphabetically</a>
+            </div>
+        </div>
 
-    // Fetch archived files from the database
-    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY upload_time DESC";
-    $result = $conn->query($sql);
 
-    // Display archived files
-    while ($row = $result->fetch_assoc()) {
-        // Display each archived file
-        echo '<div class="file-item">';
-        echo '<div class="menu-icon-container">'; // Start menu icon container
-        if ($row["filetype"] == "photo") {
-            echo '<img src="uploads/' . $row["filename"] . '" alt="' . $row["title"] . '">';
-        } elseif ($row["filetype"] == "video") {
-            echo '<video controls>';
-            echo '<source src="uploads/' . $row["filename"] . '" type="video/mp4">';
-            echo 'Your browser does not support the video tag.';
-            echo '</video>';
-        }
-        // Add the menu icon
-        echo '<div class="menu-icon" onclick="toggleMenu(this)"><div></div><div></div><div></div></div>';
-        // Add the popup menu
-        echo '<div class="popup-menu">';
-        echo '<ul>';
-        echo '<li><a href="#" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</a></li>';
-        echo '<li><a href="#" onclick="restore(' . $row["id"] . ')">Restore</a></li>';
+        <form id="fileForm">
+            <div class="files-wrapper">
+                <?php
+                include('config.php');
 
-        echo '</ul>';
-        echo '</div>'; // Close popup menu
-        echo '</div>'; // End menu icon container
-        echo '<div class="file-info">';
-        echo '<h4>' . $row["title"] . '</h4>';
-        echo '</div>'; // Close file-info
-        echo '</div>'; // Close file-item
-    }
+                $sortOrder = isset($_GET['sort']) ? $_GET['sort'] : 'date';
 
-    // Close the database connection
-    $conn->close();
-    ?>
+                if ($sortOrder == 'alphabetical') {
+                    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY title ASC";
+                } else {
+                    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY upload_time DESC";
+                }
+
+                $result = $conn->query($sql);
+
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="file-item">';
+                    echo '<input type="checkbox" name="fileIds[]" value="' . $row["id"] . '">'; // Checkbox
+                    if ($row["filetype"] == "photo") {
+                        echo '<div class="photo-container">';
+                        echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+                        echo '<h4>' . $row["title"] . '</h4>';
+                        // Add menu icon and options
+                        echo '<div class="file-options">';
+                        echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
+                        echo '<div class="file-menu">';
+                        echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
+                        echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>'; // Close photo-container
+                        // Add title below the file
+                        echo '<p>' . $row["title"] . '</p>';
+                    } elseif ($row["filetype"] == "video") {
+                        // Handle video files similarly
+                    }
+                    echo '</div>'; // Close file-item
+                }
+                ?>
+            </div>
+        </form>
+
+        <div class="action-buttons" id="actionButtons" style="display: none;">
+            <button onclick="deleteSelected()">Permanently Delete Selected</button>
+            <button onclick="restoreSelected()">Restore Selected</button>
+        </div>
+
     </div>
+</div>
 
 
 
-    <script>
-
-function redirectToUploadPage() {
-    window.location.href = "admin_upload.php";
-}
-
-function redirectToAdminBulletin() {
-    window.location.href = "admin_bulletin.php";
-}
-
-function toggleMenu(menu) {
-    var popupMenu = menu.parentElement.querySelector('.popup-menu');
-    popupMenu.style.display = popupMenu.style.display === 'block' ? 'none' : 'block';
-}
-
-// Function to permanently delete file
-function permanentlyDelete(id) {
-    if (confirm("Are you sure you want to permanently delete this file?")) {
-        // Send an AJAX request to permanently delete the file
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    // Reload the page after successful deletion
-                    alert("File permanently deleted.");
-                    location.reload();
-                } else {
-                    // Handle errors
-                    alert("Error deleting file: " + xhr.statusText);
-                }
-            }
-        };
-        xhr.open("GET", "admin_permanently_delete.php?id=" + id, true);
-        xhr.send();
-    }
-}
-
-function restore(id) {
-    if (confirm("Are you sure you want to restore this file?")) {
-        // Send an AJAX request to restore the file
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    // Reload the page after successful restoration
-                    alert(xhr.responseText);
-                    location.reload();
-                } else {
-                    // Handle errors
-                    alert("Error restoring file: " + xhr.statusText);
-                }
-            }
-        };
-        xhr.open("GET", "admin_restore_file.php?id=" + id, true);
-        xhr.send();
-    }
-}
-</script>
-
-
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <script>
+    // Function to toggle file menu options
+    function toggleFileMenu(event) {
+        var fileOptions = event.target.closest('.file-options');
+        var fileMenu = fileOptions.querySelector('.file-menu');
+        if (fileMenu.style.display === 'block') {
+            fileMenu.style.display = 'none';
+        } else {
+            var allFileMenus = document.querySelectorAll('.file-menu');
+            allFileMenus.forEach(function(menu) {
+                menu.style.display = 'none';
+            });
+            fileMenu.style.display = 'block';
+        }
+    }
+
+    // Function to permanently delete file
+    function permanentlyDelete(id) {
+        if (confirm("Are you sure you want to permanently delete this file?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        alert("File permanently deleted.");
+                        location.reload();
+                    } else {
+                        alert("Error deleting file: " + xhr.statusText);
+                    }
+                }
+            };
+            xhr.open("GET", "admin_permanently_delete.php?id=" + id, true);
+            xhr.send();
+        }
+    }
+
+    // Function to restore file
+    function restore(id) {
+        if (confirm("Are you sure you want to restore this file?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        alert(xhr.responseText);
+                        location.reload();
+                    } else {
+                        alert("Error restoring file: " + xhr.statusText);
+                    }
+                }
+            };
+            xhr.open("GET", "admin_restore_file.php?id=" + id, true);
+            xhr.send();
+        }
+    }
+
+    // Function to sort files
+    function sortFiles(order) {
+        window.location.href = "admin_archive.php?sort=" + order;
+    }
+
     // Function to toggle side navbar
     function toggleSideNavbar() {
         var sideNavbar = document.getElementById('sideNavbar');
         if (sideNavbar.style.right === '0px') {
-            sideNavbar.style.right = '-250px'; // Collapse side navbar
+            sideNavbar.style.right = '-250px'; 
         } else {
-            sideNavbar.style.right = '0px'; // Expand side navbar
+            sideNavbar.style.right = '0px'; 
         }
     }
 
@@ -386,17 +474,90 @@ function restore(id) {
     function closeSideNavbarOnLargeScreen() {
         var sideNavbar = document.getElementById('sideNavbar');
         var screenWidth = window.innerWidth;
-        if (screenWidth > 768) { // Adjust the threshold as needed
-            sideNavbar.style.right = '-250px'; // Collapse side navbar if screen width is greater than 768px
+        if (screenWidth > 768) { 
+            sideNavbar.style.right = '-250px'; 
         }
     }
 
-    // Call the function when the window loads and when it is resized
-    window.onload = closeSideNavbarOnLargeScreen;
-    window.onresize = closeSideNavbarOnLargeScreen;
+    // Function to delete selected files
+    function deleteSelected() {
+        var form = document.getElementById('fileForm');
+        var formData = new FormData(form);
+        formData.append('action', 'delete');
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    alert("Selected files permanently deleted.");
+                    location.reload();
+                } else {
+                    alert("Error deleting files: " + xhr.statusText);
+                }
+            }
+        };
+        xhr.open("POST", "admin_bulk_delete.php", true);
+        xhr.send(formData);
+    }
+
+    // Function to restore selected files
+    function restoreSelected() {
+        var form = document.getElementById('fileForm');
+        var formData = new FormData(form);
+        formData.append('action', 'restore');
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    alert("Selected files restored.");
+                    location.reload();
+                } else {
+                    alert("Error restoring files: " + xhr.statusText);
+                }
+            }
+        };
+        xhr.open("POST", "admin_bulk_restore.php", true);
+        xhr.send(formData);
+    }
+
+    // Function to toggle all checkboxes
+    function toggleAllCheckboxes(checkbox) {
+        var checkboxes = document.querySelectorAll('input[name="fileIds[]"]');
+        checkboxes.forEach(function(cb) {
+            cb.checked = checkbox.checked;
+        });
+        toggleActionButtons();
+    }
+
+    // Function to toggle action buttons based on checkbox status
+    function toggleActionButtons() {
+        var checkboxes = document.querySelectorAll('input[name="fileIds[]"]');
+        var actionButtons = document.getElementById('actionButtons');
+        var checked = false;
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                checked = true;
+            }
+        });
+        if (checked) {
+            actionButtons.style.display = 'block';
+        } else {
+            actionButtons.style.display = 'none';
+        }
+    }
+
+    // Attach event listeners when the window is fully loaded
+    window.onload = function() {
+        closeSideNavbarOnLargeScreen();
+
+        document.addEventListener('change', function(event) {
+            if (event.target.matches('input[name="fileIds[]"]')) {
+                toggleActionButtons();
+            }
+        });
+    };
 </script>
-
-
 
 </body>
 </html>
