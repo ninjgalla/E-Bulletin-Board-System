@@ -29,16 +29,21 @@ $username = $_SESSION['username'];
             padding: 0;
             font-family: Helvetica, Arial, sans-serif;
         }
+        
 
         * {
             font-family: inherit;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5; /* Set background color */
-        }
+    margin: 0;
+    padding: 0;
+    background-image: url('background.svg'); /* Set background image */
+    background-color: #f5f5f5; /* Fallback background color */
+    background-size: cover; /* Cover the entire background */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+}
+
 
         .navbar {
             background-color: #800000; /* Set navbar background color */
@@ -99,13 +104,32 @@ $username = $_SESSION['username'];
         }
 
         /* Updated CSS for file-item */
-        .file-item {
-            display: flex;
-            align-items: center;
-            padding: 10px; /* Adjust spacing */
-            margin: 10px 0; /* Adjust margin to add space between items */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+
+        @keyframes panInFromRight {
+        0% {
+            transform: translateX(100%);
         }
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes panOutToRight {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+        .file-item {
+        display: flex;
+        align-items: center;
+        padding: 10px; /* Adjust spacing */
+        margin: 10px 0; /* Adjust margin to add space between items */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+        animation-fill-mode: forwards; /* Retain the last keyframe state */
+    }
 
         /* CSS for file-media */
         .file-media {
@@ -129,26 +153,29 @@ $username = $_SESSION['username'];
     text-align: center; /* Center-align text */
     margin-top: 40px;
     position: fixed; /* Fix position */
-    left: 50px; /* Adjust left spacing */
+    left: 100px; /* Adjust left spacing */
+    background-color: rgba(255, 255, 255, 0.8); /* Set opacity to 50% */
+    border-radius: 10px; /* Add border radius for rounded corners */
+    padding: 20px; /* Add padding for content */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
 .file-info h2 {
     text-transform: uppercase; /* Convert text to uppercase */
     color: maroon;
     text-align: center;
-   
 }
 
-        .file-description {
-            margin-bottom: 20px; /* Add some spacing between items */
-        }
+.file-description {
+    margin-bottom: 20px; /* Add some spacing between items */
+}
 
-        .file-info p {
+.file-info p {
     font-size: 19px;
     text-align: justify;
     white-space: pre-wrap; /* Preserve spaces and line breaks */
- 
 }
+
 
         .file-info.centered {
             text-align: center; /* Center-align text */
@@ -213,8 +240,8 @@ $username = $_SESSION['username'];
 
         .center-left {
     position: absolute;
-    top: 40%;
-    left: 30px;
+    top: 45%;
+    left: 100px;
     transform: translateY(-50%);
     text-align: left;
     padding: 10px;
@@ -274,11 +301,14 @@ $username = $_SESSION['username'];
                 display: none;
             }
         }
-    </style>
+        
 
+
+ 
     </style>
 </head>
 <body>
+
 <div class="navbar">
     <div>
         <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
@@ -362,9 +392,11 @@ document.addEventListener("DOMContentLoaded", function() {
             item.style.display = 'none';
         });
 
-        items[currentIndex].style.display = 'block';
+        const currentItem = items[currentIndex];
+        currentItem.style.display = 'block';
+        currentItem.style.animation = 'panInFromRight 1s ease-in-out forwards';
 
-        const currentVideo = items[currentIndex].querySelector('video');
+        const currentVideo = currentItem.querySelector('video');
 
         if (currentVideo) {
             currentVideo.autoplay = true;
@@ -374,14 +406,23 @@ document.addEventListener("DOMContentLoaded", function() {
             currentVideo.play();
 
             currentVideo.addEventListener('ended', function() {
-                showNextItem(); // Call showNextItem() when the video ends
+                setTimeout(() => {
+                    currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
+                    setTimeout(showNextItem, 1000);
+                }, 3000); // Show video for 2 seconds before panning out
             });
 
             currentVideo.onerror = function() {
-                setTimeout(showNextItem, 3000);
+                setTimeout(() => {
+                    currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
+                    setTimeout(showNextItem, 1000);
+                }, 3000);
             };
         } else {
-            setTimeout(showNextItem, 3000);
+            setTimeout(() => {
+                currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
+                setTimeout(showNextItem, 1000);
+            }, 3000); // Show image for 2 seconds before panning out
         }
 
         // Update title and description
@@ -389,15 +430,14 @@ document.addEventListener("DOMContentLoaded", function() {
         const descriptionElement = document.getElementById('fileDescription');
         const fileInfoElement = document.getElementById('fileInfo');
 
-        const currentFile = items[currentIndex];
-        const title = currentFile.dataset.title;
-        const description = currentFile.dataset.description;
+        const title = currentItem.dataset.title;
+        const description = currentItem.dataset.description;
 
         titleElement.textContent = title;
         descriptionElement.textContent = description;
 
         // Check if the title and description are short
-        if (title.length <= 20 && description.length <= 100) {
+        if (title.length <= 20 && description.length <= 900) {
             fileInfoElement.classList.add('center-left');
         } else {
             fileInfoElement.classList.remove('center-left');
@@ -407,6 +447,9 @@ document.addEventListener("DOMContentLoaded", function() {
     showNextItem();
 });
 </script>
+
+
+
 
 
 <script>

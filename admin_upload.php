@@ -391,9 +391,7 @@
             .dropbtn {
                 display: none;
             }
-        }
-    </style>
-
+         }
     </style>
 </head>
 <body>
@@ -459,42 +457,44 @@
                     <input type="submit" value="Upload" name="submit">
                 </form>
             </div>
-
-            
         </div>
 
-            <!-- Fetch uploaded files from the bulletin_files table -->
-            <?php
-            // Fetch uploaded files from the database
-            $db = new mysqli("localhost", "root", "", "ebulletin_system");
-            if ($db->connect_error) {
-                die("Connection failed: " . $db->connect_error);
-            }
+       <?php
+    // Fetch uploaded files from the database
+    $db = new mysqli("localhost", "root", "", "ebulletin_system");
+    if ($db->connect_error) {
+        die("Connection failed: " . $db->connect_error);
+    }
+    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 ORDER BY upload_time DESC"; // Modify the query to fetch only non-archived files
+    $result = $db->query($sql);
 
-            $sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 ORDER BY upload_time DESC"; // Modify the query to fetch only non-archived files
-            $result = $db->query($sql);
-
-            // Display uploaded files
+    // Display uploaded files
     while ($row = $result->fetch_assoc()) {
+        $currentSchedule = isset($row["schedule"]) ? date('Y-m-d\TH:i', strtotime($row["schedule"])) : "";
+
+        // Escape special characters in title and description
+        $title = json_encode($row["title"]);
+        $description = json_encode($row["description"]);
+        $filename = json_encode($row["filename"]);
+        $schedule = json_encode($currentSchedule);
+
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
             echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
-            echo '<span class="edit-icon" onclick="openEditForm(' . $row["id"] . ', \'' . $row["title"] . '\', \'' . $row["description"] . '\', \'' . $row["filename"] . '\', \'' . $row["schedule"] . '\')"><i class="fas fa-edit"></i></span>';
+            echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         } elseif ($row["filetype"] == "video") {
             echo '<div class="video-container">';
             echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
             echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
-            echo '<span class="edit-icon" onclick="openEditForm(' . $row["id"] . ', \'' . $row["title"] . '\', \'' . $row["description"] . '\', \'' . $row["filename"] . '\', \'' . $row["schedule"] . '\')"><i class="fas fa-edit"></i></span>';
+            echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         }
     }
-            // Close database connection
-            $db->close();
-            ?>
+?>
 
-            
+ 
 <!-- Edit pop-up form -->
 <div id="editForm" class="popup">
     <span class="close" onclick="closeEditForm()">&times;</span>
@@ -561,17 +561,18 @@
         }     
     }
 </script>
-<!-- JavaScript to toggle edit form popup -->
 <script>
-    // Function to open edit form popup
-    function openEditForm(id, title, description, fileName, schedule) {
-        document.getElementById("editId").value = id; // Set file ID
-        document.getElementById("editTitle").value = title; // Set current title
-        document.getElementById("editDescription").value = description; // Set current description
-        document.getElementById("fileUploaded").value = fileName; // Set current file name
-        document.getElementById("editSchedule").value = schedule; // Set current schedule
-        document.getElementById("editForm").style.display = "block"; // Display edit form
-    }
+// Function to open edit form popup
+function openEditForm(id, title, description, fileName, schedule) {
+    console.log("Opening edit form for file:", id, title, description, fileName, schedule);
+    document.getElementById("editId").value = id; // Set file ID
+    document.getElementById("editTitle").value = title; // Set current title
+    document.getElementById("editDescription").value = description; // Set current description
+    document.getElementById("fileUploaded").value = fileName; // Set current file name
+    document.getElementById("editSchedule").value = schedule; // Set current schedule
+    document.getElementById("editForm").style.display = "block"; // Display edit form
+}
+
 
     // Function to close edit form popup
     function closeEditForm() {
@@ -585,6 +586,7 @@
         label.textContent = fileName; // Update the label text
     }
 </script>
+
 
 <script>
     // Function to toggle side navbar
@@ -606,10 +608,21 @@
         }
     }
 
+    function showDropdown() {
+    // Code to show the dropdown content
+    document.getElementById("bulletinDropdown").style.display = "block";
+}
+
+function hideDropdown() {
+    // Code to hide the dropdown content
+    document.getElementById("bulletinDropdown").style.display = "none";
+}
     // Call the function when the window loads and when it is resized
     window.onload = closeSideNavbarOnLargeScreen;
     window.onresize = closeSideNavbarOnLargeScreen;
 </script>
+
+
 
 </body>
 </html>
