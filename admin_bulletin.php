@@ -243,9 +243,10 @@ $username = $_SESSION['username'];
     top: 45%;
     left: 100px;
     transform: translateY(-50%);
-    text-align: left;
+    text-align: right;
     padding: 10px;
     border-radius: 5px;
+    margin-top: 100px;
 }
 
 .dropdown {
@@ -437,7 +438,7 @@ document.addEventListener("DOMContentLoaded", function() {
         descriptionElement.textContent = description;
 
         // Check if the title and description are short
-        if (title.length <= 20 && description.length <= 900) {
+        if (title.length <= 30 && description.length <= 350) {
             fileInfoElement.classList.add('center-left');
         } else {
             fileInfoElement.classList.remove('center-left');
