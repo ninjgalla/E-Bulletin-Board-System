@@ -77,6 +77,7 @@
     margin: 40px auto; /* Center the content horizontally and provide 40px margin on top and bottom */
     padding: 20px; /* Add padding for inner content */
     overflow: auto; /* Add overflow to enable scrolling if content exceeds screen size */
+    position: relative;
 }
 
 
@@ -392,6 +393,27 @@
                 display: none;
             }
          }
+
+        
+/* CSS for the "Archive Selected Files" button */
+.archive-button {
+    background-color: maroon;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute;
+    top: 20px; /* Adjust from the top */
+    right: 20px; /* Adjust from the right */
+}
+
+
+.archive-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
     </style>
 </head>
 <body>
@@ -434,32 +456,36 @@
 
 
 <div class="content">
-      <!-- Photo container with plus icon -->
-        <div class="photo-container">
-            <img src="plus_icon1.png" alt="Plus Icon" class="plus-icon" onclick="openUploadForm()">
+    <!-- Archive selected files button container -->
+    <div id="archiveButtonContainer" style="display: none;">
+        <!-- Archive selected files button -->
+        <button class="archive-button" onclick="archiveSelectedFiles()">Archive Selected Files</button>
+    </div>
+    <!-- Photo container with plus icon -->
+    <div class="photo-container">
+        <img src="plus_icon1.png" alt="Plus Icon" class="plus-icon" onclick="openUploadForm()">
+    </div>
+    
+    <!-- Upload file pop-up form -->
+    <div id="uploadForm" class="upload-form">
+        <span class="close" onclick="closeUploadForm()">&times;</span>
+        <div class="form-content">
+            <h2>Upload File</h2>
+            <form action="admin_upload_process.php" method="post" enctype="multipart/form-data">
+                <label for="fileToUpload">Select File:</label>
+                <input type="file" name="fileToUpload" id="fileToUpload" required><br>
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" required><br>
+                <label for="description">Description:</label>
+                <textarea name="description" id="description" rows="4" required></textarea><br>
+                <label for="schedule">Schedule:</label>
+                <input type="datetime-local" name="schedule" id="schedule" required><br> <!-- Added scheduling input -->
+                <input type="submit" value="Upload" name="submit">
+            </form>
         </div>
- 
+    </div>
 
-          <!-- Upload file pop-up form -->
-        <div id="uploadForm" class="upload-form">
-            <span class="close" onclick="closeUploadForm()">&times;</span>
-            <div class="form-content">
-                <h2>Upload File</h2>
-                <form action="admin_upload_process.php" method="post" enctype="multipart/form-data">
-                    <label for="fileToUpload">Select File:</label>
-                    <input type="file" name="fileToUpload" id="fileToUpload" required><br>
-                    <label for="title">Title:</label>
-                    <input type="text" name="title" id="title" required><br>
-                    <label for="description">Description:</label>
-                    <textarea name="description" id="description" rows="4" required></textarea><br>
-                    <label for="schedule">Schedule:</label>
-                    <input type="datetime-local" name="schedule" id="schedule" required><br> <!-- Added scheduling input -->
-                    <input type="submit" value="Upload" name="submit">
-                </form>
-            </div>
-        </div>
-
-       <?php
+    <?php
     // Fetch uploaded files from the database
     $db = new mysqli("localhost", "root", "", "ebulletin_system");
     if ($db->connect_error) {
@@ -474,26 +500,28 @@
 
         // Escape special characters in title and description
         $title = htmlspecialchars(json_encode($row["title"]), ENT_QUOTES);
-$description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
-$filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
-$schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
-
+        $description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
+        $filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
+        $schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
 
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
+            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox">';
             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
             echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         } elseif ($row["filetype"] == "video") {
             echo '<div class="video-container">';
+            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox">';
             echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
             echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         }
     }
-?>
+    ?>
+</div>
 
  
 <!-- Edit pop-up form -->
@@ -613,9 +641,60 @@ $schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
     // Call the function when the window loads and when it is resized
     window.onload = closeSideNavbarOnLargeScreen;
     window.onresize = closeSideNavbarOnLargeScreen;
+
+// Function to archive selected files
+function archiveSelectedFiles() {
+    var checkboxes = document.querySelectorAll('.file-checkbox:checked');
+    var fileIds = [];
+    checkboxes.forEach(function(checkbox) {
+        fileIds.push(checkbox.value);
+    });
+
+    // Confirm archive action with user
+    var confirmation = confirm("Are you sure you want to archive the selected files?");
+    if (confirmation) {
+        // If user confirms, proceed with archiving
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Refresh page or update UI as needed
+                    location.reload(); // For example, refresh page
+                } else {
+                    // Handle error
+                    console.error('Archive request failed');
+                }
+            }
+        };
+        xhr.open('POST', 'admin_bulk_archive.php'); // Change the URL to admin_bulk_archive.php
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({ fileIds: fileIds }));
+    } else {
+        // If user cancels, do nothing
+        return;
+    }
+}
+// Add event listener to the checkbox
+document.addEventListener('DOMContentLoaded', function() {
+    var checkboxes = document.querySelectorAll('.file-checkbox');
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Get reference to the archive button container
+            var archiveButtonContainer = document.getElementById('archiveButtonContainer');
+
+            // If checkbox is checked and at least one checkbox is checked, show the archive button; otherwise, hide it
+            if (this.checked && document.querySelectorAll('.file-checkbox:checked').length > 0) {
+                archiveButtonContainer.style.display = 'block';
+            } else {
+                archiveButtonContainer.style.display = 'none';
+            }
+        });
+    });
+});
+
+
+
 </script>
-
-
-
 </body>
 </html>

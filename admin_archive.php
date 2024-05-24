@@ -454,53 +454,53 @@
             <div class="files-wrapper">
 
                 <?php
-function truncate_title($title, $max_length) {
-    // Check if title length is within max_length
-    if (strlen($title) <= $max_length) {
-        return $title;
-    }
+                    function truncate_title($title, $max_length) {
+                        // Check if title length is within max_length
+                        if (strlen($title) <= $max_length) {
+                            return $title;
+                        }
 
-    // Truncate title and add ellipsis
-    return substr($title, 0, $max_length - 3) . '...';
-}
+                        // Truncate title and add ellipsis
+                        return substr($title, 0, $max_length - 3) . '...';
+                    }
 
-include('config.php');
+                    include('config.php');
 
-$sortOrder = isset($_GET['sort']) ? $_GET['sort'] : 'date';
+                    $sortOrder = isset($_GET['sort']) ? $_GET['sort'] : 'date';
 
-if ($sortOrder == 'alphabetical') {
-    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY title ASC";
-} else {
-    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY upload_time DESC";
-}
+                    if ($sortOrder == 'alphabetical') {
+                        $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY title ASC";
+                    } else {
+                        $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY upload_time DESC";
+                    }
 
-$result = $conn->query($sql);
+                    $result = $conn->query($sql);
 
-while ($row = $result->fetch_assoc()) {
-    echo '<div class="file-item">';
-    echo '<input type="checkbox" name="fileIds[]" value="' . $row["id"] . '">'; // Checkbox
-    if ($row["filetype"] == "photo") {
-        echo '<div class="photo-container">';
-        echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
-        // Truncate the title
-        echo '<h4>' . truncate_title($row["title"], 50) . '</h4>';
-        // Add menu icon and options
-        echo '<div class="file-options">';
-        echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
-        echo '<div class="file-menu">';
-        echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
-        echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>'; // Close photo-container
-        // Add title below the file
-        echo '<p>' . truncate_title($row["title"], 20) . '</p>';
-    } elseif ($row["filetype"] == "video") {
-        // Handle video files similarly
-    }
-    echo '</div>'; // Close file-item
-}
-?>
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<div class="file-item">';
+                        echo '<input type="checkbox" name="fileIds[]" value="' . $row["id"] . '">'; // Checkbox
+                        if ($row["filetype"] == "photo") {
+                            echo '<div class="photo-container">';
+                            echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+                            // Truncate the title
+                            echo '<h4>' . truncate_title($row["title"], 50) . '</h4>';
+                            // Add menu icon and options
+                            echo '<div class="file-options">';
+                            echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
+                            echo '<div class="file-menu">';
+                            echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
+                            echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>'; // Close photo-container
+                            // Add title below the file
+                            echo '<p>' . truncate_title($row["title"], 20) . '</p>';
+                        } elseif ($row["filetype"] == "video") {
+                            // Handle video files similarly
+                        }
+                        echo '</div>'; // Close file-item
+                    }
+                ?>
 
             </div>
         </form>
