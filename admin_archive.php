@@ -364,6 +364,34 @@
             }
         }
 
+        .select-all {
+        margin-top: 10px;
+    }
+
+    /* Style for the checkbox */
+    .select-all input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Style for the button label */
+    .select-all label {
+        background-color: #800000;
+        color: white;
+        border: none;
+        padding: 5px 13px;
+        margin: 5px 0;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 12px;
+        display: inline-block;
+        margin-top: 20px;
+    }
+
+    /* Hover effect */
+    .select-all label:hover {
+        background-color: #575757;
+    }
+
     </style>
 </head>
 <body>
@@ -414,46 +442,66 @@
             </div>
         </div>
 
+<!-- "Select All" checkbox -->
+<div class="select-all">
+    <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllCheckboxes(this)">
+    <label for="selectAllCheckbox">Select All</label>
+</div>
+
+
 
         <form id="fileForm">
             <div class="files-wrapper">
+
                 <?php
-                include('config.php');
+function truncate_title($title, $max_length) {
+    // Check if title length is within max_length
+    if (strlen($title) <= $max_length) {
+        return $title;
+    }
 
-                $sortOrder = isset($_GET['sort']) ? $_GET['sort'] : 'date';
+    // Truncate title and add ellipsis
+    return substr($title, 0, $max_length - 3) . '...';
+}
 
-                if ($sortOrder == 'alphabetical') {
-                    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY title ASC";
-                } else {
-                    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY upload_time DESC";
-                }
+include('config.php');
 
-                $result = $conn->query($sql);
+$sortOrder = isset($_GET['sort']) ? $_GET['sort'] : 'date';
 
-                while ($row = $result->fetch_assoc()) {
-                    echo '<div class="file-item">';
-                    echo '<input type="checkbox" name="fileIds[]" value="' . $row["id"] . '">'; // Checkbox
-                    if ($row["filetype"] == "photo") {
-                        echo '<div class="photo-container">';
-                        echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
-                        echo '<h4>' . $row["title"] . '</h4>';
-                        // Add menu icon and options
-                        echo '<div class="file-options">';
-                        echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
-                        echo '<div class="file-menu">';
-                        echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
-                        echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>'; // Close photo-container
-                        // Add title below the file
-                        echo '<p>' . $row["title"] . '</p>';
-                    } elseif ($row["filetype"] == "video") {
-                        // Handle video files similarly
-                    }
-                    echo '</div>'; // Close file-item
-                }
-                ?>
+if ($sortOrder == 'alphabetical') {
+    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY title ASC";
+} else {
+    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 1 ORDER BY upload_time DESC";
+}
+
+$result = $conn->query($sql);
+
+while ($row = $result->fetch_assoc()) {
+    echo '<div class="file-item">';
+    echo '<input type="checkbox" name="fileIds[]" value="' . $row["id"] . '">'; // Checkbox
+    if ($row["filetype"] == "photo") {
+        echo '<div class="photo-container">';
+        echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+        // Truncate the title
+        echo '<h4>' . truncate_title($row["title"], 50) . '</h4>';
+        // Add menu icon and options
+        echo '<div class="file-options">';
+        echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
+        echo '<div class="file-menu">';
+        echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
+        echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>'; // Close photo-container
+        // Add title below the file
+        echo '<p>' . truncate_title($row["title"], 20) . '</p>';
+    } elseif ($row["filetype"] == "video") {
+        // Handle video files similarly
+    }
+    echo '</div>'; // Close file-item
+}
+?>
+
             </div>
         </form>
 
@@ -624,6 +672,15 @@
             }
         });
     };
+
+     // Function to toggle all checkboxes
+     function toggleAllCheckboxes(checkbox) {
+        var checkboxes = document.querySelectorAll('input[name="fileIds[]"]');
+        checkboxes.forEach(function(cb) {
+            cb.checked = checkbox.checked;
+        });
+        toggleActionButtons();
+    }
 </script>
 
 </body>

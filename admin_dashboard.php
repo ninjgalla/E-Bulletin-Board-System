@@ -277,9 +277,15 @@ html, body {
 
             // Convert PHP array to JavaScript array
         const postsWithComments = <?php echo json_encode($postsWithComments); ?>;
-
 // Extract post titles and comments counts
-const postTitles = postsWithComments.map(post => post.title);
+const postTitles = postsWithComments.map(post => {
+    const maxLength = 20; // Set the maximum length for the titles
+    if (post.title.length > maxLength) {
+        return post.title.substring(0, maxLength) + '...'; // Truncate and add ellipsis
+    } else {
+        return post.title;
+    }
+});
 const commentsCounts = postsWithComments.map(post => post.comments_count);
 
 // Render chart using Chart.js
@@ -306,6 +312,7 @@ const myChart = new Chart(ctx, {
         }
     }
 });
+
     </script>
 
 <script>

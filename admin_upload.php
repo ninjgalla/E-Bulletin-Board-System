@@ -473,10 +473,11 @@
         $currentSchedule = isset($row["schedule"]) ? date('Y-m-d\TH:i', strtotime($row["schedule"])) : "";
 
         // Escape special characters in title and description
-        $title = json_encode($row["title"]);
-        $description = json_encode($row["description"]);
-        $filename = json_encode($row["filename"]);
-        $schedule = json_encode($currentSchedule);
+        $title = htmlspecialchars(json_encode($row["title"]), ENT_QUOTES);
+$description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
+$filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
+$schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
+
 
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
@@ -524,8 +525,6 @@
 
 
 
-
-
 <script>
     // Function to open the upload form
     function openUploadForm() {
@@ -537,11 +536,9 @@
         document.getElementById("uploadForm").style.display = "none";
     }
 
-
     // Function to archive file
     function archiveFile(id) {
-        if (confirm("Are you sure you want to archive this file?")) 
-        {
+        if (confirm("Are you sure you want to archive this file?")) {
             // Send an AJAX request to archive the file
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
@@ -558,26 +555,24 @@
             };
             xhr.open("GET", "admin_archive_file.php?id=" + id, true);
             xhr.send();
-        }     
+        }
     }
-</script>
-<script>
-// Function to open edit form popup
-function openEditForm(id, title, description, fileName, schedule) {
-    console.log("Opening edit form for file:", id, title, description, fileName, schedule);
-    document.getElementById("editId").value = id; // Set file ID
-    document.getElementById("editTitle").value = title; // Set current title
-    document.getElementById("editDescription").value = description; // Set current description
-    document.getElementById("fileUploaded").value = fileName; // Set current file name
-    document.getElementById("editSchedule").value = schedule; // Set current schedule
-    document.getElementById("editForm").style.display = "block"; // Display edit form
-}
 
+    // Function to open edit form popup
+    function openEditForm(id, title, description, fileName, schedule) {
+        console.log("Opening edit form for file:", id, title, description, fileName, schedule);
+        document.getElementById("editId").value = id; // Set file ID
+        document.getElementById("editTitle").value = title; // Set current title
+        document.getElementById("editDescription").value = description; // Set current description
+        document.getElementById("fileUploaded").value = fileName; // Set current file name
+        document.getElementById("editSchedule").value = schedule; // Set current schedule
+        document.getElementById("editForm").style.display = "block"; // Display edit form
+    }
 
     // Function to close edit form popup
     function closeEditForm() {
         document.getElementById("editForm").style.display = "none"; // Hide edit form
-    } 
+    }
 
     // Function to update the file name label
     function updateFileName(input) {
@@ -585,10 +580,7 @@ function openEditForm(id, title, description, fileName, schedule) {
         var label = document.getElementById("selectedFileName"); // Get the label element
         label.textContent = fileName; // Update the label text
     }
-</script>
 
-
-<script>
     // Function to toggle side navbar
     function toggleSideNavbar() {
         var sideNavbar = document.getElementById('sideNavbar');
@@ -609,14 +601,15 @@ function openEditForm(id, title, description, fileName, schedule) {
     }
 
     function showDropdown() {
-    // Code to show the dropdown content
-    document.getElementById("bulletinDropdown").style.display = "block";
-}
+        // Code to show the dropdown content
+        document.getElementById("bulletinDropdown").style.display = "block";
+    }
 
-function hideDropdown() {
-    // Code to hide the dropdown content
-    document.getElementById("bulletinDropdown").style.display = "none";
-}
+    function hideDropdown() {
+        // Code to hide the dropdown content
+        document.getElementById("bulletinDropdown").style.display = "none";
+    }
+
     // Call the function when the window loads and when it is resized
     window.onload = closeSideNavbarOnLargeScreen;
     window.onresize = closeSideNavbarOnLargeScreen;
