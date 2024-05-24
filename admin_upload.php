@@ -107,6 +107,7 @@
             padding: 5px;
             border-radius: 50%;
             cursor: pointer;
+            visibility: hidden; /* Hide the icons by default */
         }
 
         .edit-icon {
@@ -122,7 +123,12 @@
             display: block; /* Display as block-level element */
             margin-top: 30px;
             margin-left: 20px;
+            visibility: hidden; /* Hide the icons by default */
         }
+        .photo-container:hover .delete-icon,
+.photo-container:hover .edit-icon {
+    visibility: visible; /* Display icons when photo-container is hovered */
+}
 
         /* Image containers for videos */
         .video-container {
@@ -506,7 +512,7 @@
 
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
-            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox">';
+            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
             echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';

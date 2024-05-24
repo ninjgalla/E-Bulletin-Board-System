@@ -478,9 +478,9 @@
 
                     while ($row = $result->fetch_assoc()) {
                         echo '<div class="file-item">';
-                        echo '<input type="checkbox" name="fileIds[]" value="' . $row["id"] . '">'; // Checkbox
                         if ($row["filetype"] == "photo") {
                             echo '<div class="photo-container">';
+                            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
                             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
                             // Truncate the title
                             echo '<h4>' . truncate_title($row["title"], 50) . '</h4>';
@@ -496,10 +496,26 @@
                             // Add title below the file
                             echo '<p>' . truncate_title($row["title"], 20) . '</p>';
                         } elseif ($row["filetype"] == "video") {
-                            // Handle video files similarly
+                            echo '<div class="photo-container">';
+                            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
+                            echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>'; // Video element
+                            // Truncate the title
+                            echo '<h4>' . truncate_title($row["title"], 50) . '</h4>';
+                            // Add menu icon and options
+                            echo '<div class="file-options">';
+                            echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
+                            echo '<div class="file-menu">';
+                            echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
+                            echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>'; // Close photo-container
+                            // Add title below the file
+                            echo '<p>' . truncate_title($row["title"], 20) . '</p>';
                         }
                         echo '</div>'; // Close file-item
                     }
+                    
                 ?>
 
             </div>
