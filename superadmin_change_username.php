@@ -8,7 +8,7 @@ if (!isset($_SESSION['username'])) {
     exit; // Stop further execution
 }
 
-// Include configuration file and database connection
+// Include database connection
 require_once 'config.php';
 
 // Fetch username from the session
@@ -17,20 +17,18 @@ $username = $_SESSION['username'];
 // Placeholder for the profile picture
 $profilePicture = '';
 
-// Fetch user details from the database
-$sql = "SELECT UserID, first_name, last_name, email, TUP_id, profile_picture FROM users WHERE username=?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$stmt->bind_result($userId, $firstName, $lastName, $email, $tupId, $profilePictureDB);
-$stmt->fetch();
-$stmt->close();
-
-// Assign the profile picture variable
-$profilePicture = $profilePictureDB;
-
+// Fetch profile picture from the database (assuming you have a table called 'users')
+$query = "SELECT profile_picture FROM users WHERE username = ?";
+if ($stmt = $conn->prepare($query)) {
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->bind_result($profilePicture);
+    $stmt->fetch();
+    $stmt->close();
+}
 
 // Initialize variables to prevent undefined variable warnings
+$userId = $firstName = $lastName = $email = $tupId = $profilePictureDB = '';
 $success_message = '';
 $error_message = '';
 
@@ -43,13 +41,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $tupId = $_POST['tupId'];
 
-   // Handle profile picture upload only if a file is selected
-if (!empty($_FILES['profilePicture']['name']) && $_FILES['profilePicture']['error'] == UPLOAD_ERR_OK) {
-    // Process profile picture upload
-} else {
-    // No new file uploaded, retain the old profile picture or set a default picture
-    $profilePictureDB = $profilePicture;
-}
+    // Handle profile picture upload
+    if ($_FILES['profilePicture']['error'] == UPLOAD_ERR_OK) {
+        $targetDir = "uploads/";
+        $fileName = basename($_FILES["profilePicture"]["name"]);
+        $targetFilePath = $targetDir . $fileName;
+
+        // Move the uploaded file to the target directory
+        if (move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $targetFilePath)) {
+            // Save the file path to the database
+            $profilePictureDB = $targetFilePath;
+        } else {
+            $error_message = "Error uploading the profile picture.";
+        }
+    } else {
+        // If no new file is uploaded, retain the old profile picture
+        $profilePictureDB = isset($_POST['existingProfilePicture']) ? $_POST['existingProfilePicture'] : '';
+    }
 
     // Update user information in the database
     $update_query = "UPDATE users SET first_name=?, last_name=?, email=?, TUP_id=?, profile_picture=? WHERE UserID=?";
@@ -67,83 +75,15 @@ if (!empty($_FILES['profilePicture']['name']) && $_FILES['profilePicture']['erro
     $stmt->close();
 }
 
-// Define variables and initialize with empty values
-$current_password = $new_password = $confirm_new_password = "";
-$current_password_err = $new_password_err = $confirm_new_password_err = "";
-$message = "";
-$password_change_successful = false; // Initialize as false
-
-// Processing form data when form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["current_password"]) && isset($_POST["new_password"]) && isset($_POST["confirm_new_password"])) {
-    // Validate form inputs and check for errors
-
-    // Retrieve form data
-    $current_password = $_POST["current_password"];
-    $new_password = $_POST["new_password"];
-    $confirm_new_password = $_POST["confirm_new_password"];
-
-    // Validate current password
-    if (empty(trim($current_password))) {
-        $current_password_err = "Please enter your current password.";
-    }
-
-    // Validate new password
-    if (empty(trim($new_password))) {
-        $new_password_err = "Please enter a new password.";
-    } elseif (strlen(trim($new_password)) < 8) {
-        $new_password_err = "Password must have at least 8 characters.";
-    }
-
-    // Validate confirm new password
-    if (empty(trim($confirm_new_password))) {
-        $confirm_new_password_err = "Please confirm the new password.";
-    } elseif ($new_password != $confirm_new_password) {
-        $confirm_new_password_err = "Password did not match.";
-    }
-
-    // Check if there are no validation errors
-    if (empty($current_password_err) && empty($new_password_err) && empty($confirm_new_password_err)) {
-        // Check if the current password is correct
-        $sql = "SELECT password FROM users WHERE username = ?";
-        if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("s", $username);
-            $stmt->execute();
-            $stmt->store_result();
-
-            if ($stmt->num_rows == 1) {
-                $stmt->bind_result($stored_password);
-                if ($stmt->fetch()) {
-                    if ($current_password == $stored_password) {
-                        // Update the user's password in the database
-                        $sql_update = "UPDATE users SET password = ? WHERE username = ?";
-                        if ($stmt_update = $conn->prepare($sql_update)) {
-                            $stmt_update->bind_param("ss", $new_password, $username);
-                            if ($stmt_update->execute()) {
-                                $password_change_successful = true;
-                                $message = "Password changed successfully!";
-                            } else {
-                                $message = "Error changing password. Please try again later.";
-                            }
-                            $stmt_update->close();
-                        } else {
-                            $message = "Error changing password. Please try again later.";
-                        }
-                    } else {
-                        $current_password_err = "The current password you entered is incorrect.";
-                    }
-                }
-            } else {
-                $message = "User not found.";
-            }
-
-            $stmt->close();
-        } else {
-            $message = "Error changing password. Please try again later.";
-        }
-    } else {
-        // Set error message
-        $message = "Please correct the errors in the form.";
-    }
+// Fetch user details from the database only if the form is not submitted
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    $sql = "SELECT UserID, first_name, last_name, email, TUP_id, profile_picture FROM users WHERE username=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->bind_result($userId, $firstName, $lastName, $email, $tupId, $profilePictureDB);
+    $stmt->fetch();
+    $stmt->close();
 }
 
 // Close the connection
@@ -156,9 +96,8 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
-    <title>Change Password</title>
+    <title>Profile Settings</title>
     <style>
-          /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
         }
@@ -266,7 +205,6 @@ $conn->close();
         label {
             font-weight: bold;
             
-            
         }
         h1 {
             text-align: center;
@@ -282,7 +220,6 @@ $conn->close();
             border-radius: 4px;
             box-sizing: border-box;
             margin-right: 100px;
-            
         }
 
         input[type="submit"] {
@@ -307,7 +244,7 @@ $conn->close();
         }
 
         .error-message {
-            color: red;
+            color: green;
         }
 
         .success-message {
@@ -330,11 +267,11 @@ $conn->close();
                 border: 2px solid maroon;
             }
 
-            input[type="file"] {
-                display: none;
-            }
+        input[type="file"] {
+            display: none;
+        }
 
-            .profile-picture label {
+        .profile-picture label {
                 cursor: pointer;
                 background-color: maroon;
                 color: white;
@@ -362,65 +299,62 @@ $conn->close();
             .empty-profile {
                 background-color: red;
             }
-
         .hamburger {
-    display: none; /* Hidden by default */
-    font-size: 24px; /* Adjust font size for hamburger icon */
-    color: white; /* Set font color to white */
-    cursor: pointer;
-}
+            display: none; /* Hidden by default */
+            font-size: 24px; /* Adjust font size for hamburger icon */
+            color: white; /* Set font color to white */
+            cursor: pointer;
+        }
 
-/* Side navbar styles */
-.side-navbar {
-    position: fixed;
-    top: 0;
-    right: -250px; /* Initially hide the side navbar on the right */
-    width: 250px;
-    height: 100%;
-    background-color: #800000;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-    padding-top: 60px;
-    z-index: 1000;
-    transition: right 0.3s ease;
-    font-size: 16px;
-    color: white;
-}
+        .side-navbar {
+            position: fixed;
+            top: 0;
+            right: -250px; /* Initially hide the side navbar on the right */
+            width: 250px;
+            height: 100%;
+            background-color: #800000;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 60px;
+            z-index: 1000;
+            transition: right 0.3s ease;
+            font-size: 16px;
+            color: white;
+        }
 
-/* Close button */
-.close-btn {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    color: white;
-}
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            color: white;
+        }
 
-.side-navbar a {
-    color: white;
-    display: block;
-    padding: 10px 20px;
-    text-decoration: none;
-}
+        .side-navbar a {
+            color: white;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
 
-.side-navbar a:hover {
-    background-color: #575757; /* Change background on hover */
-}
+        .side-navbar a:hover {
+            background-color: #575757; /* Change background on hover */
+        }
 
-/* Ensure responsiveness */
-@media (max-width: 768px) {
-    .navbar a {
-        display: none; /* Hide navbar links */
-    }
-    .navbar .logo {
-        display: block; /* Ensure the logo is always displayed */
-    }
-    .hamburger {
-        display: block; /* Show hamburger menu */
-    }
-}
-.dropdown {
+        /* Ensure responsiveness */
+        @media (max-width: 768px) {
+            .navbar a {
+                display: none; /* Hide navbar links */
+            }
+            .navbar .logo {
+                display: block; /* Ensure the logo is always displayed */
+            }
+            .hamburger {
+                display: block; /* Show hamburger menu */
+            }
+        }
+        .dropdown {
             position: relative;
             display: inline-block;
         }
@@ -473,6 +407,7 @@ $conn->close();
                 display: none;
             }
         }
+
         @media (max-width: 768px) {
             .sidebar {
                 display: none;
@@ -496,18 +431,18 @@ $conn->close();
         }
 
         input[type="submit"] {
-            width: auto;
-            padding: 10px 20px;
-            background-color: maroon; 
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-align: center; /* Center the button */
-            margin: 0 auto; /* Center horizontally */
-            display: block; /* Ensure the button occupies the full width */
-        }
+    width: auto;
+    padding: 10px 20px;
+    background-color: maroon;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center; /* Center the button */
+    margin: 0 auto; /* Center horizontally */
+    display: block; /* Ensure the button occupies the full width */
+}
 
         input[type="submit"]:hover {
             background-color: #800000;
@@ -519,14 +454,54 @@ $conn->close();
 </head>
 <body>
 <div class="navbar">
-        <div>
-            <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
+    <div>
+        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+    </div>
+    <div>
+        <!-- Dropdown menu for Bulletin Feed -->
+        <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
+            <button class="dropbtn">Bulletin</button>
+            <div class="dropdown-content" id="bulletinDropdown">
+                <a href="superadmin_bulletin.php">Bulletin Board</a>
+                <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+            </div>
         </div>
-        <div>
-            <a href="user_profile_settings.php">Profile</a>
-            <a href="logout.php">Logout</a>
+        <!-- End of Dropdown menu -->
+        <!-- Dropdown menu for Posts -->
+        <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
+            <button class="dropbtn">Posts</button>
+            <div class="dropdown-content" id="postsDropdown">
+                <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_for_approval.php">For Approval</a>
+                <a href="superadmin_rejected.php">Rejected</a>
+            </div>
         </div>
+        <!-- End of Dropdown menu -->
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
+    </div>
+    <div class="hamburger" onclick="toggleSideNavbar()">
+        <i class="fas fa-bars"></i>
+    </div>
 </div>
+
+<!-- Side navbar -->
+<div class="side-navbar" id="sideNavbar">
+    <div class="close-btn" onclick="toggleSideNavbar()">
+        <i class="fas fa-times"></i>
+    </div>
+        <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="superadmin_bulletin.php">Bulletin Board</a>
+        <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_for_approval.php">For Approval</a>
+        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
+</div>
+
+
 <div class="sidebar">
         <div class="profile-picture">
             <!-- Display the user's profile picture from the database if available -->
@@ -546,70 +521,51 @@ $conn->close();
                 <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
             </form>
         </div>
-
-    <a href="user_profile_settings.php">User Info</a>
-    <a href="user_change_username.php">Change Username</a>
-    <a href="user_change_password.php">Change Password</a>
-</div>
+        <a href="superadmin_profile_settings.php">User Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
+        <a href="superadmin_user_management.php">User Management</a>
+    </div>
 
 <div class="container">
-    <h1>Change Password</h1>
-    <?php if (!empty($message)): ?>
-        <div class="message <?php echo ($password_change_successful ? '' : 'error-message'); ?>"><?php echo htmlspecialchars($message); ?></div>
+    <h1>Change Username</h1>
+    <?php if (!empty($_GET['message'])): ?>
+        <?php $message = htmlspecialchars($_GET['message']); ?>
+        <div class="message <?php echo ($username_change_successful ? 'success-message' : 'error-message'); ?>"><?php echo $message; ?></div>
     <?php endif; ?>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly style="color: gray;">
-        <!-- Empty placeholder element to ensure consistent grid gap -->
-        <div></div>
-    </div>
-    <div class="form-group">
-        <label for="current_password">Current Password:</label>
-        <input type="password" name="current_password" id="current_password" aria-describedby="current_password_err">
-        <span class="error-message" id="current_password_err"><?php echo $current_password_err; ?></span>
-    </div>
-    <div class="form-group">
-        <label for="new_password">New Password:</label>
-        <input type="password" name="new_password" id="new_password" aria-describedby="new_password_err">
-        <span class="error-message" id="new_password_err"><?php echo $new_password_err; ?></span>
-    </div>
-    <div class="form-group">
-        <label for="confirm_new_password">Confirm New Password:</label>
-        <input type="password" name="confirm_new_password" id="confirm_new_password" aria-describedby="confirm_new_password_err">
-        <span class="error-message" id="confirm_new_password_err"><?php echo $confirm_new_password_err; ?></span>
-    </div>
-    <!-- Add hidden input fields for user details -->
-    <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
-    <input type="hidden" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>">
-    <input type="hidden" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>">
-    <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
-    <input type="hidden" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>">
-    <div class="form-group">
-        <input type="submit" value="Change Password">
-    </div>
-</form>
-
+    <form action="superadmin_change_username_handler.php" method="post">
+        <div class="form-group">
+            <label for="current_username">Current Username:</label>
+            <input type="text" name="current_username" id="current_username" value="<?php echo htmlspecialchars($username); ?>" readonly style="color: gray;">
+            <div></div>
+        </div>
+        <div class="form-group">
+            <label for="new_username">New Username:</label>
+            <input type="text" name="new_username" id="new_username">
+            <?php if (!empty($new_username_err)): ?>
+                <span class="error-message"><?php echo $new_username_err; ?></span>
+            <?php endif; ?>
+            <div></div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Change Username">
+        </div>
+    </form>
 </div>
 
-
-
 <script>
+    function redirectToUploadPage() {
+        window.location.href = "superadmin_upload.php";
+    }
 
-function redirectToUploadPage() {
-    window.location.href = "upload.html";
-}
+    function redirectToAdminBulletin() {
+        window.location.href = "superadmin_bulletin.php";
+    }
 
-function redirectToAdminBulletin() {
-window.location.href = "superadmin_bulletin.php";
-}
-</script>
-
-<script>
     // Function to toggle side navbar
     function toggleSideNavbar() {
         var sideNavbar = document.getElementById('sideNavbar');
-        if  (sideNavbar.style.right === '0px') {
+        if (sideNavbar.style.right === '0px') {
             sideNavbar.style.right = '-250px'; // Collapse side navbar
         } else {
             sideNavbar.style.right = '0px'; // Expand side navbar

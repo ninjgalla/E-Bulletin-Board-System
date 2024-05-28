@@ -23,10 +23,10 @@ if (mysqli_num_rows($result) == 1) {
     // Redirect based on user role
     switch ($role) {
         case 1: // Admin role
-            header("Location: admin_dashboard.php");
+            header("Location: admin_bulletin.php");
             break;
         case 2: // Moderator role
-            header("Location: moderator_dashboard.php");
+            header("Location: superadmin_dashboard.php");
             break;
         case 3: // User role
             header("Location: user_bulletin_feed.php");
@@ -38,7 +38,10 @@ if (mysqli_num_rows($result) == 1) {
     }
     exit; // Stop further execution
 } else {
-    // Invalid credentials, redirect back to login page
+    // Set error message
+    $_SESSION['error'] = "Invalid username or password. Please try again.";
+
+    // Redirect back to login page
     header("Location: index.php");
     exit; // Stop further execution
 }

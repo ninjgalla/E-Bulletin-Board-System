@@ -408,12 +408,54 @@ $conn->close();
             }
         }
 
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+        }
+            @media (max-width: 768px) {
+            .container {
+                max-width: 350px;
+                margin: 60px auto 30px;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            justify-items: left;
+        }
+
+        input[type="submit"] {
+    width: auto;
+    padding: 10px 20px;
+    background-color: maroon;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center; /* Center the button */
+    margin: 0 auto; /* Center horizontally */
+    display: block; /* Ensure the button occupies the full width */
+}
+
+        input[type="submit"]:hover {
+            background-color: #800000;
+        }
+
+        }           
+
     </style>
 </head>
 <body>
 <div class="navbar">
     <div>
-        <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->

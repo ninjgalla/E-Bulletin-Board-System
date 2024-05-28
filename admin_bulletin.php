@@ -29,21 +29,19 @@ $username = $_SESSION['username'];
             padding: 0;
             font-family: Helvetica, Arial, sans-serif;
         }
-        
 
         * {
             font-family: inherit;
         }
 
         body {
-    margin: 0;
-    padding: 0;
-    background-image: url('background.svg'); /* Set background image */
-    background-color: #f5f5f5; /* Fallback background color */
-    background-size: cover; /* Cover the entire background */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-}
-
+            margin: 0;
+            padding: 0;
+            background-image: url('background.svg'); /* Set background image */
+            background-color: #f5f5f5; /* Fallback background color */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+        }
 
         .navbar {
             background-color: #800000; /* Set navbar background color */
@@ -89,7 +87,6 @@ $username = $_SESSION['username'];
             font-size: 20px; /* Increased font size */
         }
 
-        /* For Announcements */
         .file-container {
             overflow: hidden;
             position: absolute; /* Position the container */
@@ -103,40 +100,23 @@ $username = $_SESSION['username'];
             flex-direction: column;
         }
 
-        /* Updated CSS for file-item */
-
-        @keyframes panInFromRight {
-        0% {
-            transform: translateX(100%);
-        }
-        100% {
-            transform: translateX(0);
-        }
-    }
-
-    @keyframes panOutToRight {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(100%);
-        }
-    }
         .file-item {
-        display: flex;
-        align-items: center;
-        padding: 10px; /* Adjust spacing */
-        margin: 10px 0; /* Adjust margin to add space between items */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
-        animation-fill-mode: forwards; /* Retain the last keyframe state */
-    }
-
-        /* CSS for file-media */
-        .file-media {
-            flex-shrink: 0; /* Prevent media from shrinking */
+            display: flex;
+            align-items: center;
+            padding: 10px; /* Adjust spacing */
+            margin: 10px 0; /* Adjust margin to add space between items */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+            animation-fill-mode: forwards; /* Retain the last keyframe state */
         }
 
-        /* CSS for file-media img and video */
+        .file-media {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
         .file-media img,
         .file-media video {
             width: 100%; /* Set width to 100% */
@@ -147,35 +127,34 @@ $username = $_SESSION['username'];
         }
 
         .file-info {
-    float: left;
-    width: 600px; /* Adjust width as needed */
-    padding-right: 20px; /* Add some spacing */
-    text-align: center; /* Center-align text */
-    margin-top: 40px;
-    position: fixed; /* Fix position */
-    left: 100px; /* Adjust left spacing */
-    background-color: rgba(255, 255, 255, 0.8); /* Set opacity to 50% */
-    border-radius: 10px; /* Add border radius for rounded corners */
-    padding: 20px; /* Add padding for content */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
-}
+            float: left;
+            width: 600px; /* Adjust width as needed */
+            padding-right: 20px; /* Add some spacing */
+            text-align: center; /* Center-align text */
+            margin-top: 40px;
+            position: fixed; /* Fix position */
+            left: 100px; /* Adjust left spacing */
+            background-color: rgba(255, 255, 255, 0.8); /* Set opacity to 50% */
+            border-radius: 10px; /* Add border radius for rounded corners */
+            padding: 20px; /* Add padding for content */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
 
-.file-info h2 {
-    text-transform: uppercase; /* Convert text to uppercase */
-    color: maroon;
-    text-align: center;
-}
+        .file-info h2 {
+            text-transform: uppercase; /* Convert text to uppercase */
+            color: maroon;
+            text-align: center;
+        }
 
-.file-description {
-    margin-bottom: 20px; /* Add some spacing between items */
-}
+        .file-description {
+            margin-bottom: 20px; /* Add some spacing between items */
+        }
 
-.file-info p {
-    font-size: 19px;
-    text-align: justify;
-    white-space: pre-wrap; /* Preserve spaces and line breaks */
-}
-
+        .file-info p {
+            font-size: 19px;
+            text-align: justify;
+            white-space: pre-wrap; /* Preserve spaces and line breaks */
+        }
 
         .file-info.centered {
             text-align: center; /* Center-align text */
@@ -210,7 +189,6 @@ $username = $_SESSION['username'];
             font-size: 24px;
             color: white;
             cursor: pointer;
-            color: white;
         }
 
         .side-navbar a {
@@ -239,28 +217,28 @@ $username = $_SESSION['username'];
         }
 
         .center-left {
-    position: absolute;
-    top: 45%;
-    left: 100px;
-    transform: translateY(-50%);
-    text-align: right;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 100px;
-}
+            position: absolute;
+            top: 45%;
+            left: 100px;
+            transform: translateY(-50%);
+            text-align: right;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 100px;
+        }
 
-.dropdown {
+        .dropdown {
             position: relative;
             display: inline-block;
         }
 
         .dropbtn {
-    background-color: #800000;
-    color: white;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}
+            background-color: #800000;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
 
         .dropdown-content {
             display: none;
@@ -290,32 +268,24 @@ $username = $_SESSION['username'];
             background-color: #800000;
         }
 
-         /* Hide the dropdown content when screen size is small */
-         @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: 768px) {
             .dropdown-content {
                 display: none;
             }
-        }
-         /* Hide the dropdown content when screen size is small */
-         @media only screen and (max-width: 768px) {
+
             .dropbtn {
                 display: none;
             }
         }
-        
-
-
- 
     </style>
 </head>
 <body>
 
 <div class="navbar">
     <div>
-        <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
-        <!-- Dropdown menu for Bulletin Feed -->
         <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
             <button class="dropbtn">Bulletin</button>
             <div class="dropdown-content" id="bulletinDropdown">
@@ -323,41 +293,46 @@ $username = $_SESSION['username'];
                 <a href="admin_bulletin_feed.php">Bulletin Feed</a>
             </div>
         </div>
-        <!-- End of Dropdown menu -->
         <a href="admin_upload.php">Upload</a>
         <a href="admin_archive.php">Archive</a>
         <a href="admin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
-    </div>
-    <div class="hamburger" onclick="toggleSideNavbar()">
-        <i class="fas fa-bars"></i>
-    </div>
+   
+        </div>
+<div class="hamburger" onclick="toggleSideNavbar()">
+    <i class="fas fa-bars"></i>
+</div>
 </div>
 
-<!-- Side navbar -->
 <div class="side-navbar" id="sideNavbar">
-    <div class="close-btn" onclick="toggleSideNavbar()">
-        <i class="fas fa-times"></i>
-    </div>
-        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-        <a href="admin_bulletin.php">Bulletin Board</a>
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+<div class="close-btn" onclick="toggleSideNavbar()">
+    <i class="fas fa-times"></i>
+</div>
+<a href="admin_bulletin_feed.php">Bulletin Feed</a>
+<a href="admin_bulletin.php">Bulletin Board</a>
+<a href="admin_upload.php">Upload</a>
+<a href="admin_archive.php">Archive</a>
+<a href="admin_profile_settings.php">Profile</a>
+<a href="logout.php">Logout</a>
 </div>
 
+<!-- File info -->
 <div class="file-info" id="fileInfo">
-    <!-- Placeholder for title and description -->
     <h2 id="fileTitle"></h2>
     <p id="fileDescription"></p>
 </div>
 
+<!-- File container -->
 <div class="file-container">
     <div class="file-inner" id="fileInner">
         <?php
         // Fetch uploaded files from the database
-        $sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 AND schedule <= NOW() ORDER BY upload_time DESC"; // Modify the query to fetch only non-archived files with a schedule in the past or current time
+        $sql = "SELECT * FROM bulletin_files 
+                WHERE is_archived = 0 
+                AND schedule <= NOW() 
+                AND status = 'approved' 
+                ORDER BY upload_time DESC";
+
         $result = $conn->query($sql);
         $count = 0;
 
@@ -367,14 +342,24 @@ $username = $_SESSION['username'];
                 data-title="<?php echo $row["title"]; ?>" data-description="<?php echo $row["description"]; ?>">
                 <div class="file-media">
                     <?php if ($row["filetype"] == "photo"): ?>
-                        <img src="uploads/<?php echo $row["filename"]; ?>" alt="<?php echo $row["title"]; ?>">
+                        <div class="photo-container">
+                            <img src="uploads/<?php echo $row["filename"]; ?>" alt="<?php echo $row["title"]; ?>">
+                        </div>
                     <?php elseif ($row["filetype"] == "video"): ?>
-                        <video controls>
-                            <source src="uploads/<?php echo $row["filename"]; ?>" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
+                        <div class="video-container">
+                            <video controls autoplay>
+                                <source src="uploads/<?php echo $row["filename"]; ?>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
                     <?php endif; ?>
                 </div>
+                <?php if ($row["filetype"] != "video"): ?>
+                    <div class="file-info">
+                        <h2><?php echo $row["title"]; ?></h2>
+                        <p><?php echo $row["description"]; ?></p>
+                    </div>
+                <?php endif; ?>
             </div>
             <?php $count++; ?>
         <?php endwhile; ?>
@@ -383,102 +368,87 @@ $username = $_SESSION['username'];
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const items = document.querySelectorAll('.file-item');
-    let currentIndex = -1;
+const items = document.querySelectorAll('.file-item');
+let currentIndex = -1;
 
-    function showNextItem() {
-        currentIndex = (currentIndex + 1) % items.length;
+function showNextItem() {
+    currentIndex = (currentIndex + 1) % items.length;
 
-        items.forEach(item => {
-            item.style.display = 'none';
+    items.forEach(item => {
+        item.style.display = 'none';
+    });
+
+    const currentItem = items[currentIndex];
+    currentItem.style.display = 'block';
+    currentItem.style.animation = 'panInFromRight 1s ease-in-out forwards';
+
+    const currentVideo = currentItem.querySelector('video');
+
+    if (currentVideo) {
+        currentVideo.muted = true;
+        currentVideo.play();
+
+        currentVideo.addEventListener('loadeddata', function() {
+            currentVideo.requestFullscreen(); // Request full screen when video is loaded
         });
 
-        const currentItem = items[currentIndex];
-        currentItem.style.display = 'block';
-        currentItem.style.animation = 'panInFromRight 1s ease-in-out forwards';
-
-        const currentVideo = currentItem.querySelector('video');
-
-        if (currentVideo) {
-            currentVideo.autoplay = true;
-            currentVideo.muted = true;
-
-            currentVideo.currentTime = 0;
-            currentVideo.play();
-
-            currentVideo.addEventListener('ended', function() {
-                setTimeout(() => {
-                    currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
-                    setTimeout(showNextItem, 1000);
-                }, 3000); // Show video for 2 seconds before panning out
-            });
-
-            currentVideo.onerror = function() {
-                setTimeout(() => {
-                    currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
-                    setTimeout(showNextItem, 1000);
-                }, 3000);
-            };
-        } else {
+        currentVideo.addEventListener('ended', function() {
             setTimeout(() => {
                 currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
                 setTimeout(showNextItem, 1000);
-            }, 3000); // Show image for 2 seconds before panning out
-        }
+            }, 3000); // Show video for 2 seconds before panning out
+        });
 
-        // Update title and description
-        const titleElement = document.getElementById('fileTitle');
-        const descriptionElement = document.getElementById('fileDescription');
-        const fileInfoElement = document.getElementById('fileInfo');
-
-        const title = currentItem.dataset.title;
-        const description = currentItem.dataset.description;
-
-        titleElement.textContent = title;
-        descriptionElement.textContent = description;
-
-        // Check if the title and description are short
-        if (title.length <= 30 && description.length <= 350) {
-            fileInfoElement.classList.add('center-left');
-        } else {
-            fileInfoElement.classList.remove('center-left');
-        }
+        currentVideo.onerror = function() {
+            setTimeout(() => {
+                currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
+                setTimeout(showNextItem, 1000);
+            }, 3000);
+        };
+    } else {
+        setTimeout(() => {
+            currentItem.style.animation = 'panOutToRight 1s ease-in-out forwards';
+            setTimeout(showNextItem, 1000);
+        }, 3000); // Show image for 2 seconds before panning out
     }
 
-    showNextItem();
+    const titleElement = document.getElementById('fileTitle');
+    const descriptionElement = document.getElementById('fileDescription');
+    const fileInfoElement = document.getElementById('fileInfo');
+
+    const title = currentItem.dataset.title;
+    const description = currentItem.dataset.description;
+
+    titleElement.textContent = title;
+    descriptionElement.textContent = description;
+
+    if (title.length <= 30 && description.length <= 350) {
+        fileInfoElement.classList.add('center-left');
+    } else {
+        fileInfoElement.classList.remove('center-left');
+    }
+}
+
+showNextItem();
 });
-</script>
-
-
-
-
-
-<script>
-function redirectToUploadPage() {
-    window.location.href = "upload.html";
-}
-
-function redirectToAdminBulletin() {
-    window.location.href = "admin_bulletin.php";
-}
 </script>
 
 <script>
 function toggleSideNavbar() {
-    var sideNavbar = document.getElementById('sideNavbar');
-    if (sideNavbar.style.right === '0px') {
-        sideNavbar.style.right = '-250px'; // Collapse side navbar
-    } else {
-        sideNavbar.style.right = '0px'; // Expand side navbar
-    }
+var sideNavbar = document.getElementById('sideNavbar');
+if (sideNavbar.style.right === '0px') {
+    sideNavbar.style.right = '-250px'; // Collapse side navbar
+} else {
+    sideNavbar.style.right = '0px'; // Expand side navbar
+}
 }
 
 function closeSideNavbarOnLargeScreen() {
-    var sideNavbar = document.getElementById('sideNavbar');
-    var screenWidth = window.innerWidth;
-    if (screenWidth > 768) { // Adjust the threshold as needed
-        sideNavbar.style.right = '-250px'; // Collapse side navbar if screen width is greater than 768px
-    }
+var sideNavbar = document.getElementById('sideNavbar');
+var screenWidth = window.innerWidth;
+if (screenWidth > 768) { // Adjust the threshold as needed
+    sideNavbar.style.right = '-250px'; // Collapse side navbar if screen width is greater than 768px
+}
 }
 
 window.onload = closeSideNavbarOnLargeScreen;

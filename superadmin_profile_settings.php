@@ -446,21 +446,30 @@ $conn->close();
 
     <div class="navbar">
     <div>
-        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
         <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
             <button class="dropbtn">Bulletin</button>
             <div class="dropdown-content" id="bulletinDropdown">
-                <a href="admin_bulletin.php">Bulletin Board</a>
-                <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+                <a href="superadmin_bulletin.php">Bulletin Board</a>
+                <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
             </div>
         </div>
         <!-- End of Dropdown menu -->
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <!-- Dropdown menu for Posts -->
+        <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
+            <button class="dropbtn">Posts</button>
+            <div class="dropdown-content" id="postsDropdown">
+                <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_for_approval.php">For Approval</a>
+                <a href="superadmin_rejected.php">Rejected</a>
+            </div>
+        </div>
+        <!-- End of Dropdown menu -->
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="hamburger" onclick="toggleSideNavbar()">
@@ -473,14 +482,15 @@ $conn->close();
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
     </div>
-        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-        <a href="admin_bulletin.php">Bulletin Board</a>
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="superadmin_bulletin.php">Bulletin Board</a>
+        <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_for_approval.php">For Approval</a>
+        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
 </div>
-
 
 <div class="sidebar">
     <div class="profile-picture">
@@ -503,10 +513,10 @@ $conn->close();
             <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
         </form>
     </div>
-    <a href="admin_profile_settings.php">User Info</a>
-    <a href="admin_change_username.php">Change Username</a>
-    <a href="admin_change_password.php">Change Password</a>
-    
+    <a href="superadmin_profile_settings.php">User Info</a>
+    <a href="superadmin_change_username.php">Change Username</a>
+    <a href="superadmin_change_password.php">Change Password</a>
+    <a href="superadmin_user_management.php">User Management</a>
 </div>
 
 <div class="container">

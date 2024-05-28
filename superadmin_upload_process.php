@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $stmt->close();
 
                         // Redirect to admin_dashboard.php
-                        header("Location: admin_upload.php");
+                        header("Location: superadmin_upload.php");
                         exit;
                     } else {
                         echo "Error uploading file: " . $stmt->error;

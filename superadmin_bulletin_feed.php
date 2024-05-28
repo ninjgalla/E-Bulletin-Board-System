@@ -380,21 +380,30 @@ $username = $_SESSION['username'];
 <body>
 <div class="navbar">
     <div>
-        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
         <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
             <button class="dropbtn">Bulletin</button>
             <div class="dropdown-content" id="bulletinDropdown">
-                <a href="admin_bulletin.php">Bulletin Board</a>
-                <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+                <a href="superadmin_bulletin.php">Bulletin Board</a>
+                <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
             </div>
         </div>
         <!-- End of Dropdown menu -->
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <!-- Dropdown menu for Posts -->
+        <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
+            <button class="dropbtn">Posts</button>
+            <div class="dropdown-content" id="postsDropdown">
+                <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_for_approval.php">For Approval</a>
+                <a href="superadmin_rejected.php">Rejected</a>
+            </div>
+        </div>
+        <!-- End of Dropdown menu -->
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="hamburger" onclick="toggleSideNavbar()">
@@ -407,11 +416,13 @@ $username = $_SESSION['username'];
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
     </div>
-        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-        <a href="admin_bulletin.php">Bulletin Board</a>
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="superadmin_bulletin.php">Bulletin Board</a>
+        <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_for_approval.php">For Approval</a>
+        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
 </div>
 
@@ -469,7 +480,7 @@ if (mysqli_num_rows($result) > 0) {
 
         // Add a comment container with text field and button (hidden initially)
         echo '<div class="comment-container" style="display: none;">';
-        echo '<form method="post" action="admin_submit_comment.php" onsubmit="saveScrollPosition()">'; // Set the action to submit_comment.php and call saveScrollPosition() function
+        echo '<form method="post" action="superadmin_submit_comment.php" onsubmit="saveScrollPosition()">'; // Set the action to submit_comment.php and call saveScrollPosition() function
         echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
         echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
         echo '<button type="submit" class="post-button">Post</button>';
@@ -565,7 +576,7 @@ mysqli_close($conn);
 
                 // Send AJAX request to submit the comment
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'admin_submit_comment.php', true);
+                xhr.open('POST', 'superadmin_submit_comment.php', true);
                 xhr.onload = function() {
                     if (xhr.status === 200) {
                         // On success, reload the comment section without page reload

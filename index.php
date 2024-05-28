@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +11,7 @@
     <style>
 
 html, body {
-            margin: 0;
+            margin: 0; 
             padding: 0;
             font-family: Helvetica, Arial, sans-serif;
         }
@@ -73,6 +77,13 @@ html, body {
 <body>
     <div class="container">
         <h2>Login</h2>
+        <?php
+        // Check for error message
+        if (isset($_SESSION['error'])) {
+            echo '<p style="color: red;">' . $_SESSION['error'] . '</p>';
+            unset($_SESSION['error']); // Clear the error message
+        }
+        ?>
         <form action="login_process.php" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>

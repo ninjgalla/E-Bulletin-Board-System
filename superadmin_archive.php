@@ -400,21 +400,30 @@
 <body>
 <div class="navbar">
     <div>
-        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
         <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
             <button class="dropbtn-a">Bulletin</button>
             <div class="dropdown-content" id="bulletinDropdown">
-                <a href="admin_bulletin.php">Bulletin Board</a>
-                <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+                <a href="superadmin_bulletin.php">Bulletin Board</a>
+                <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
             </div>
         </div>
         <!-- End of Dropdown menu -->
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <!-- Dropdown menu for Posts -->
+        <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
+            <button class="dropbtn-a">Posts</button>
+            <div class="dropdown-content" id="postsDropdown">
+                <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_for_approval.php">For Approval</a>
+                <a href="superadmin_rejected.php">Rejected</a>
+            </div>
+        </div>
+        <!-- End of Dropdown menu -->
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="hamburger" onclick="toggleSideNavbar()">
@@ -427,11 +436,13 @@
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
     </div>
-        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-        <a href="admin_bulletin.php">Bulletin Board</a>
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="superadmin_bulletin.php">Bulletin Board</a>
+        <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_for_approval.php">For Approval</a>
+        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
 </div>
 
@@ -492,6 +503,7 @@ while ($row = $result->fetch_assoc()) {
         echo '<div class="file-options">';
         echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
         echo '<div class="file-menu">';
+        echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
         echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
         echo '</div>';
         echo '</div>';
@@ -508,6 +520,7 @@ while ($row = $result->fetch_assoc()) {
         echo '<div class="file-options">';
         echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
         echo '<div class="file-menu">';
+        echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
         echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
         echo '</div>';
         echo '</div>';
@@ -550,6 +563,25 @@ while ($row = $result->fetch_assoc()) {
         }
     }
 
+    // Function to permanently delete file
+    function permanentlyDelete(id) {
+        if (confirm("Are you sure you want to permanently delete this file?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        alert("File permanently deleted.");
+                        location.reload();
+                    } else {
+                        alert("Error deleting file: " + xhr.statusText);
+                    }
+                }
+            };
+            xhr.open("GET", "superadmin_permanently_delete.php?id=" + id, true);
+            xhr.send();
+        }
+    }
+
     // Function to restore file
     function restore(id) {
         if (confirm("Are you sure you want to restore this file?")) {
@@ -564,14 +596,14 @@ while ($row = $result->fetch_assoc()) {
                     }
                 }
             };
-            xhr.open("GET", "admin_restore_file.php?id=" + id, true);
+            xhr.open("GET", "superadmin_restore_file.php?id=" + id, true);
             xhr.send();
         }
     }
 
     // Function to sort files
     function sortFiles(order) {
-        window.location.href = "admin_archive.php?sort=" + order;
+        window.location.href = "superadmin_archive.php?sort=" + order;
     }
 
     // Function to toggle side navbar
@@ -593,6 +625,26 @@ while ($row = $result->fetch_assoc()) {
         }
     }
 
+    // Function to delete selected files
+    function deleteSelected() {
+        var form = document.getElementById('fileForm');
+        var formData = new FormData(form);
+        formData.append('action', 'delete');
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    alert("Selected files permanently deleted.");
+                    location.reload();
+                } else {
+                    alert("Error deleting files: " + xhr.statusText);
+                }
+            }
+        };
+        xhr.open("POST", "superadmin_bulk_delete.php", true);
+        xhr.send(formData);
+    }
 
     // Function to restore selected files
     function restoreSelected() {
@@ -611,7 +663,7 @@ while ($row = $result->fetch_assoc()) {
                 }
             }
         };
-        xhr.open("POST", "admin_bulk_restore.php", true);
+        xhr.open("POST", "superadmin_bulk_restore.php", true);
         xhr.send(formData);
     }
 

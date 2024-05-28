@@ -16,7 +16,7 @@ if (isset($_POST['role'])) {
         case 'admin':
             $RoleID = 2;
             break;
-        case 'moderator':
+        case 'superadmin':
             $RoleID = 3;
             break;
         case 'user':
@@ -34,7 +34,7 @@ $result = mysqli_query($conn, $query);
 
 if (mysqli_num_rows($result) > 0) {
     // Email already exists, handle the error appropriately (e.g., display a message to the user)
-    echo "Email already exists. Please use a different email address.";
+    $email_error = "Email already exists. Please use a different email address.";
 } else {
     // Insert user into database
     $insert_query = "INSERT INTO users (username, email, password, first_name, last_name, TUP_id, RoleID) VALUES ('$username', '$email', '$password', '$first_name', '$last_name', '$TUP_id', '$RoleID')";
@@ -48,4 +48,5 @@ if (mysqli_num_rows($result) > 0) {
         echo "Registration failed. Please try again.";
     }
 }
+
 ?>

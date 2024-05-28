@@ -18,7 +18,7 @@ $username = $_SESSION['username'];
 $profilePicture = '';
 
 // Fetch user details from the database
-$query = "SELECT UserID, username, first_name, last_name, email, TUP_id, profile_picture FROM users WHERE username = ?";
+$query = "SELECT UserID, username, first_name, last_name, email, TUP_id, profile_picture, RoleID FROM users WHERE username = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $username);
 $stmt->execute();
@@ -26,7 +26,7 @@ $stmt->store_result();
 
 // Check if the user exists
 if ($stmt->num_rows > 0) {
-    $stmt->bind_result($userId, $username, $firstName, $lastName, $email, $tupId, $profilePicture);
+    $stmt->bind_result($userId, $username, $firstName, $lastName, $email, $tupId, $profilePicture, $roleID);
     $stmt->fetch();
 } else {
     // Handle the case where the user is not found
@@ -83,11 +83,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 }
 
-// Close the connection
+// Fetch all users with their roles from the database
+$queryAllUsers = "SELECT u.UserID, u.username, u.first_name, u.last_name, u.email, u.TUP_id, u.profile_picture, u.RoleID, r.RoleName 
+                  FROM users u
+                  JOIN roles r ON u.RoleID = r.RoleID";
+
+$resultAllUsers = $conn->query($queryAllUsers);
+
+// Initialize an array to store all user records
+$users = [];
+
+// Check if the query was successful
+if ($resultAllUsers) {
+    // Fetch all user records and store them in the $users array
+    while ($row = $resultAllUsers->fetch_assoc()) {
+        $users[] = $row;
+    }
+} else {
+    // Handle the case where the query fails
+    $error_message = "Error fetching users from the database.";
+}
+
+// Close the database connection
 $conn->close();
 ?>
-
-
 
     <!DOCTYPE html>
     <html lang="en">
@@ -106,14 +125,14 @@ $conn->close();
             }
 
             .container {
-                max-width: 500px;
+                max-width: 1000px;
                 margin: 60px auto 30px;
                 background-color: #fff;
                 padding: 20px;
                 border-radius: 8px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                
-            }
+                margin-left: 280px; /* Adjusted margin-left to start from the sidebar */
+                }
 
             .navbar {
                 background-color: #800000;
@@ -188,51 +207,7 @@ $conn->close();
                 font-weight: bold;
             }
 
-            h1 {
-                text-align: center;
-                margin-bottom: 30px;
-                color: maroon;
-            }
-
-            form {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-gap: 20px;
-                justify-items: center;
-            }
-
-            label {
-                font-weight: bold;
-            }
-
-            input[type="text"],
-            input[type="email"],
-            input[type="password"],
-            select {
-                width: calc(100% - 10px);
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                box-sizing: border-box;
-                margin-right: 100px;
-            }
-
-            input[type="submit"] {
-                width: auto;
-                padding: 10px 20px;
-                background-color: maroon;
-                color: #fff;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-                grid-column: span 2;
-            }
-
-            input[type="submit"]:hover {
-                background-color: #800000;
-            }
-
+           
             .profile-picture {
                 position: relative; /* Make the container relative for absolute positioning */
                 text-align: center;
@@ -282,9 +257,6 @@ $conn->close();
                 background-color: red;
             }
 
-            .success-message {
-                color: green;
-            }
 
             .hamburger {
                 display: none; /* Hidden by default */
@@ -347,41 +319,51 @@ $conn->close();
                 display: none;
             }
         }
-            @media (max-width: 768px) {
-            .container {
-                max-width: 350px;
-                margin: 60px auto 30px;
-                background-color: #fff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-               
-            }
-            form {
-                display: grid;
-                grid-template-columns: 1fr 2fr;
-                grid-gap: 20px;
-                justify-items: left;
-            }
-            input[type="submit"] {
-                width: auto;
-                padding: 10px 20px;
-                background-color: maroon;
-                color: #fff;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-                text-align: center; /* Center the button */
-                margin: 0 auto; /* Center horizontally */
-                display: block; /* Ensure the button occupies the full width */
-            }
+             /* Dropdown button */
+        .dropbtn {
+            background-color: #800000;
+            color: white;
+            padding: 5px 15px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .dropbtn-a {
+            background-color: #800000;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+}
 
-            input[type="submit"]:hover {
-                background-color: #800000;
-            }
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
 
-        }           
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown-menu:hover .dropdown-content {
+            display: block;
+        }
         .dropdown {
             position: relative;
             display: inline-block;
@@ -422,23 +404,20 @@ $conn->close();
         .dropdown:hover .dropbtn {
             background-color: #800000;
         }
-
-         /* Hide the dropdown content when screen size is small */
-         @media only screen and (max-width: 768px) {
+        
+           /* Hide the dropdown content when screen size is small */
+        @media only screen and (max-width: 768px) {
             .dropdown-content {
                 display: none;
             }
         }
          /* Hide the dropdown content when screen size is small */
          @media only screen and (max-width: 768px) {
-            .dropbtn {
+            .dropbtn-a {
                 display: none;
             }
         }
-             
-
-
-
+            
 
         </style>
     </head>
@@ -446,21 +425,30 @@ $conn->close();
 
     <div class="navbar">
     <div>
-        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
         <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
-            <button class="dropbtn">Bulletin</button>
+            <button class="dropbtn-a">Bulletin</button>
             <div class="dropdown-content" id="bulletinDropdown">
-                <a href="admin_bulletin.php">Bulletin Board</a>
-                <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+                <a href="superadmin_bulletin.php">Bulletin Board</a>
+                <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
             </div>
         </div>
         <!-- End of Dropdown menu -->
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <!-- Dropdown menu for Posts -->
+        <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
+            <button class="dropbtn-a">Posts</button>
+            <div class="dropdown-content" id="postsDropdown">
+                <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_for_approval.php">For Approval</a>
+                <a href="superadmin_rejected.php">Rejected</a>
+            </div>
+        </div>
+        <!-- End of Dropdown menu -->
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="hamburger" onclick="toggleSideNavbar()">
@@ -473,70 +461,98 @@ $conn->close();
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
     </div>
-        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-        <a href="admin_bulletin.php">Bulletin Board</a>
-        <a href="admin_upload.php">Upload</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="superadmin_bulletin.php">Bulletin Board</a>
+        <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_for_approval.php">For Approval</a>
+        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
 </div>
 
 
 <div class="sidebar">
-    <div class="profile-picture">
-        <!-- Display the user's profile picture from the database if available -->
-        <?php if (!empty($profilePicture)) : ?>
-            <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="User Profile Picture" class="profile-img" id="profile-picture">
-        <?php else : ?>
-            <img src="user.png" alt="Default Profile Picture" class="profile-img" id="profile-picture">
-        <?php endif; ?>
-        <form id="profile-picture-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
-            <label for="profile-image-upload" class="profile-picture-button">Change Picture</label>
-            <input type="file" id="profile-image-upload" name="profilePicture" onchange="document.getElementById('profile-picture-form').submit();">
-            <!-- Hidden input field for the user ID -->
-            <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
-            <!-- Other hidden input fields for user information -->
-            <input type="hidden" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>">
-            <input type="hidden" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>">
-            <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
-            <input type="hidden" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>">
-            <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
-        </form>
+        <div class="profile-picture">
+            <!-- Display the user's profile picture from the database if available -->
+            <?php if (!empty($profilePicture)) : ?>
+                <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="User Profile Picture" class="profile-img" id="profile-picture">
+            <?php else : ?>
+                <img src="user.png" alt="Default Profile Picture" class="profile-img" id="profile-picture">
+            <?php endif; ?>
+            <form id="profile-picture-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+               
+                <input type="file" id="profile-image-upload" name="profilePicture" onchange="document.getElementById('profile-picture-form').submit();">
+                <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
+                <input type="hidden" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>">
+                <input type="hidden" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>">
+                <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
+                <input type="hidden" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>">
+                <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
+            </form>
+        </div>
+        <a href="superadmin_profile_settings.php">User Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
+        <a href="superadmin_user_management.php">User Management</a>
     </div>
-    <a href="admin_profile_settings.php">User Info</a>
-    <a href="admin_change_username.php">Change Username</a>
-    <a href="admin_change_password.php">Change Password</a>
-    
-</div>
 
 <div class="container">
-        <h1>User Info</h1>
-        <?php if (!empty($success_message)) : ?>
-            <p class="success-message"><?php echo $success_message; ?></p>
-        <?php endif; ?>
-        <form id="profile-update-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
-            <!-- Hidden input field for the user ID -->
-            <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
-
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>" readonly style="color: gray;">
-
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>" readonly style="color: gray;">
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-
-            <label for="tupId">TUP ID:</label>
-            <input type="text" id="tupId" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>" readonly style="color: gray;">
-
-           
-            <!-- Hidden input field for the existing profile picture -->
-            <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
-
-            <input type="submit" name="submit" value="Save Changes"> 
-        </form>
-    </div>
+    <h2>User Management</h2>
+    <?php if (!empty($users)) : ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>TUP ID</th>
+                    <th>Current Role</th>
+                    <th>New</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user) : ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($user['UserID']); ?></td>
+                        <td><?php echo htmlspecialchars($user['username']); ?></td>
+                        <td><?php echo htmlspecialchars($user['first_name']); ?></td>
+                        <td><?php echo htmlspecialchars($user['last_name']); ?></td>
+                        <td><?php echo htmlspecialchars($user['email']); ?></td>
+                        <td><?php echo htmlspecialchars($user['TUP_id']); ?></td>
+                        <td><?php echo htmlspecialchars($user['RoleName']); ?></td>
+                        <td>
+                            <!-- Display current role or provide a dropdown to change the role -->
+                            <?php
+                                // Current role ID of the user
+                                $currentRoleId = $user['RoleID'];
+                                ?>
+                                <!-- Display current role or provide a dropdown to change the role -->
+                                <select name="role">
+                                    <option value="1" <?php if ($currentRoleId === 1) echo 'selected'; ?>>User</option>
+                                    <option value="2" <?php if ($currentRoleId === 2) echo 'selected'; ?>>Admin</option>
+                                    <option value="3" <?php if ($currentRoleId === 3) echo 'selected'; ?>>Super Admin</option>
+                                    <!-- Add more options for different roles if needed -->
+                                </select>
+                            </td>
+                        <td>
+                            <!-- Form to submit role change -->
+                            <form action="update_role.php" method="POST">
+                                <input type="hidden" name="userId" value="<?php echo htmlspecialchars($user['UserID']); ?>">
+                                <button type="submit">Update Role</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else : ?>
+        <p>No users found.</p>
+    <?php endif; ?>
+</div>
 
     <script>
     document.getElementById('profile-picture').addEventListener('click', function() {
