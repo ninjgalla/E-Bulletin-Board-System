@@ -91,7 +91,7 @@ html, body {
             <input type="password" id="password" name="password" required>
             <button type="submit">Login</button>
         </form>
-        <p><a href="registration.php">Register</a> | <a href="forgot_password.html">Forgot Password</a></p>
+        <p><a href="registration.php">Register</a> 
     </div>
 </body>
 </html>

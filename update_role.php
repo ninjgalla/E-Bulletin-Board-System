@@ -15,14 +15,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Map the new role name to RoleID
     $roleId = null;
     switch ($newRole) {
-        case 'User':
-            $roleId = 1;
+        case '3':
+            $roleId = 3;
             break;
-        case 'Admin':
+        case '2':
             $roleId = 2;
             break;
-        case 'Super Admin':
-            $roleId = 3;
+        case '1':
+            $roleId = 1;
             break;
         // Add more cases for additional roles if needed
     }
@@ -31,18 +31,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ii", $roleId, $userId);
     $stmt->execute();
 
-    // Check if the update was successful
-    if ($stmt->affected_rows > 0) {
-        // Redirect back to user management page with success message
-        header("Location: superadmin_user_management.php?success=Role updated successfully.");
-        exit;
+    // Check for errors
+    if ($stmt->errno) {
+        // Error occurred
+        $error_message = "Error: " . $stmt->error;
     } else {
-        // Redirect back to user management page with error message
-        header("Location: superadmin_user_management.php?error=Failed to update role. Please try again later.");
-        exit;
+        // Check if the update was successful
+        if ($stmt->affected_rows > 0) {
+            // Redirect back to user management page with success message
+            header("Location: superadmin_user_management.php?success=Role updated successfully.");
+            exit;
+        } else {
+            // Redirect back to user management page with error message
+            $error_message = "Failed to update role. No rows affected.";
+        }
     }
+
+    // Close the statement
+    $stmt->close();
 } else {
     // If the form is not submitted, redirect back to user management page
     header("Location: superadmin_user_management.php");
     exit;
 }
+?>

@@ -392,7 +392,14 @@ $username = $_SESSION['username'];
             </div>
         </div>
         <!-- End of Dropdown menu -->
-        <a href="admin_upload.php">Upload</a>
+        <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
+            <button class="dropbtn">Posts</button>
+            <div class="dropdown-content" id="postsDropdown">
+                <a href="admin_upload.php">Uploads</a>
+                <a href="admin_for_approval.php">For Approval</a>
+                <a href="admin_rejected.php">Rejected</a>
+            </div>
+        </div>
         <a href="admin_archive.php">Archive</a>
         <a href="admin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
@@ -410,6 +417,8 @@ $username = $_SESSION['username'];
         <a href="admin_bulletin_feed.php">Bulletin Feed</a>
         <a href="admin_bulletin.php">Bulletin Board</a>
         <a href="admin_upload.php">Upload</a>
+        <a href="admin_for_approval.php">For Approval</a>
+        <a href="admin_rejected.php">Rejected</a>
         <a href="admin_archive.php">Archive</a>
         <a href="admin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>

@@ -44,47 +44,50 @@ $error_message = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
     $userId = $_POST['userId'];
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $email = $_POST['email'];
-    $tupId = $_POST['tupId'];
+    $newRole = $_POST['role'];
 
-    // Handle profile picture upload
-    if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] == UPLOAD_ERR_OK) {
-        $targetDir = "uploads/";
-        $fileName = basename($_FILES["profilePicture"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
+    // Update user's role in the database
+    $update_query = "UPDATE users SET RoleID = ? WHERE UserID = ?";
+    $stmt = $conn->prepare($update_query);
 
-        // Move the uploaded file to the target directory
-        if (move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $targetFilePath)) {
-            // Save the file path to the database
-            $profilePicture = $targetFilePath;
-        } else {
-            $error_message = "Error uploading the profile picture.";
-        }
-    } else {
-        // If no new file is uploaded, retain the old profile picture
-        $profilePicture = isset($_POST['existingProfilePicture']) ? $_POST['existingProfilePicture'] : '';
+    // Map the new role name to RoleID
+    $roleId = null;
+    switch ($newRole) {
+        case '3':
+            $roleId = 3;
+            break;
+        case '2':
+            $roleId = 2;
+            break;
+        case '1':
+            $roleId = 1;
+            break;
+        // Add more cases for additional roles if needed
     }
 
-    // Update user information in the database
-    $update_query = "UPDATE users SET first_name=?, last_name=?, email=?, TUP_id=?, profile_picture=?, username=? WHERE UserID=?";
-    $stmt = $conn->prepare($update_query);
-    $stmt->bind_param("ssssssi", $firstName, $lastName, $email, $tupId, $profilePicture, $username, $userId);
+    // Bind parameters and execute query
+    $stmt->bind_param("ii", $roleId, $userId);
     $stmt->execute();
 
-    // Check if the update was successful
-    if ($stmt->affected_rows > 0) {
-        $success_message = "User information updated successfully.";
+    // Check for errors
+    if ($stmt->errno) {
+        // Error occurred
+        $error_message = "Error: " . $stmt->error;
     } else {
-        $error_message = "Error updating user information. Please try again later.";
+        // Check if the update was successful
+        if ($stmt->affected_rows > 0) {
+            $success_message = "Role updated successfully.";
+        } else {
+            $error_message = "Failed to update role. No rows affected.";
+        }
     }
 
+    // Close the statement
     $stmt->close();
 }
 
 // Fetch all users with their roles from the database
-$queryAllUsers = "SELECT u.UserID, u.username, u.first_name, u.last_name, u.email, u.TUP_id, u.profile_picture, u.RoleID, r.RoleName 
+$queryAllUsers = "SELECT u.UserID, u.username, u.first_name, u.last_name, u.email, u.TUP_id, u.RoleID, r.RoleName 
                   FROM users u
                   JOIN roles r ON u.RoleID = r.RoleID";
 
@@ -108,14 +111,13 @@ if ($resultAllUsers) {
 $conn->close();
 ?>
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <title>Profile Settings</title>
-        <style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <style>
             /* Your existing CSS styles */
             body {
                 font-family: Arial, sans-serif;
@@ -418,9 +420,10 @@ $conn->close();
             }
         }
             
-
-        </style>
-    </head>
+    </style>
+</head>
+<body>
+</head>
     <body>
 
     <div class="navbar">
@@ -497,7 +500,8 @@ $conn->close();
         <a href="superadmin_user_management.php">User Management</a>
     </div>
 
-<div class="container">
+    <div class="container">
+
     <h2>User Management</h2>
     <?php if (!empty($users)) : ?>
         <table>
@@ -510,7 +514,7 @@ $conn->close();
                     <th>Email</th>
                     <th>TUP ID</th>
                     <th>Current Role</th>
-                    <th>New</th>
+                    <th>New Role</th> <!-- Updated column heading -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -526,22 +530,14 @@ $conn->close();
                         <td><?php echo htmlspecialchars($user['RoleName']); ?></td>
                         <td>
                             <!-- Display current role or provide a dropdown to change the role -->
-                            <?php
-                                // Current role ID of the user
-                                $currentRoleId = $user['RoleID'];
-                                ?>
-                                <!-- Display current role or provide a dropdown to change the role -->
-                                <select name="role">
-                                    <option value="1" <?php if ($currentRoleId === 1) echo 'selected'; ?>>User</option>
-                                    <option value="2" <?php if ($currentRoleId === 2) echo 'selected'; ?>>Admin</option>
-                                    <option value="3" <?php if ($currentRoleId === 3) echo 'selected'; ?>>Super Admin</option>
-                                    <!-- Add more options for different roles if needed -->
-                                </select>
-                            </td>
-                        <td>
-                            <!-- Form to submit role change -->
-                            <form action="update_role.php" method="POST">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                                 <input type="hidden" name="userId" value="<?php echo htmlspecialchars($user['UserID']); ?>">
+                                <select name="role"> <!-- Add the name attribute here -->
+                                    <option value="3" <?php if ($user['RoleID'] === 3) echo 'selected'; ?>>User</option>
+                                    <option value="2" <?php if ($user['RoleID'] === 2) echo 'selected'; ?>>Admin</option>
+                                    <option value="1" <?php if ($user['RoleID'] === 1) echo 'selected'; ?>>Super Admin</option>
+                                    <!-- Add more options for additional roles if needed -->
+                                </select>
                                 <button type="submit">Update Role</button>
                             </form>
                         </td>
@@ -552,43 +548,42 @@ $conn->close();
     <?php else : ?>
         <p>No users found.</p>
     <?php endif; ?>
-</div>
+    </div>
 
-    <script>
-    document.getElementById('profile-picture').addEventListener('click', function() {
-        document.getElementById('profile-image-upload').click();
-    });
+<script>
+document.getElementById('profile-picture').addEventListener('click', function() {
+    document.getElementById('profile-image-upload').click();
+});
 
-    // Update profile picture preview
-    document.getElementById('profile-image-upload').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = function() {
-            document.getElementById('profile-picture').src = reader.result;
-        };
-        reader.readAsDataURL(file);
-    });
+// Update profile picture preview
+document.getElementById('profile-image-upload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function() {
+        document.getElementById('profile-picture').src = reader.result;
+    };
+    reader.readAsDataURL(file);
+});
 
-    function toggleSideNavbar() {
-        var sideNavbar = document.getElementById('sideNavbar');
-        if (sideNavbar.style.right === '0px') {
-            sideNavbar.style.right = '-250px';
-        } else {
-            sideNavbar.style.right = '0px';
-        }
+function toggleSideNavbar() {
+    var sideNavbar = document.getElementById('sideNavbar');
+    if (sideNavbar.style.right === '0px') {
+        sideNavbar.style.right = '-250px';
+    } else {
+        sideNavbar.style.right = '0px';
     }
+}
 
-    function closeSideNavbarOnLargeScreen() {
-        var sideNavbar = document.getElementById('sideNavbar');
-        var screenWidth = window.innerWidth;
-        if (screenWidth > 768) {
-            sideNavbar.style.right = '-250px';
-        }
+function closeSideNavbarOnLargeScreen() {
+    var sideNavbar = document.getElementById('sideNavbar');
+    var screenWidth = window.innerWidth;
+    if (screenWidth > 768) {
+        sideNavbar.style.right = '-250px';
     }
+}
 
-    window.onload = closeSideNavbarOnLargeScreen;
-    window.onresize = closeSideNavbarOnLargeScreen;
-    </script>
-    </body>
-    </html>
-
+window.onload = closeSideNavbarOnLargeScreen;
+window.onresize = closeSideNavbarOnLargeScreen;
+</script>
+</body>
+</html>
