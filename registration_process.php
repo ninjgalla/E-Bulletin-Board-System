@@ -63,4 +63,9 @@ if (!isset($email_error)) {
         }
     }
 }
+
+// Echo the error message if it exists
+if (isset($email_error)) {
+    echo $email_error;
+}
 ?>
