@@ -87,13 +87,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Settings</title>
-    <style>
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <title>Profile Settings</title>
+        <style>
             /* Your existing CSS styles */
             body {
                 font-family: Arial, sans-serif;
@@ -109,6 +112,7 @@ $conn->close();
                 padding: 20px;
                 border-radius: 8px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                
             }
 
             .navbar {
@@ -337,19 +341,137 @@ $conn->close();
                     display: block; /* Show hamburger menu */
                 }
             }
-        </style>
-</head>
-<body>
 
-<div class="navbar">
-        <div>
-            <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
-        </div>
-        <div>
-            <a href="user_profile_settings.php">Profile</a>
-            <a href="logout.php">Logout</a>
-        </div>
+            @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+        }
+            @media (max-width: 768px) {
+            .container {
+                max-width: 350px;
+                margin: 60px auto 30px;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+               
+            }
+            form {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                grid-gap: 20px;
+                justify-items: left;
+            }
+            input[type="submit"] {
+                width: auto;
+                padding: 10px 20px;
+                background-color: maroon;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                text-align: center; /* Center the button */
+                margin: 0 auto; /* Center horizontally */
+                display: block; /* Ensure the button occupies the full width */
+            }
+
+            input[type="submit"]:hover {
+                background-color: #800000;
+            }
+
+        }           
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+    background-color: #800000;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #800000;
+        }
+
+         /* Hide the dropdown content when screen size is small */
+         @media only screen and (max-width: 768px) {
+            .dropdown-content {
+                display: none;
+            }
+        }
+         /* Hide the dropdown content when screen size is small */
+         @media only screen and (max-width: 768px) {
+            .dropbtn {
+                display: none;
+            }
+        }
+             
+
+        .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
+
+
+
+        </style>
+    </head>
+    <body>
+
+    <div class="navbar">
+    <div>
+        <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
+    </div>
+    <div>
+        <a href="user_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
+    </div>
+    <div class="hamburger" onclick="toggleSideNavbar()">
+        <i class="fas fa-bars"></i>
+    </div>
 </div>
+
+<!-- Side navbar -->
+<div class="side-navbar" id="sideNavbar">
+    <div class="close-btn" onclick="toggleSideNavbar()">
+        <i class="fas fa-times"></i>
+    </div>
+        <a href="user_bulletin_feed.php">Bulletin Feed</a>
+        <a href="user_profile_settings.php">Profile</a>
+        <a href="user_change_username.php">Change Username</a>
+        <a href="user_change_password.php">Change Password</a>
+        <a href="logout.php">Logout</a>
+</div>
+
 
 <div class="sidebar">
     <div class="profile-picture">
@@ -372,52 +494,77 @@ $conn->close();
             <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
         </form>
     </div>
-
-<a href="user_profile_settings.php">User Info</a>
-<a href="user_change_username.php">Change Username</a>
-<a href="user_change_password.php">Change Password</a>
+    <a href="admin_profile_settings.php">Profile</a>
+    <a href="admin_change_username.php">Change Username</a>
+    <a href="admin_change_password.php">Change Password</a>
+    
 </div>
-
 
 <div class="container">
-    <h1>User Info</h1>
-    <?php if (!empty($success_message)) : ?>
-        <p class="success-message"><?php echo $success_message; ?></p>
-    <?php endif; ?>
-    <form id="profile-update-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-        <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
+        <h1>Profile Info</h1>
+        <?php if (!empty($success_message)) : ?>
+            <p class="success-message"><?php echo $success_message; ?></p>
+        <?php endif; ?>
+        <form id="profile-update-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+            <!-- Hidden input field for the user ID -->
+            <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
 
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>" readonly style="color: gray;">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>">
 
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>" readonly style="color: gray;">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>">
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
 
-        <label for="tupId">TUP ID:</label>
-        <input type="text" id="tupId" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>" readonly style="color: gray;">
-        
-        <input type="submit" name="submit" value="Save Changes"> 
-        
-    </form>
-</div>
-<script>
-document.getElementById('profile-picture').addEventListener('click', function() {
-    document.getElementById('profile-image-upload').click();
-});
+            <label for="tupId">TUP ID:</label>
+            <input type="text" id="tupId" name="tupId" value="<?php echo htmlspecialchars($tupId); ?>">
 
-// Update profile picture preview
-document.getElementById('profile-image-upload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function() {
-        document.getElementById('profile-picture').src = reader.result;
-    };
-    reader.readAsDataURL(file);
-});
-</script>
 
-</body>
-</html>
+           
+            <!-- Hidden input field for the existing profile picture -->
+            <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
+
+            <input type="submit" name="submit" value="Save Changes"> 
+        </form>
+    </div>
+
+    <script>
+    document.getElementById('profile-picture').addEventListener('click', function() {
+        document.getElementById('profile-image-upload').click();
+    });
+
+    // Update profile picture preview
+    document.getElementById('profile-image-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function() {
+            document.getElementById('profile-picture').src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function toggleSideNavbar() {
+        var sideNavbar = document.getElementById('sideNavbar');
+        if (sideNavbar.style.right === '0px') {
+            sideNavbar.style.right = '-250px';
+        } else {
+            sideNavbar.style.right = '0px';
+        }
+    }
+
+    function closeSideNavbarOnLargeScreen() {
+        var sideNavbar = document.getElementById('sideNavbar');
+        var screenWidth = window.innerWidth;
+        if (screenWidth > 768) {
+            sideNavbar.style.right = '-250px';
+        }
+    }
+
+    window.onload = closeSideNavbarOnLargeScreen;
+    window.onresize = closeSideNavbarOnLargeScreen;
+    </script>
+    </body>
+    </html>
+

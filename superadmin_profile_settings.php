@@ -437,6 +437,9 @@ $conn->close();
         }
              
 
+        .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
 
 
 
@@ -463,6 +466,7 @@ $conn->close();
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
                 <a href="superadmin_rejected.php">Rejected</a>
             </div>
@@ -481,15 +485,27 @@ $conn->close();
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
         <a href="superadmin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
         <a href="superadmin_rejected.php">Rejected</a>
-        <a href="superadmin_archive.php">Archive</a>
-        <a href="superadmin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="superadmin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="superadmin_profile_settings.php">Profile Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="sidebar">
@@ -513,14 +529,14 @@ $conn->close();
             <input type="hidden" name="existingProfilePicture" value="<?php echo htmlspecialchars($profilePicture); ?>">
         </form>
     </div>
-    <a href="superadmin_profile_settings.php">User Info</a>
+    <a href="superadmin_profile_settings.php">Profile Info</a>
     <a href="superadmin_change_username.php">Change Username</a>
     <a href="superadmin_change_password.php">Change Password</a>
     <a href="superadmin_user_management.php">User Management</a>
 </div>
 
 <div class="container">
-        <h1>User Info</h1>
+        <h1>Profile Info</h1>
         <?php if (!empty($success_message)) : ?>
             <p class="success-message"><?php echo $success_message; ?></p>
         <?php endif; ?>

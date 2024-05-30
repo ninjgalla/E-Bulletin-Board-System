@@ -300,6 +300,15 @@ body {
 .post-title:hover {
     text-decoration: underline;
 }
+.indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
+
+h2{
+    color: maroon;
+    text-align: center;
+}
+
 </style>
 </head>
 <body>
@@ -322,6 +331,7 @@ body {
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
                 <a href="superadmin_rejected.php">Rejected</a>
             </div>
@@ -340,75 +350,92 @@ body {
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
         <a href="superadmin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
         <a href="superadmin_rejected.php">Rejected</a>
-        <a href="superadmin_archive.php">Archive</a>
-        <a href="superadmin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="superadmin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="superadmin_profile_settings.php">Profile Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
-
-
 
 <div class="content">
-    <?php
-    // Fetch uploaded files from the database
-    $db = new mysqli("localhost", "root", "", "ebulletin_system");
-    if ($db->connect_error) {
-        die("Connection failed: " . $db->connect_error);
-    }
-    $sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 AND status = 'rejected' ORDER BY upload_time DESC";
+    <h2>Rejected Files</h2>
+<?php
+// Fetch uploaded files from the database
+$db = new mysqli("localhost", "root", "", "ebulletin_system");
+if ($db->connect_error) {
+    die("Connection failed: " . $db->connect_error);
+}
+$sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 AND status = 'rejected' ORDER BY upload_time DESC";
 
-    $result = $db->query($sql);
+$result = $db->query($sql);
 
-    // Display uploaded files
-    while ($row = $result->fetch_assoc()) {
-        $currentSchedule = isset($row["schedule"]) ? date('Y-m-d\TH:i', strtotime($row["schedule"])) : "";
+// Display uploaded files
+while ($row = $result->fetch_assoc()) {
+    $currentSchedule = isset($row["schedule"]) ? date('Y-m-d\TH:i', strtotime($row["schedule"])) : "";
     
-        // Escape special characters in title and description
-        $title = htmlspecialchars(json_encode($row["title"]), ENT_QUOTES);
-        $description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
-        $filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
-        $schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
+    // Escape special characters in title and description
+    $title = htmlspecialchars(json_encode($row["title"]), ENT_QUOTES);
+    $description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
+    $filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
+    $schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
+    $remarks = isset($row["remarks"]) ? htmlspecialchars(json_encode($row["remarks"]), ENT_QUOTES) : ""; // Ensure $remarks is defined
     
-        if ($row["filetype"] == "photo") {
-            echo '<div class="photo-container">';
-            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
-            echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
-            echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
-            echo '</div>';
-        } elseif ($row["filetype"] == "video") {
-            echo '<div class="video-container">';
-            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
-            echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
-            echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
-            echo '</div>';
-        }
+    if ($row["filetype"] == "photo") {
+        echo '<div class="photo-container">';
+        echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+        echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $remarks . ', '. $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
+        echo '</div>';
+
+    } elseif ($row["filetype"] == "video") {
+        echo '<div class="video-container">';
+        echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
+        echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $remarks . ', '. $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
+        echo '</div>';
     }
-    ?>
+}
+?>
 </div>
 
-<!-- Modal -->
 <div id="postModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <h2 id="modalTitle"></h2>
-    <p id="modalDescription"></p>
-    <p><strong>Schedule:</strong> <span id="modalSchedule"></span></p>
-    <label for="modalRemarks">Remarks:</label>
-    <textarea id="modalRemarks" rows="4" cols="50"></textarea>
-    <br><br>
-    <button class="approve-btn" id="modalApproveBtn">Approve</button>
-    <button class="reject-btn" id="modalRejectBtn">Reject</button>
-  </div>
-</div>
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Modal Title</h2>
+            <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+            <p><strong>Schedule:</strong> <span id="modalSchedule"></span></p>
+            <p><strong>Remarks:</strong> <span id="modalRemarks"></span></p>
+        </div>
+    </div>
 
 <script>
-    // Function to toggle side navbar
-    function toggleSideNavbar() {
+function openModal(title, description, schedule, remarks) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalDescription").textContent = description;
+    document.getElementById("modalSchedule").textContent = schedule;
+    document.getElementById("modalRemarks").textContent = remarks;
+    document.getElementById("postModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("postModal").style.display = "none";
+}
+ // Function to toggle side navbar
+ function toggleSideNavbar() {
         var sideNavbar = document.getElementById('sideNavbar');
         if (sideNavbar.style.right === '0px') {
             sideNavbar.style.right = '-250px'; // Collapse side navbar
@@ -440,50 +467,6 @@ body {
     window.onload = closeSideNavbarOnLargeScreen;
     window.onresize = closeSideNavbarOnLargeScreen;
 
-    function approvePost(id) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                alert('Post ' + id + ' approved');
-                location.reload();
-            }
-        };
-        xhttp.open("POST", "approve_post.php", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("id=" + id + "&action=approve");
-    }
-
-    function rejectPost(id) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                alert('Post ' + id + ' rejected');
-                location.reload();
-            }
-        };
-        xhttp.open("POST", "reject_post.php", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("id=" + id + "&action=reject");
-    }
-
-    // Function to open the modal
-    function openModal(title, description, schedule, id) {
-        document.getElementById("modalTitle").textContent = title;
-        document.getElementById("modalDescription").textContent = description;
-        document.getElementById("modalSchedule").textContent = schedule;
-        document.getElementById("modalApproveBtn").onclick = function() {
-            approvePost(id);
-        };
-        document.getElementById("modalRejectBtn").onclick = function() {
-            rejectPost(id);
-        };
-        document.getElementById("postModal").style.display = "block";
-    }
-
-    // Function to close the modal
-    function closeModal() {
-        document.getElementById("postModal").style.display = "none";
-    }
 </script>
 </body>
 </html>

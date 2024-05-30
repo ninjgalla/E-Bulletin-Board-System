@@ -53,8 +53,13 @@ $username = $_SESSION['username'];
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+            opacity: 0; /* Initially hide the navbar */
+            transition: opacity 0.3s; /* Add transition effect */
         }
 
+        .navbar:hover {
+            opacity: 1; /* Show the navbar on hover */
+        }
         .navbar a {
             color: white;
             text-decoration: none;
@@ -151,7 +156,7 @@ $username = $_SESSION['username'];
     width: 600px; /* Adjust width as needed */
     padding-right: 20px; /* Add some spacing */
     text-align: center; /* Center-align text */
-    margin-top: 40px;
+    margin-top: 110px;
     position: fixed; /* Fix position */
     left: 100px; /* Adjust left spacing */
     background-color: rgba(255, 255, 255, 0.8); /* Set opacity to 50% */
@@ -240,13 +245,13 @@ $username = $_SESSION['username'];
 
         .center-left {
     position: absolute;
-    top: 45%;
+    top: 30%;
     left: 100px;
     transform: translateY(-50%);
     text-align: right;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 100px;
+    margin-top: 150px;
 }
 
 .dropdown {
@@ -303,6 +308,9 @@ $username = $_SESSION['username'];
             }
         }
         
+        .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
 
 
  
@@ -312,7 +320,7 @@ $username = $_SESSION['username'];
 
 <div class="navbar">
     <div>
-        <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
@@ -329,6 +337,7 @@ $username = $_SESSION['username'];
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="admin_upload.php">Uploads</a>
+                <a href="admin_approved_post.php">Approved</a>
                 <a href="admin_for_approval.php">For Approval</a>
                 <a href="admin_rejected.php">Rejected</a>
             </div>
@@ -347,15 +356,27 @@ $username = $_SESSION['username'];
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="admin_bulletin_feed.php">Bulletin Feed</a>
         <a href="admin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="admin_upload.php">Uploads</a>
+        <a href="admin_approved_post.php">Approved</a>
         <a href="admin_for_approval.php">For Approval</a>
         <a href="admin_rejected.php">Rejected</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="admin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="admin_profile_settings.php">Profile Info</a>
+        <a href="admin_change_username.php">Change Username</a>
+        <a href="admin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="file-info" id="fileInfo">
@@ -454,7 +475,7 @@ document.addEventListener("DOMContentLoaded", function() {
         descriptionElement.textContent = description;
 
         // Check if the title and description are short
-        if (title.length <= 30 && description.length <= 350) {
+        if (title.length <= 50 && description.length <= 350) {
             fileInfoElement.classList.add('center-left');
         } else {
             fileInfoElement.classList.remove('center-left');

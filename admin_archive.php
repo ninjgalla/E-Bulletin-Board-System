@@ -368,8 +368,10 @@
         }
 
         .select-all {
-        margin-top: 10px;
-    }
+    position: absolute;
+    top: 60px; /* Adjust as needed */
+    left: 20px; /* Adjust as needed */
+}
 
     /* Style for the checkbox */
     .select-all input[type="checkbox"] {
@@ -378,22 +380,26 @@
 
     /* Style for the button label */
     .select-all label {
-        background-color: #800000;
-        color: white;
-        border: none;
-        padding: 5px 13px;
-        margin: 5px 0;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 12px;
-        display: inline-block;
-        margin-top: 20px;
-    }
+    background-color: #800000;
+    color: white;
+    border: none;
+    padding: 5px 13px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 12px;
+    display: inline-block;
+}
 
     /* Hover effect */
     .select-all label:hover {
         background-color: #575757;
     }
+    .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
+
+    
 
     </style>
 </head>
@@ -416,6 +422,7 @@
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="admin_upload.php">Uploads</a>
+                <a href="admin_approved_post.php">Approved</a>
                 <a href="admin_for_approval.php">For Approval</a>
                 <a href="admin_rejected.php">Rejected</a>
             </div>
@@ -433,15 +440,27 @@
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="admin_bulletin_feed.php">Bulletin Feed</a>
         <a href="admin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="admin_upload.php">Uploads</a>
+        <a href="admin_approved_post.php">Approved</a>
         <a href="admin_for_approval.php">For Approval</a>
         <a href="admin_rejected.php">Rejected</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="admin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="admin_profile_settings.php">Profile Info</a>
+        <a href="admin_change_username.php">Change Username</a>
+        <a href="admin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="file-container">
@@ -453,12 +472,11 @@
                 <a href="#" onclick="sortFiles('alphabetical')">Sort Alphabetically</a>
             </div>
         </div>
-
-<!-- "Select All" checkbox -->
-<div class="select-all">
-    <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllCheckboxes(this)">
-    <label for="selectAllCheckbox">Select All</label>
-</div>
+    <!-- "Select All" checkbox -->
+    <div class="select-all">
+        <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllCheckboxes(this)">
+        <label for="selectAllCheckbox">Select All</label>
+    </div>
 
 
 

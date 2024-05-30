@@ -368,8 +368,10 @@
         }
 
         .select-all {
-        margin-top: 10px;
-    }
+    position: absolute;
+    top: 60px; /* Adjust as needed */
+    left: 20px; /* Adjust as needed */
+}
 
     /* Style for the checkbox */
     .select-all input[type="checkbox"] {
@@ -378,23 +380,29 @@
 
     /* Style for the button label */
     .select-all label {
-        background-color: #800000;
-        color: white;
-        border: none;
-        padding: 5px 13px;
-        margin: 5px 0;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 12px;
-        display: inline-block;
-        margin-top: 20px;
-    }
+    background-color: #800000;
+    color: white;
+    border: none;
+    padding: 5px 13px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 12px;
+    display: inline-block;
+}
 
     /* Hover effect */
     .select-all label:hover {
         background-color: #575757;
-    }
+        .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
 
+
+    }
+    .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
     </style>
 </head>
 <body>
@@ -417,6 +425,7 @@
             <button class="dropbtn-a">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
                 <a href="superadmin_rejected.php">Rejected</a>
             </div>
@@ -435,15 +444,27 @@
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
         <a href="superadmin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
         <a href="superadmin_rejected.php">Rejected</a>
-        <a href="superadmin_archive.php">Archive</a>
-        <a href="superadmin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="superadmin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="superadmin_profile_settings.php">Profile Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="file-container">
@@ -625,8 +646,9 @@ while ($row = $result->fetch_assoc()) {
         }
     }
 
-    // Function to delete selected files
-    function deleteSelected() {
+// Function to delete selected files
+function deleteSelected() {
+    if (confirm("Are you sure you want to permanently delete the selected files?")) {
         var form = document.getElementById('fileForm');
         var formData = new FormData(form);
         formData.append('action', 'delete');
@@ -645,6 +667,8 @@ while ($row = $result->fetch_assoc()) {
         xhr.open("POST", "superadmin_bulk_delete.php", true);
         xhr.send(formData);
     }
+}
+
 
     // Function to restore selected files
     function restoreSelected() {

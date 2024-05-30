@@ -45,7 +45,7 @@ $username = $_SESSION['username'];
 }
 
 
-        .navbar {
+.navbar {
             background-color: #800000; /* Set navbar background color */
             color: maroon;
             padding: 15px 40px; /* Adjust padding to increase width */
@@ -53,6 +53,12 @@ $username = $_SESSION['username'];
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+            opacity: 0; /* Initially hide the navbar */
+            transition: opacity 0.3s; /* Add transition effect */
+        }
+
+        .navbar:hover {
+            opacity: 1; /* Show the navbar on hover */
         }
 
         .navbar a {
@@ -151,7 +157,7 @@ $username = $_SESSION['username'];
     width: 600px; /* Adjust width as needed */
     padding-right: 20px; /* Add some spacing */
     text-align: center; /* Center-align text */
-    margin-top: 40px;
+    margin-top: 110px;
     position: fixed; /* Fix position */
     left: 100px; /* Adjust left spacing */
     background-color: rgba(255, 255, 255, 0.8); /* Set opacity to 50% */
@@ -240,13 +246,13 @@ $username = $_SESSION['username'];
 
         .center-left {
     position: absolute;
-    top: 45%;
+    top: 30%;
     left: 100px;
     transform: translateY(-50%);
     text-align: right;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 100px;
+    margin-top: 150px;
 }
 
 .dropdown {
@@ -303,6 +309,9 @@ $username = $_SESSION['username'];
             }
         }
         
+        .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
 
 
  
@@ -329,6 +338,7 @@ $username = $_SESSION['username'];
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
                 <a href="superadmin_rejected.php">Rejected</a>
             </div>
@@ -347,13 +357,27 @@ $username = $_SESSION['username'];
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
         <a href="superadmin_bulletin.php">Bulletin Board</a>
-        <a href="superadmin_upload.php">Upload</a>
-        <a href="superadmin_archive.php">Archive</a>
-        <a href="superadmin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
+        <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_approved_post.php">Approved</a>
+        <a href="superadmin_for_approval.php">For Approval</a>
+        <a href="superadmin_rejected.php">Rejected</a>
+    </div>
+    <a href="superadmin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="superadmin_profile_settings.php">Profile Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="file-info" id="fileInfo">
@@ -452,7 +476,7 @@ document.addEventListener("DOMContentLoaded", function() {
         descriptionElement.textContent = description;
 
         // Check if the title and description are short
-        if (title.length <= 30 && description.length <= 350) {
+        if (title.length <= 50 && description.length <= 350) {
             fileInfoElement.classList.add('center-left');
         } else {
             fileInfoElement.classList.remove('center-left');
@@ -473,7 +497,7 @@ function redirectToUploadPage() {
 }
 
 function redirectToAdminBulletin() {
-    window.location.href = "admin_bulletin.php";
+    window.location.href = "superadmin_bulletin.php";
 }
 </script>
 

@@ -419,8 +419,66 @@ $conn->close();
                 display: none;
             }
         }
-            
+        .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
+/* Add CSS for the table */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Collapse table borders */
+}
+
+thead th,
+tbody td {
+    padding: 8px; /* Add padding to table cells */
+    border: 1px solid #ddd; /* Add borders to table cells */
+    text-align: left; /* Align text to the left in table cells */
+}
+
+/* Set specific widths for each column */
+thead th:nth-child(1),
+tbody td:nth-child(1) {
+    width: 5%; /* Adjust width for the User ID column */
+}
+
+thead th:nth-child(2),
+tbody td:nth-child(2) {
+    width: 10%; /* Adjust width for the Username column */
+}
+
+/* Repeat the above pattern for other columns as needed */
+
+/* Add styles for table header */
+thead th {
+    background-color: #f2f2f2; /* Add background color to table header */
+    font-weight: bold; /* Make table header text bold */
+}
+
+/* Add styles for table rows */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Add alternate background color to even rows */
+}
+
+/* Add hover effect to table rows */
+tbody tr:hover {
+    background-color: #f2f2f2; /* Change background color on hover */
+}
+button[type="submit"] {
+        background-color: #800000; /* Set background color */
+        color: white; /* Set text color */
+        padding: 1px 10px; /* Adjust padding to make the button smaller */
+        border: none; /* Remove border */
+        border-radius: 4px; /* Add border radius */
+        cursor: pointer; /* Add cursor pointer */
+        transition: background-color 0.3s; /* Add transition effect */
+        font-size: 12px; /* Adjust font size to make the button slimmer */
+    }
+
+    button[type="submit"]:hover {
+        background-color: #600000; /* Change background color on hover */
+    }
     </style>
+    
 </head>
 <body>
 </head>
@@ -445,6 +503,7 @@ $conn->close();
             <button class="dropbtn-a">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
                 <a href="superadmin_rejected.php">Rejected</a>
             </div>
@@ -467,6 +526,7 @@ $conn->close();
         <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
         <a href="superadmin_bulletin.php">Bulletin Board</a>
         <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
         <a href="superadmin_rejected.php">Rejected</a>
         <a href="superadmin_archive.php">Archive</a>
@@ -519,31 +579,34 @@ $conn->close();
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($users as $user) : ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($user['UserID']); ?></td>
-                        <td><?php echo htmlspecialchars($user['username']); ?></td>
-                        <td><?php echo htmlspecialchars($user['first_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['last_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['email']); ?></td>
-                        <td><?php echo htmlspecialchars($user['TUP_id']); ?></td>
-                        <td><?php echo htmlspecialchars($user['RoleName']); ?></td>
-                        <td>
-                            <!-- Display current role or provide a dropdown to change the role -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                                <input type="hidden" name="userId" value="<?php echo htmlspecialchars($user['UserID']); ?>">
-                                <select name="role"> <!-- Add the name attribute here -->
-                                    <option value="3" <?php if ($user['RoleID'] === 3) echo 'selected'; ?>>User</option>
-                                    <option value="2" <?php if ($user['RoleID'] === 2) echo 'selected'; ?>>Admin</option>
-                                    <option value="1" <?php if ($user['RoleID'] === 1) echo 'selected'; ?>>Super Admin</option>
-                                    <!-- Add more options for additional roles if needed -->
-                                </select>
-                                <button type="submit">Update Role</button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+    <?php foreach ($users as $user) : ?>
+        <tr>
+            <td><?php echo htmlspecialchars($user['UserID']); ?></td>
+            <td><?php echo htmlspecialchars($user['username']); ?></td>
+            <td><?php echo htmlspecialchars($user['first_name']); ?></td>
+            <td><?php echo htmlspecialchars($user['last_name']); ?></td>
+            <td><?php echo htmlspecialchars($user['email']); ?></td>
+            <td><?php echo htmlspecialchars($user['TUP_id']); ?></td>
+            <td><?php echo htmlspecialchars($user['RoleName']); ?></td>
+            <td>
+                <!-- Display current role or provide a dropdown to change the role -->
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                    <input type="hidden" name="userId" value="<?php echo htmlspecialchars($user['UserID']); ?>">
+                    <select name="role"> <!-- Add the name attribute here -->
+                        <option value="3" <?php if ($user['RoleID'] === 3) echo 'selected'; ?>>User</option>
+                        <option value="2" <?php if ($user['RoleID'] === 2) echo 'selected'; ?>>Admin</option>
+                        <option value="1" <?php if ($user['RoleID'] === 1) echo 'selected'; ?>>Super Admin</option>
+                        <!-- Add more options for additional roles if needed -->
+                    </select>
+                </td>
+                <td>
+                    <button type="submit">Update Role</button> <!-- Move the button here -->
+                </form>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
+
         </table>
     <?php else : ?>
         <p>No users found.</p>

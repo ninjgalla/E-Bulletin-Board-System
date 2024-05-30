@@ -300,12 +300,21 @@ body {
 .post-title:hover {
     text-decoration: underline;
 }
+.indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
+
+h2{
+    color: maroon;
+    text-align: center;
+}
+
 </style>
 </head>
 <body>
 <div class="navbar">
     <div>
-        <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
@@ -322,6 +331,7 @@ body {
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="admin_upload.php">Uploads</a>
+                <a href="admin_approved_post.php">Approved</a>
                 <a href="admin_for_approval.php">For Approval</a>
                 <a href="admin_rejected.php">Rejected</a>
             </div>
@@ -340,18 +350,31 @@ body {
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="admin_bulletin_feed.php">Bulletin Feed</a>
         <a href="admin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="admin_upload.php">Uploads</a>
+        <a href="admin_approved_post.php">Approved</a>
         <a href="admin_for_approval.php">For Approval</a>
         <a href="admin_rejected.php">Rejected</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="admin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="admin_profile_settings.php">Profile Info</a>
+        <a href="admin_change_username.php">Change Username</a>
+        <a href="admin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="content">
+    <h2>Rejected Files</h2>
 <?php
 // Fetch uploaded files from the database
 $db = new mysqli("localhost", "root", "", "ebulletin_system");
@@ -375,14 +398,12 @@ while ($row = $result->fetch_assoc()) {
     
     if ($row["filetype"] == "photo") {
         echo '<div class="photo-container">';
-        echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
         echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
         echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $remarks . ', '. $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
         echo '</div>';
 
     } elseif ($row["filetype"] == "video") {
         echo '<div class="video-container">';
-        echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
         echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
         echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $remarks . ', '. $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
         echo '</div>';
@@ -392,14 +413,14 @@ while ($row = $result->fetch_assoc()) {
 </div>
 
 <div id="postModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <h2 id="modalTitle"></h2>
-    <p id="modalDescription"></p>
-    <p><strong>Schedule:</strong> <span id="modalSchedule"></span></p>
-    <p><strong>Remarks:</strong> <span id="modalRemarks"></span></p>
-  </div>
-</div>
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Modal Title</h2>
+            <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+            <p><strong>Schedule:</strong> <span id="modalSchedule"></span></p>
+            <p><strong>Remarks:</strong> <span id="modalRemarks"></span></p>
+        </div>
+    </div>
 
 <script>
 function openModal(title, description, schedule, remarks) {

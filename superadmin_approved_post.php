@@ -152,14 +152,6 @@
             object-fit: cover; /* Cover the entire container */
         }
 
-        .plus-icon {
-            width: 50%; /* Make the plus icon fill the container */
-            height: 50%; /* Make the plus icon fill the container */
-            margin-top: 40px;
-            margin-left: 50px;
-            cursor: pointer; /* Add cursor pointer */
-        }
-
         .upload-form {
             display: none;
             position: fixed;
@@ -427,6 +419,10 @@
 .indent {
     margin-left: 20px; /* Adjust indentation as needed */
 }
+h2{
+    color: maroon;
+    text-align: center;
+}
 
     </style> 
 </head>
@@ -445,7 +441,6 @@
             </div>
         </div>
         <!-- End of Dropdown menu -->
-        <!-- Dropdown menu for Posts -->
         <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
@@ -455,7 +450,6 @@
                 <a href="superadmin_rejected.php">Rejected</a>
             </div>
         </div>
-        <!-- End of Dropdown menu -->
         <a href="superadmin_archive.php">Archive</a>
         <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
@@ -493,17 +487,12 @@
 </div>
 
 
-
-
 <div class="content">
+    <h2>Approved Post</h2>
     <!-- Archive selected files button container -->
     <div id="archiveButtonContainer" style="display: none;">
         <!-- Archive selected files button -->
         <button class="archive-button" onclick="archiveSelectedFiles()">Archive Selected Files</button>
-    </div>
-    <!-- Photo container with plus icon -->
-    <div class="photo-container">
-        <img src="plus_icon1.png" alt="Plus Icon" class="plus-icon" onclick="openUploadForm()">
     </div>
     
     <!-- Upload file pop-up form -->
@@ -531,9 +520,9 @@
     if ($db->connect_error) {
         die("Connection failed: " . $db->connect_error);
     }
-    $sql = "SELECT * FROM bulletin_files ORDER BY upload_time DESC";
-    $result = $db->query($sql);
-
+  // Fetch only approved posts from the database
+  $sql = "SELECT * FROM bulletin_files WHERE status = 'approved' AND is_archived = 0 ORDER BY upload_time DESC";
+  $result = $db->query($sql);
 
     // Display uploaded files
     while ($row = $result->fetch_assoc()) {
@@ -547,12 +536,16 @@
 
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
+            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         } elseif ($row["filetype"] == "video") {
             echo '<div class="video-container">';
+            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: in line; top: 10px; left: 10px;">';
             echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
+            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         }

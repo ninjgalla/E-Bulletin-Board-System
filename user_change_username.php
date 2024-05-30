@@ -90,12 +90,14 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Settings</title>
-    <style>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <title>Profile Settings</title>
+        <style>
+          /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
         }
@@ -203,6 +205,7 @@ $conn->close();
         label {
             font-weight: bold;
             
+            
         }
         h1 {
             text-align: center;
@@ -218,6 +221,7 @@ $conn->close();
             border-radius: 4px;
             box-sizing: border-box;
             margin-right: 100px;
+            
         }
 
         input[type="submit"] {
@@ -238,16 +242,10 @@ $conn->close();
 
         .message {
             margin-bottom: 10px;
-            color: green; /* Default color */
+            color: black; /* Default color */
         }
 
-        .error-message {
-            color: green;
-        }
-
-        .success-message {
-            color: green;
-        }
+     
 
         .profile-picture {
                 position: relative; /* Make the container relative for absolute positioning */
@@ -265,11 +263,11 @@ $conn->close();
                 border: 2px solid maroon;
             }
 
-        input[type="file"] {
-            display: none;
-        }
+            input[type="file"] {
+                display: none;
+            }
 
-        .profile-picture label {
+            .profile-picture label {
                 cursor: pointer;
                 background-color: maroon;
                 color: white;
@@ -297,73 +295,187 @@ $conn->close();
             .empty-profile {
                 background-color: red;
             }
+
         .hamburger {
-            display: none; /* Hidden by default */
-            font-size: 24px; /* Adjust font size for hamburger icon */
-            color: white; /* Set font color to white */
-            cursor: pointer;
+    display: none; /* Hidden by default */
+    font-size: 24px; /* Adjust font size for hamburger icon */
+    color: white; /* Set font color to white */
+    cursor: pointer;
+}
+
+/* Side navbar styles */
+.side-navbar {
+    position: fixed;
+    top: 0;
+    right: -250px; /* Initially hide the side navbar on the right */
+    width: 250px;
+    height: 100%;
+    background-color: #800000;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    padding-top: 60px;
+    z-index: 1000;
+    transition: right 0.3s ease;
+    font-size: 16px;
+    color: white;
+}
+
+/* Close button */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    color: white;
+}
+
+.side-navbar a {
+    color: white;
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.side-navbar a:hover {
+    background-color: #575757; /* Change background on hover */
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+    .navbar a {
+        display: none; /* Hide navbar links */
+    }
+    .navbar .logo {
+        display: block; /* Ensure the logo is always displayed */
+    }
+    .hamburger {
+        display: block; /* Show hamburger menu */
+    }
+}
+.dropdown {
+            position: relative;
+            display: inline-block;
         }
 
-        .side-navbar {
-            position: fixed;
-            top: 0;
-            right: -250px; /* Initially hide the side navbar on the right */
-            width: 250px;
-            height: 100%;
-            background-color: #800000;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            padding-top: 60px;
-            z-index: 1000;
-            transition: right 0.3s ease;
-            font-size: 16px;
-            color: white;
-        }
+        .dropbtn {
+    background-color: #800000;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
 
-        .close-btn {
+        .dropdown-content {
+            display: none;
             position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-            color: white;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
         }
 
-        .side-navbar a {
-            color: white;
-            display: block;
-            padding: 10px 20px;
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
             text-decoration: none;
+            display: block;
         }
 
-        .side-navbar a:hover {
-            background-color: #575757; /* Change background on hover */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
         }
 
-        /* Ensure responsiveness */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #800000;
+        }
+
+         /* Hide the dropdown content when screen size is small */
+         @media only screen and (max-width: 768px) {
+            .dropdown-content {
+                display: none;
+            }
+        }
+         /* Hide the dropdown content when screen size is small */
+         @media only screen and (max-width: 768px) {
+            .dropbtn {
+                display: none;
+            }
+        }
         @media (max-width: 768px) {
-            .navbar a {
-                display: none; /* Hide navbar links */
-            }
-            .navbar .logo {
-                display: block; /* Ensure the logo is always displayed */
-            }
-            .hamburger {
-                display: block; /* Show hamburger menu */
+            .sidebar {
+                display: none;
             }
         }
+            @media (max-width: 768px) {
+            .container {
+                max-width: 350px;
+                margin: 60px auto 30px;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            justify-items: left;
+        }
+
+        input[type="submit"] {
+            width: auto;
+            padding: 10px 20px;
+            background-color: maroon; 
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center; /* Center the button */
+            margin: 0 auto; /* Center horizontally */
+            display: block; /* Ensure the button occupies the full width */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #800000;
+        }
+
+        }           
+
     </style>
 </head>
 <body>
 <div class="navbar">
-        <div>
-            <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
-        </div>
-        <div>
-            <a href="user_profile_settings.php">Profile</a>
-            <a href="logout.php">Logout</a>
-        </div>
+    <div>
+        <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
+    </div>
+    <div>
+        <a href="user_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
+    </div>
+    <div class="hamburger" onclick="toggleSideNavbar()">
+        <i class="fas fa-bars"></i>
+    </div>
 </div>
+
+<!-- Side navbar -->
+<div class="side-navbar" id="sideNavbar">
+    <div class="close-btn" onclick="toggleSideNavbar()">
+        <i class="fas fa-times"></i>
+    </div>
+        <a href="user_bulletin_feed.php">Bulletin Feed</a>
+        <a href="user_profile_settings.php">Profile</a>
+        <a href="user_change_username.php">Change Username</a>
+        <a href="user_change_password.php">Change Password</a>
+        <a href="logout.php">Logout</a>
+</div>
+
 <div class="sidebar">
         <div class="profile-picture">
             <!-- Display the user's profile picture from the database if available -->
@@ -384,11 +496,10 @@ $conn->close();
             </form>
         </div>
 
-    <a href="user_profile_settings.php">User Info</a>
+    <a href="user_profile_settings.php">Profile</a>
     <a href="user_change_username.php">Change Username</a>
     <a href="user_change_password.php">Change Password</a>
 </div>
-
 
     <!-- Change Username form -->
 <div class="container">
@@ -420,7 +531,41 @@ $conn->close();
 </div>
 
 
+<script>
+    document.getElementById('profile-picture').addEventListener('click', function() {
+        document.getElementById('profile-image-upload').click();
+    });
 
+    // Update profile picture preview
+    document.getElementById('profile-image-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function() {
+            document.getElementById('profile-picture').src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function toggleSideNavbar() {
+        var sideNavbar = document.getElementById('sideNavbar');
+        if (sideNavbar.style.right === '0px') {
+            sideNavbar.style.right = '-250px';
+        } else {
+            sideNavbar.style.right = '0px';
+        }
+    }
+
+    function closeSideNavbarOnLargeScreen() {
+        var sideNavbar = document.getElementById('sideNavbar');
+        var screenWidth = window.innerWidth;
+        if (screenWidth > 768) {
+            sideNavbar.style.right = '-250px';
+        }
+    }
+
+    window.onload = closeSideNavbarOnLargeScreen;
+    window.onresize = closeSideNavbarOnLargeScreen;
     </script>
+
 </body>
 </html>

@@ -305,7 +305,7 @@ body {
 <body>
 <div class="navbar">
     <div>
-        <a href="admin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->

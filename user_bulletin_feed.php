@@ -380,7 +380,7 @@ $username = $_SESSION['username'];
 <body>
 <div class="navbar">
     <div>
-        <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
+        <a href="user_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <a href="user_profile_settings.php">Profile</a>
@@ -398,6 +398,8 @@ $username = $_SESSION['username'];
     </div>
         <a href="user_bulletin_feed.php">Bulletin Feed</a>
         <a href="user_profile_settings.php">Profile</a>
+        <a href="user_change_username.php">Change Username</a>
+        <a href="user_change_password.php">Change Password</a>
         <a href="logout.php">Logout</a>
 </div>
 
@@ -454,7 +456,7 @@ if (mysqli_num_rows($result) > 0) {
         echo '<button class="comment-button" data-post-id="' . $row['id'] . '"><i class="fa-regular fa-comment" style="color: #000000;"></i> Comment</button>';
 
         // Add a comment container with text field and button (hidden initially)
-        echo '<div class="comment-container" style="display: none;">';
+        echo '<div class="comment-container" ;">';
         echo '<form method="post" action="submit_comment.php" onsubmit="saveScrollPosition()">'; // Set the action to submit_comment.php and call saveScrollPosition() function
         echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
         echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
@@ -593,29 +595,32 @@ mysqli_close($conn);
     window.onresize = closeSideNavbarOnLargeScreen;
 
     // Function to toggle visibility of full and truncated descriptions
-    document.querySelectorAll('.see-more-link').forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default anchor behavior
-            var targetId = this.getAttribute('data-toggle');
-            var targetElement = document.getElementById(targetId);
-            targetElement.style.display = 'block'; // Show the full description
-            this.style.display = 'none'; // Hide the "See more" link
-            var seeLessLink = document.querySelector('[data-toggle="' + targetId + '"].see-less-link');
-            seeLessLink.style.display = 'inline'; // Show the "See less" link
-        });
+document.querySelectorAll('.see-more-link').forEach(function(link) {
+    link.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default anchor behavior
+        var targetId = this.getAttribute('data-toggle');
+        var targetElement = document.getElementById(targetId);
+        var truncatedDescription = targetElement.previousElementSibling; // Get the truncated description
+        truncatedDescription.style.display = 'none'; // Hide the truncated description
+        targetElement.style.display = 'block'; // Show the full description
+        this.style.display = 'none'; // Hide the "See more" link
+        var seeLessLink = document.querySelector('[data-toggle="' + targetId + '"].see-less-link');
+        seeLessLink.style.display = 'inline'; // Show the "See less" link
     });
-
-    document.querySelectorAll('.see-less-link').forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default anchor behavior
-            var targetId = this.getAttribute('data-toggle');
-            var targetElement = document.getElementById(targetId);
-            targetElement.style.display = 'none'; // Hide the full description
-            var seeMoreLink = document.querySelector('[data-toggle="' + targetId + '"].see-more-link');
-            seeMoreLink.style.display = 'inline'; // Show the "See more" link
-            this.style.display = 'none'; // Hide the "See less" link
-        });
+});
+document.querySelectorAll('.see-less-link').forEach(function(link) {
+    link.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default anchor behavior
+        var targetId = this.getAttribute('data-toggle');
+        var targetElement = document.getElementById(targetId);
+        targetElement.style.display = 'none'; // Hide the full description
+        var seeMoreLink = document.querySelector('[data-toggle="' + targetId + '"].see-more-link');
+        seeMoreLink.style.display = 'inline'; // Show the "See more" link
+        this.style.display = 'none'; // Hide the "See less" link
+        var truncatedDescription = targetElement.previousElementSibling; // Get the truncated description
+        truncatedDescription.style.display = 'block'; // Show the truncated description
     });
+});
 </script>
 
 <script>

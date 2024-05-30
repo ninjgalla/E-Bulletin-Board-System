@@ -240,16 +240,9 @@ $conn->close();
 
         .message {
             margin-bottom: 10px;
-            color: green; /* Default color */
+            color: black; /* Default color */
         }
 
-        .error-message {
-            color: green;
-        }
-
-        .success-message {
-            color: green;
-        }
 
         .profile-picture {
                 position: relative; /* Make the container relative for absolute positioning */
@@ -449,6 +442,9 @@ $conn->close();
         }
 
         }           
+        .indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
 
     </style>
 </head>
@@ -471,6 +467,8 @@ $conn->close();
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="admin_upload.php">Uploads</a>
+                <a href="admin_approved_post.php">Approved</a>
+                <a href="admin_for_approval.php">For Approval</a>
                 <a href="admin_rejected.php">Rejected</a>
             </div>
         </div>
@@ -487,15 +485,27 @@ $conn->close();
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="admin_bulletin_feed.php">Bulletin Feed</a>
         <a href="admin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="admin_upload.php">Uploads</a>
+        <a href="admin_approved_post.php">Approved</a>
         <a href="admin_for_approval.php">For Approval</a>
         <a href="admin_rejected.php">Rejected</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="admin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="admin_profile_settings.php">Profile Info</a>
+        <a href="admin_change_username.php">Change Username</a>
+        <a href="admin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="sidebar">
@@ -522,16 +532,17 @@ $conn->close();
         <a href="admin_change_password.php">Change Password</a>
     </div>
 
-<div class="container">
+    <div class="container">
     <h1>Change Username</h1>
     <?php if (!empty($_GET['message'])): ?>
         <?php $message = htmlspecialchars($_GET['message']); ?>
         <div class="message <?php echo ($username_change_successful ? 'success-message' : 'error-message'); ?>"><?php echo $message; ?></div>
     <?php endif; ?>
-    <form action="admin_change_username_handler.php" method="post">
+    <form action="user_change_username_handler.php" method="post">
         <div class="form-group">
             <label for="current_username">Current Username:</label>
             <input type="text" name="current_username" id="current_username" value="<?php echo htmlspecialchars($username); ?>" readonly style="color: gray;">
+            <!-- Empty placeholder element to ensure consistent grid gap -->
             <div></div>
         </div>
         <div class="form-group">
@@ -540,6 +551,7 @@ $conn->close();
             <?php if (!empty($new_username_err)): ?>
                 <span class="error-message"><?php echo $new_username_err; ?></span>
             <?php endif; ?>
+            <!-- Empty placeholder element to ensure consistent grid gap -->
             <div></div>
         </div>
         <div class="form-group">

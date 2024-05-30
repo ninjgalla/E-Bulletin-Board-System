@@ -56,29 +56,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check input errors before updating the database
-    if (empty($new_username_err)) {
-        // Prepare an update statement
-        $sql_update_username = "UPDATE users SET username = ? WHERE username = ?";
-        if ($stmt_update_username = $conn->prepare($sql_update_username)) {
-            // Bind variables to the prepared statement as parameters
-            $stmt_update_username->bind_param("ss", $new_username, $username);
+if (empty($new_username_err)) {
+    // Prepare an update statement
+    $sql_update_username = "UPDATE users SET username = ? WHERE username = ?";
+    if ($stmt_update_username = $conn->prepare($sql_update_username)) {
+        // Bind variables to the prepared statement as parameters
+        $stmt_update_username->bind_param("ss", $new_username, $username);
 
-            // Attempt to execute the prepared statement
-            if ($stmt_update_username->execute()) {
-                // Username updated successfully. Update the session variable and set flag to true
-                $_SESSION['username'] = $new_username;
-                $username_change_successful = true;
-                $message = "Username changed successfully!";
-            } else {
-                $message = "Oops! Something went wrong. Please try again later.";
-            }
+        // Attempt to execute the prepared statement
+if ($stmt_update_username->execute()) {
+    // Username updated successfully. Update the session variable and set flag to true
+    $_SESSION['username'] = $new_username;
+    $username_change_successful = true;
+    $message = "Username changed successfully!";
+} else {
+    $message = "Oops! Something went wrong. Please try again later.";
+}
 
-            // Close statement
-            $stmt_update_username->close();
-        } else {
-            $message = "Oops! Something went wrong. Please try again later.";
-        }
+
+        // Close statement
+        $stmt_update_username->close();
+    } else {
+        $message = "Oops! Something went wrong. Please try again later.";
     }
+} else {
+    // New username has errors, set the error message
+    $message = $new_username_err;
+}
+
 }
 
 // Close connection

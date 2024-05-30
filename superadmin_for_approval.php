@@ -300,6 +300,15 @@ body {
 .post-title:hover {
     text-decoration: underline;
 }
+.indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
+
+h2{
+    color: maroon;
+    text-align: center;
+}
+
 </style>
 </head>
 <body>
@@ -322,6 +331,7 @@ body {
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
                 <a href="superadmin_rejected.php">Rejected</a>
             </div>
@@ -340,20 +350,33 @@ body {
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
         <a href="superadmin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
         <a href="superadmin_rejected.php">Rejected</a>
-        <a href="superadmin_archive.php">Archive</a>
-        <a href="superadmin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="superadmin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="superadmin_profile_settings.php">Profile Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 
 
 <div class="content">
+    <h2>For Approval</h2>
     <?php
     // Fetch uploaded files from the database
     $db = new mysqli("localhost", "root", "", "ebulletin_system");
@@ -377,13 +400,11 @@ body {
     
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
-            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
             echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
             echo '</div>';
         } elseif ($row["filetype"] == "video") {
             echo '<div class="video-container">';
-            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
             echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
             echo '<div class="post-title" onclick="openModal(' . $title . ', ' . $description . ', ' . $schedule . ', ' . $row["id"] . ')">' . htmlspecialchars($row["title"]) . '</div>';
             echo '</div>';

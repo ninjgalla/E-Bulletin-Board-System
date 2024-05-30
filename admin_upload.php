@@ -424,6 +424,9 @@
 .archive-button:hover {
     background-color: gray; 
 }
+.indent {
+    margin-left: 20px; /* Adjust indentation as needed */
+}
 
     </style> 
 </head>
@@ -446,6 +449,7 @@
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="admin_upload.php">Uploads</a>
+                <a href="admin_approved_post.php">Approved</a>
                 <a href="admin_for_approval.php">For Approval</a>
                 <a href="admin_rejected.php">Rejected</a>
             </div>
@@ -463,15 +467,27 @@
 <div class="side-navbar" id="sideNavbar">
     <div class="close-btn" onclick="toggleSideNavbar()">
         <i class="fas fa-times"></i>
-    </div>
+        </div>
+    <a>Bulletin</a>
+    <div class="indent">
         <a href="admin_bulletin_feed.php">Bulletin Feed</a>
         <a href="admin_bulletin.php">Bulletin Board</a>
+    </div>
+    <a>Posts</a>
+    <div class="indent">    
         <a href="admin_upload.php">Uploads</a>
+        <a href="admin_approved_post.php">Approved</a>
         <a href="admin_for_approval.php">For Approval</a>
         <a href="admin_rejected.php">Rejected</a>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <a href="admin_archive.php">Archive</a>
+    <a>Profile</a>
+    <div class="indent">
+        <a href="admin_profile_settings.php">Profile Info</a>
+        <a href="admin_change_username.php">Change Username</a>
+        <a href="admin_change_password.php">Change Password</a>
+    </div>
+    <a href="logout.php">Logout</a>
 </div>
 
 
@@ -512,7 +528,7 @@
         die("Connection failed: " . $db->connect_error);
     }
     // Fetch only approved posts from the database
-    $sql = "SELECT * FROM bulletin_files WHERE status = 'approved' AND is_archived = 0 ORDER BY upload_time DESC";
+    $sql = "SELECT * FROM bulletin_files ORDER BY upload_time DESC";
     $result = $db->query($sql);
 
 
@@ -528,16 +544,12 @@
 
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
-            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
-            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         } elseif ($row["filetype"] == "video") {
             echo '<div class="video-container">';
-            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: in line; top: 10px; left: 10px;">';
             echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
-            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         }

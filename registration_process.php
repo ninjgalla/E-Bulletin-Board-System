@@ -33,7 +33,7 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $email_parts = explode('@', $email);
     if ($email_parts[1] !== 'tup.edu.ph') {
         // Invalid email domain, set the error message
-        $email_error = "Only emails with '@tup.edu.ph' domain are allowed.";
+        $email_error = "Only TUP email are allowed to register.";
     }
 } else {
     // Invalid email format, set the error message

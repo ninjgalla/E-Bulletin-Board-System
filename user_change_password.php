@@ -151,13 +151,13 @@ $conn->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
-    <title>Change Password</title>
-    <style>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <title>Profile Settings</title>
+        <style>
           /* Inherit font-family for all other elements */
         * {
             font-family: inherit;
@@ -519,13 +519,28 @@ $conn->close();
 </head>
 <body>
 <div class="navbar">
-        <div>
-            <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
-        </div>
-        <div>
-            <a href="user_profile_settings.php">Profile</a>
-            <a href="logout.php">Logout</a>
-        </div>
+    <div>
+        <a href="user_bulletin_feed.php" class="logo">TUPM-COS EBBS</a>
+    </div>
+    <div>
+        <a href="user_profile_settings.php">Profile</a>
+        <a href="logout.php">Logout</a>
+    </div>
+    <div class="hamburger" onclick="toggleSideNavbar()">
+        <i class="fas fa-bars"></i>
+    </div>
+</div>
+
+<!-- Side navbar -->
+<div class="side-navbar" id="sideNavbar">
+    <div class="close-btn" onclick="toggleSideNavbar()">
+        <i class="fas fa-times"></i>
+    </div>
+        <a href="user_bulletin_feed.php">Bulletin Feed</a>
+        <a href="user_profile_settings.php">Profile</a>
+        <a href="user_change_username.php">Change Username</a>
+        <a href="user_change_password.php">Change Password</a>
+        <a href="logout.php">Logout</a>
 </div>
 <div class="sidebar">
         <div class="profile-picture">
@@ -547,7 +562,7 @@ $conn->close();
             </form>
         </div>
 
-    <a href="user_profile_settings.php">User Info</a>
+    <a href="user_profile_settings.php">Profile</a>
     <a href="user_change_username.php">Change Username</a>
     <a href="user_change_password.php">Change Password</a>
 </div>

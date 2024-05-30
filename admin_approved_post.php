@@ -152,14 +152,6 @@
             object-fit: cover; /* Cover the entire container */
         }
 
-        .plus-icon {
-            width: 50%; /* Make the plus icon fill the container */
-            height: 50%; /* Make the plus icon fill the container */
-            margin-top: 40px;
-            margin-left: 50px;
-            cursor: pointer; /* Add cursor pointer */
-        }
-
         .upload-form {
             display: none;
             position: fixed;
@@ -427,37 +419,38 @@
 .indent {
     margin-left: 20px; /* Adjust indentation as needed */
 }
-
+h2{
+    color: maroon;
+    text-align: center;
+}
     </style> 
 </head>
 <body>
 <div class="navbar">
     <div>
-        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
         <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
             <button class="dropbtn">Bulletin</button>
             <div class="dropdown-content" id="bulletinDropdown">
-                <a href="superadmin_bulletin.php">Bulletin Board</a>
-                <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+                <a href="admin_bulletin.php">Bulletin Board</a>
+                <a href="admin_bulletin_feed.php">Bulletin Feed</a>
             </div>
         </div>
         <!-- End of Dropdown menu -->
-        <!-- Dropdown menu for Posts -->
         <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
-                <a href="superadmin_upload.php">Uploads</a>
-                <a href="superadmin_approved_post.php">Approved</a>
-                <a href="superadmin_for_approval.php">For Approval</a>
-                <a href="superadmin_rejected.php">Rejected</a>
+                <a href="admin_upload.php">Uploads</a>
+                <a href="admin_approved_post.php">Approved</a>
+                <a href="admin_for_approval.php">For Approval</a>
+                <a href="admin_rejected.php">Rejected</a>
             </div>
         </div>
-        <!-- End of Dropdown menu -->
-        <a href="superadmin_archive.php">Archive</a>
-        <a href="superadmin_profile_settings.php">Profile</a>
+        <a href="admin_archive.php">Archive</a>
+        <a href="admin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="hamburger" onclick="toggleSideNavbar()">
@@ -472,38 +465,33 @@
         </div>
     <a>Bulletin</a>
     <div class="indent">
-        <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
-        <a href="superadmin_bulletin.php">Bulletin Board</a>
+        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="admin_bulletin.php">Bulletin Board</a>
     </div>
     <a>Posts</a>
     <div class="indent">    
-        <a href="superadmin_upload.php">Uploads</a>
-        <a href="superadmin_approved_post.php">Approved</a>
-        <a href="superadmin_for_approval.php">For Approval</a>
-        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="admin_upload.php">Uploads</a>
+        <a href="admin_approved_post.php">Approved</a>
+        <a href="admin_for_approval.php">For Approval</a>
+        <a href="admin_rejected.php">Rejected</a>
     </div>
-    <a href="superadmin_archive.php">Archive</a>
+    <a href="admin_archive.php">Archive</a>
     <a>Profile</a>
     <div class="indent">
-        <a href="superadmin_profile_settings.php">Profile Info</a>
-        <a href="superadmin_change_username.php">Change Username</a>
-        <a href="superadmin_change_password.php">Change Password</a>
+        <a href="admin_profile_settings.php">Profile Info</a>
+        <a href="admin_change_username.php">Change Username</a>
+        <a href="admin_change_password.php">Change Password</a>
     </div>
     <a href="logout.php">Logout</a>
 </div>
 
 
-
-
 <div class="content">
+    <h2>Approved Post</h2>
     <!-- Archive selected files button container -->
     <div id="archiveButtonContainer" style="display: none;">
         <!-- Archive selected files button -->
         <button class="archive-button" onclick="archiveSelectedFiles()">Archive Selected Files</button>
-    </div>
-    <!-- Photo container with plus icon -->
-    <div class="photo-container">
-        <img src="plus_icon1.png" alt="Plus Icon" class="plus-icon" onclick="openUploadForm()">
     </div>
     
     <!-- Upload file pop-up form -->
@@ -511,7 +499,7 @@
         <span class="close" onclick="closeUploadForm()">&times;</span>
         <div class="form-content">
             <h2>Upload File</h2>
-            <form action="superadmin_upload_process.php" method="post" enctype="multipart/form-data">
+            <form action="admin_upload_process.php" method="post" enctype="multipart/form-data">
                 <label for="fileToUpload">Select File:</label>
                 <input type="file" name="fileToUpload" id="fileToUpload" required><br>
                 <label for="title">Title:</label>
@@ -531,9 +519,9 @@
     if ($db->connect_error) {
         die("Connection failed: " . $db->connect_error);
     }
-    $sql = "SELECT * FROM bulletin_files ORDER BY upload_time DESC";
-    $result = $db->query($sql);
-
+  // Fetch only approved posts from the database
+  $sql = "SELECT * FROM bulletin_files WHERE status = 'approved' AND is_archived = 0 ORDER BY upload_time DESC";
+  $result = $db->query($sql);
 
     // Display uploaded files
     while ($row = $result->fetch_assoc()) {
@@ -547,12 +535,16 @@
 
         if ($row["filetype"] == "photo") {
             echo '<div class="photo-container">';
+            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
             echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         } elseif ($row["filetype"] == "video") {
             echo '<div class="video-container">';
+            echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: in line; top: 10px; left: 10px;">';
             echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
+            echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
             echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
             echo '</div>';
         }
@@ -566,7 +558,7 @@
     <span class="close" onclick="closeEditForm()">&times;</span>
     <div class="form-content">
         <h2>Edit File</h2>
-        <form action="superadmin_edit_process.php" method="post" enctype="multipart/form-data">
+        <form action="admin_edit_process.php" method="post" enctype="multipart/form-data">
             <!-- File upload input -->
             <label for="editFile">Upload File:</label>
             <div class="file-input-container">
@@ -618,7 +610,7 @@
                     }
                 }
             };
-            xhr.open("GET", "superadmin_archive_file.php?id=" + id, true);
+            xhr.open("GET", "admin_archive_file.php?id=" + id, true);
             xhr.send();
         }
     }
@@ -703,7 +695,7 @@ function archiveSelectedFiles() {
                 }
             }
         };
-        xhr.open('POST', 'superadmin_bulk_archive.php'); // Change the URL to admin_bulk_archive.php
+        xhr.open('POST', 'admin_bulk_archive.php'); // Change the URL to admin_bulk_archive.php
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({ fileIds: fileIds }));
     } else {
