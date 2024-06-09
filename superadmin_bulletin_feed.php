@@ -376,14 +376,19 @@ $username = $_SESSION['username'];
         .indent {
     margin-left: 20px; /* Adjust indentation as needed */
 }
-
+.delete-icon {
+    cursor: pointer;
+    color: red;
+    margin-left: 10px;
+    font-weight: bold;
+}
 
     </style>
 </head>
 <body>
 <div class="navbar">
     <div>
-        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
@@ -400,9 +405,9 @@ $username = $_SESSION['username'];
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
-                <a href="superadmin_approved_post.php">Approved</a>
+                <!-- <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
-                <a href="superadmin_rejected.php">Rejected</a>
+                <a href="superadmin_rejected.php">Rejected</a> -->
             </div>
         </div>
         <!-- End of Dropdown menu -->
@@ -428,9 +433,9 @@ $username = $_SESSION['username'];
     <a>Posts</a>
     <div class="indent">    
         <a href="superadmin_upload.php">Uploads</a>
-        <a href="superadmin_approved_post.php">Approved</a>
+        <!-- <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
-        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_rejected.php">Rejected</a> -->
     </div>
     <a href="superadmin_archive.php">Archive</a>
     <a>Profile</a>
@@ -447,10 +452,9 @@ include "config.php"; // Include the database connection file
 
 // Query to fetch data from the bulletin_files table
 $sql = "SELECT * FROM bulletin_files 
-        WHERE is_archived = 0 
-          AND schedule <= NOW() 
-          AND status = 'approved' 
-        ORDER BY upload_time DESC";
+WHERE is_archived = 0 
+  AND schedule <= NOW()
+ORDER BY upload_time DESC";
 $result = mysqli_query($conn, $sql);
 
 // Check if there are any rows returned
@@ -460,6 +464,9 @@ if (mysqli_num_rows($result) > 0) {
         // Generate HTML for each post container dynamically
         echo '<div class="post-container">';
         echo '<h2 class="post-title">' . $row['title'] . '</h2>';
+        
+        // Display the schedule time
+        echo '<p class="post-schedule">Posted on: ' . date('F j, Y, g:i a', strtotime($row['schedule'])) . '</p>';
 
         // Display truncated description with "See more" link for long descriptions
         $description = $row['description'];
@@ -490,43 +497,11 @@ if (mysqli_num_rows($result) > 0) {
             echo 'Your browser does not support the video tag.';
             echo '</video>';
         }
-
-        // Add a comment button
-        echo '<button class="comment-button" data-post-id="' . $row['id'] . '"><i class="fa-regular fa-comment" style="color: #000000;"></i> Comment</button>';
-
-        // Add a comment container with text field and button (hidden initially)
-        echo '<div class="comment-container" ;">';
-        echo '<form method="post" action="superadmin_submit_comment.php" onsubmit="saveScrollPosition()">'; // Set the action to submit_comment.php and call saveScrollPosition() function
-        echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
-        echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
-        echo '<button type="submit" class="post-button">Post</button>';
-        echo '</form>'; // Close form
-
-        // Container to display comments
-        echo '<div class="comments-section">'; 
-
-        // Fetch comments for the post from the server using AJAX
-        $postId = $row['id'];
-        $sqlComments = "SELECT user_id, comment_text FROM comments WHERE post_id = '$postId'";
-        $resultComments = mysqli_query($conn, $sqlComments);
-        if ($resultComments) {
-            $counter = 0;
-            while ($comment = mysqli_fetch_assoc($resultComments)) {
-                $bgColor = ($counter % 2 == 0) ? 'lightgray' : '#f0f0f0'; // Alternate background colors
-                echo '<div class="comment" style="background-color: ' . $bgColor . ';">'. 'User '. $comment['user_id'] .': ' . $comment['comment_text'] . '</div>';
-                $counter++;
-            }
-        } else {
-            echo '<div>Error fetching comments.</div>';
-        }
-        echo '</div>'; // Close comments-section
-
-        echo '</div>'; // Close comment-container
-        echo '</div>'; // Close post-container
+        
+        echo '</div>'; // Close the post container
     }
 } else {
-    // If no rows are returned, display a message
-    echo "No posts found.";
+    echo 'No posts found.';
 }
 
 // Close the database connection
@@ -536,7 +511,29 @@ mysqli_close($conn);
 
 
 
+
 <!-- JavaScript code... -->
+<script>
+function deleteComment(commentId) {
+    if (confirm("Are you sure you want to delete this comment?")) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "delete_comment.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert("Comment deleted successfully.");
+                    location.reload(); // Reload the page to reflect the changes
+                } else {
+                    alert("Error deleting comment: " + response.message);
+                }
+            }
+        };
+        xhr.send("comment_id=" + commentId);
+    }
+}
+</script>
 <script>
     // Function to save the current scroll position before submitting a comment
     function saveScrollPosition() {

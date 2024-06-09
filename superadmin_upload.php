@@ -433,7 +433,7 @@
 <body>
 <div class="navbar">
     <div>
-        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
@@ -450,9 +450,9 @@
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
-                <a href="superadmin_approved_post.php">Approved</a>
+                <!-- <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
-                <a href="superadmin_rejected.php">Rejected</a>
+                <a href="superadmin_rejected.php">Rejected</a> -->
             </div>
         </div>
         <!-- End of Dropdown menu -->
@@ -478,9 +478,9 @@
     <a>Posts</a>
     <div class="indent">    
         <a href="superadmin_upload.php">Uploads</a>
-        <a href="superadmin_approved_post.php">Approved</a>
+        <!-- <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
-        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_rejected.php">Rejected</a> -->
     </div>
     <a href="superadmin_archive.php">Archive</a>
     <a>Profile</a>
@@ -506,24 +506,28 @@
         <img src="plus_icon1.png" alt="Plus Icon" class="plus-icon" onclick="openUploadForm()">
     </div>
     
-    <!-- Upload file pop-up form -->
-    <div id="uploadForm" class="upload-form">
-        <span class="close" onclick="closeUploadForm()">&times;</span>
-        <div class="form-content">
-            <h2>Upload File</h2>
-            <form action="superadmin_upload_process.php" method="post" enctype="multipart/form-data">
-                <label for="fileToUpload">Select File:</label>
-                <input type="file" name="fileToUpload" id="fileToUpload" required><br>
-                <label for="title">Title:</label>
-                <input type="text" name="title" id="title" required><br>
-                <label for="description">Description:</label>
-                <textarea name="description" id="description" rows="4" required></textarea><br>
-                <label for="schedule">Schedule:</label>
-                <input type="datetime-local" name="schedule" id="schedule" required><br> <!-- Added scheduling input -->
-                <input type="submit" value="Upload" name="submit">
-            </form>
-        </div>
+<!-- Upload file pop-up form -->
+<div id="uploadForm" class="upload-form">
+    <span class="close" onclick="closeUploadForm()">&times;</span>
+    <div class="form-content">
+        <h2>Upload File</h2>
+        <form action="superadmin_upload_process.php" method="post" enctype="multipart/form-data">
+            <label for="fileToUpload">Select File:</label>
+            <input type="file" name="fileToUpload" id="fileToUpload" required><br>
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" required><br>
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" rows="4" required></textarea><br>
+            <label for="schedule">Start Time:</label>
+            <input type="datetime-local" name="schedule" id="schedule" required><br>
+            <!-- Added end time input -->
+            <label for="endTime">End Time:</label>
+            <input type="datetime-local" name="endTime" id="endTime" required><br>
+            <input type="submit" value="Upload" name="submit">
+        </form>
     </div>
+</div>
+
 
     <?php
     // Fetch uploaded files from the database
@@ -531,31 +535,45 @@
     if ($db->connect_error) {
         die("Connection failed: " . $db->connect_error);
     }
-    $sql = "SELECT * FROM bulletin_files ORDER BY upload_time DESC";
-    $result = $db->query($sql);
-
+  // Fetch only approved posts from the database
+  $sql = "SELECT * FROM bulletin_files 
+                WHERE is_archived = 0 
+                ORDER BY upload_time DESC";
+  $result = $db->query($sql);
 
     // Display uploaded files
     while ($row = $result->fetch_assoc()) {
+        // Fetch start and end times from the database
         $currentSchedule = isset($row["schedule"]) ? date('Y-m-d\TH:i', strtotime($row["schedule"])) : "";
+        $currentEndTime = isset($row["end_time"]) ? date('Y-m-d\TH:i', strtotime($row["end_time"])) : "";
 
         // Escape special characters in title and description
         $title = htmlspecialchars(json_encode($row["title"]), ENT_QUOTES);
-        $description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
-        $filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
-        $schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
+    $description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
+    $filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
+    $schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
+    $endTime = htmlspecialchars(json_encode($currentEndTime), ENT_QUOTES);
 
-        if ($row["filetype"] == "photo") {
-            echo '<div class="photo-container">';
-            echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
-            echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
-            echo '</div>';
-        } elseif ($row["filetype"] == "video") {
-            echo '<div class="video-container">';
-            echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
-            echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ')\'><i class="fas fa-edit"></i></span>';
-            echo '</div>';
-        }
+    if ($row["filetype"] == "photo") {
+        echo '<div class="photo-container">';
+        echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
+        echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
+        echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
+        echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ', ' . $endTime . ')\'><i class="fas fa-edit"></i></span>';
+        // Displaying end time
+        echo '<span class="end-time">' . date('Y-m-d H:i', strtotime($row["end_time"])) . '</span>';
+        echo '</div>';
+    } elseif ($row["filetype"] == "video") {
+        echo '<div class="video-container">';
+        echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: in line; top: 10px; left: 10px;">';
+        echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
+        echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
+        echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ', ' . $endTime . ')\'><i class="fas fa-edit"></i></span>';
+        // Displaying end time
+        echo '<span class="end-time">' . date('Y-m-d H:i', strtotime($row["end_time"])) . '</span>';
+        echo '</div>';
+    }
+    
     }
     ?>
 </div>
@@ -580,13 +598,17 @@
             <input type="text" name="editTitle" id="editTitle" value="<?php echo $currentTitle; ?>" required><br>
             <label for="editDescription">Description:</label>
             <textarea name="editDescription" id="editDescription" rows="4" required><?php echo $currentDescription; ?></textarea><br>
-            <label for="editSchedule">Schedule:</label>
+            <label for="editSchedule">Start Time:</label>
             <input type="datetime-local" name="editSchedule" id="editSchedule" value="<?php echo $currentSchedule; ?>" required><br>
+            <!-- Add end time field -->
+            <label for="editEndTime">End Time:</label>
+            <input type="datetime-local" name="editEndTime" id="editEndTime" value="<?php echo $currentEndTime; ?>" required><br>
             <input type="hidden" name="editId" id="editId" value="<?php echo $postId; ?>"> <!-- Hidden field to store post ID -->
             <input type="submit" value="Save Changes" name="submit">
         </form>
     </div>
 </div>
+
 
 
 

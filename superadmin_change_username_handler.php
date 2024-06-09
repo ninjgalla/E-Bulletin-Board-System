@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+
     // Check input errors before updating the database
     if (empty($new_username_err)) {
         // Prepare an update statement

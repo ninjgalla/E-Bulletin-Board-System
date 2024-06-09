@@ -376,7 +376,6 @@ $username = $_SESSION['username'];
         .indent {
     margin-left: 20px; /* Adjust indentation as needed */
 }
-
 .delete-icon {
     cursor: pointer;
     color: red;
@@ -389,29 +388,31 @@ $username = $_SESSION['username'];
 <body>
 <div class="navbar">
     <div>
-        <a href="admin_bulletin.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
         <div class="dropdown" onmouseover="showDropdown()" onmouseout="hideDropdown()">
             <button class="dropbtn">Bulletin</button>
             <div class="dropdown-content" id="bulletinDropdown">
-                <a href="admin_bulletin.php">Bulletin Board</a>
-                <a href="admin_bulletin_feed.php">Bulletin Feed</a>
+                <a href="superadmin_bulletin.php">Bulletin Board</a>
+                <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
             </div>
         </div>
         <!-- End of Dropdown menu -->
+        <!-- Dropdown menu for Posts -->
         <div class="dropdown" onmouseover="showPostsDropdown()" onmouseout="hidePostsDropdown()">
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
-                <a href="admin_upload.php">Uploads</a>
-                <a href="admin_approved_post.php">Approved</a>
-                <a href="admin_for_approval.php">For Approval</a>
-                <a href="admin_rejected.php">Rejected</a>
+                <a href="superadmin_upload.php">Uploads</a>
+                <a href="superadmin_approved_post.php">Approved</a>
+                <a href="superadmin_for_approval.php">For Approval</a>
+                <a href="superadmin_rejected.php">Rejected</a>
             </div>
         </div>
-        <a href="admin_archive.php">Archive</a>
-        <a href="admin_profile_settings.php">Profile</a>
+        <!-- End of Dropdown menu -->
+        <a href="superadmin_archive.php">Archive</a>
+        <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="hamburger" onclick="toggleSideNavbar()">
@@ -426,22 +427,22 @@ $username = $_SESSION['username'];
         </div>
     <a>Bulletin</a>
     <div class="indent">
-        <a href="admin_bulletin_feed.php">Bulletin Feed</a>
-        <a href="admin_bulletin.php">Bulletin Board</a>
+        <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
+        <a href="superadmin_bulletin.php">Bulletin Board</a>
     </div>
     <a>Posts</a>
     <div class="indent">    
-        <a href="admin_upload.php">Uploads</a>
-        <a href="admin_approved_post.php">Approved</a>
-        <a href="admin_for_approval.php">For Approval</a>
-        <a href="admin_rejected.php">Rejected</a>
+        <a href="superadmin_upload.php">Uploads</a>
+        <a href="superadmin_approved_post.php">Approved</a>
+        <a href="superadmin_for_approval.php">For Approval</a>
+        <a href="superadmin_rejected.php">Rejected</a>
     </div>
-    <a href="admin_archive.php">Archive</a>
+    <a href="superadmin_archive.php">Archive</a>
     <a>Profile</a>
     <div class="indent">
-        <a href="admin_profile_settings.php">Profile Info</a>
-        <a href="admin_change_username.php">Change Username</a>
-        <a href="admin_change_password.php">Change Password</a>
+        <a href="superadmin_profile_settings.php">Profile Info</a>
+        <a href="superadmin_change_username.php">Change Username</a>
+        <a href="superadmin_change_password.php">Change Password</a>
     </div>
     <a href="logout.php">Logout</a>
 </div>
@@ -495,48 +496,47 @@ if (mysqli_num_rows($result) > 0) {
             echo '</video>';
         }
 
-        // Add a comment button
-        echo '<button class="comment-button" data-post-id="' . $row['id'] . '"><i class="fa-regular fa-comment" style="color: #000000;"></i> Comment</button>';
+    //     // Add a comment button
+    //     echo '<button class="comment-button" data-post-id="' . $row['id'] . '"><i class="fa-regular fa-comment" style="color: #000000;"></i> Comment</button>';
 
-        // Add a comment container with text field and button (hidden initially)
-        echo '<div class="comment-container";">';
-        echo '<form method="post" action="admin_submit_comment.php" onsubmit="saveScrollPosition()">'; // Set the action to submit_comment.php and call saveScrollPosition() function
-        echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
-        echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
-        echo '<button type="submit" class="post-button">Post</button>';
-        echo '</form>'; // Close form
+    //     // Add a comment container with text field and button (hidden initially)
+    //     echo '<div class="comment-container" ;">';
+    //     echo '<form method="post" action="superadmin_submit_comment.php" onsubmit="saveScrollPosition()">'; // Set the action to submit_comment.php and call saveScrollPosition() function
+    //     echo '<input type="hidden" name="post_id" value="' . $row['id'] . '">'; // Add a hidden input for post_id
+    //     echo '<input type="text" name="comment" class="comment-field" placeholder="Add a comment...">';
+    //     echo '<button type="submit" class="post-button">Post</button>';
+    //     echo '</form>'; // Close form
 
-        // Container to display comments
-        echo '<div class="comments-section">'; 
+    //     // Container to display comments
+    //     echo '<div class="comments-section">'; 
 
-       // Fetch comments for the post from the server using AJAX
-$postId = $row['id'];
-$sqlComments = "SELECT comment_id, username, comment_text FROM comments WHERE post_id = '$postId'";
-$resultComments = mysqli_query($conn, $sqlComments);
-if ($resultComments) {
-    $counter = 0;
-    while ($comment = mysqli_fetch_assoc($resultComments)) {
-        $bgColor = ($counter % 2 == 0) ? 'lightgray' : '#f0f0f0'; // Alternate background colors
-        echo '<div class="comment" style="background-color: ' . $bgColor . ';">';
-        echo ' <span class="delete-icon" onclick="deleteComment(' . $comment['comment_id'] . ')">&times;</span>';
+    //   // Fetch comments for the post from the server using AJAX
+    //   $postId = $row['id'];
+    //   $sqlComments = "SELECT comment_id, username, comment_text FROM comments WHERE post_id = '$postId'";
+    //   $resultComments = mysqli_query($conn, $sqlComments);
+    //   if ($resultComments) {
+    //       $counter = 0;
+    //       while ($comment = mysqli_fetch_assoc($resultComments)) {
+    //           $bgColor = ($counter % 2 == 0) ? 'lightgray' : '#f0f0f0'; // Alternate background colors
+    //           echo '<div class="comment" style="background-color: ' . $bgColor . ';">';
+    //           echo ' <span class="delete-icon" onclick="deleteComment(' . $comment['comment_id'] . ')">&times;</span>';
+      
+    //           echo ' ' . $comment['username'] . ': ' . $comment['comment_text'];
+    //           echo '</div>';
+    //           $counter++;
+    //       }
+    //     } else {
+    //         echo '<div>Error fetching comments.</div>';
+    //     }
+        echo '</div>'; // Close comments-section
 
-        echo ' ' . $comment['username'] . ': ' . $comment['comment_text'];
-        echo '</div>';
-        $counter++;
+        echo '</div>'; // Close comment-container
+        echo '</div>'; // Close post-container
     }
 } else {
-    echo '<div>Error fetching comments.</div>';
+    // If no rows are returned, display a message
+    echo "No posts found.";
 }
-echo '</div>'; // Close comments-section
-
-echo '</div>'; // Close comment-container
-echo '</div>'; // Close post-container
-}
-} else {
-// If no rows are returned, display a message
-echo "No posts found.";
-}
-
 
 // Close the database connection
 mysqli_close($conn);
@@ -567,7 +567,6 @@ function deleteComment(commentId) {
     }
 }
 </script>
-
 <script>
     // Function to save the current scroll position before submitting a comment
     function saveScrollPosition() {
@@ -606,8 +605,10 @@ function deleteComment(commentId) {
                     commentContainer.style.display = 'none';
                 }
 
-                // Restore the scroll position immediately
-                window.scrollTo(0, scrollPos);
+                // Restore the scroll position after a short delay
+                setTimeout(function() {
+                    window.scrollTo(0, scrollPos);
+                }, 100);
             });
         });
 
@@ -621,7 +622,7 @@ function deleteComment(commentId) {
 
                 // Send AJAX request to submit the comment
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'admin_submit_comment.php', true);
+                xhr.open('POST', 'superadmin_submit_comment.php', true);
                 xhr.onload = function() {
                     if (xhr.status === 200) {
                         // On success, reload the comment section without page reload
@@ -662,7 +663,7 @@ function deleteComment(commentId) {
     // Call the function when the window is resized
     window.onresize = closeSideNavbarOnLargeScreen;
 
-     // Function to toggle visibility of full and truncated descriptions
+ // Function to toggle visibility of full and truncated descriptions
 document.querySelectorAll('.see-more-link').forEach(function(link) {
     link.addEventListener('click', function(event) {
         event.preventDefault(); // Prevent the default anchor behavior

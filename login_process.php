@@ -23,7 +23,7 @@ if (mysqli_num_rows($result) == 1) {
     // Redirect based on user role
     switch ($role) {
         case 1: // Super Admin role
-            header("Location: superadmin_dashboard.php");
+            header("Location: superadmin_bulletin.php");
             break;
         case 2: // Admin
             header("Location: admin_bulletin.php");

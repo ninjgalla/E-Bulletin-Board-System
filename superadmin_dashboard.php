@@ -227,7 +227,7 @@ html, body {
 <body>
 <div class="navbar">
     <div>
-        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
@@ -244,9 +244,9 @@ html, body {
             <button class="dropbtn">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
-                <a href="superadmin_approved_post.php">Approved</a>
+                <!-- <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
-                <a href="superadmin_rejected.php">Rejected</a>
+                <a href="superadmin_rejected.php">Rejected</a> -->
             </div>
         </div>
         <!-- End of Dropdown menu -->
@@ -272,9 +272,9 @@ html, body {
     <a>Posts</a>
     <div class="indent">    
         <a href="superadmin_upload.php">Uploads</a>
-        <a href="superadmin_approved_post.php">Approved</a>
+        <!-- <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
-        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_rejected.php">Rejected</a> -->
     </div>
     <a href="superadmin_archive.php">Archive</a>
     <a>Profile</a>

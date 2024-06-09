@@ -1,0 +1,12 @@
+{
+    "name": "ninjg/ebulletin",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Ninjg\\Ebulletin\\": "src/"
+        }
+    },
+    "require": {
+        "phpmailer/phpmailer": "*"
+    }
+}

@@ -486,7 +486,7 @@ button[type="submit"] {
 
     <div class="navbar">
     <div>
-        <a href="superadmin_dashboard.php" class="logo">TUPM-COS EBBS</a>
+        <a href="superadmin_bulletin.php" class="logo">TUPM-COS EBBS</a>
     </div>
     <div>
         <!-- Dropdown menu for Bulletin Feed -->
@@ -503,9 +503,9 @@ button[type="submit"] {
             <button class="dropbtn-a">Posts</button>
             <div class="dropdown-content" id="postsDropdown">
                 <a href="superadmin_upload.php">Uploads</a>
-                <a href="superadmin_approved_post.php">Approved</a>
+                <!-- <a href="superadmin_approved_post.php">Approved</a>
                 <a href="superadmin_for_approval.php">For Approval</a>
-                <a href="superadmin_rejected.php">Rejected</a>
+                <a href="superadmin_rejected.php">Rejected</a> -->
             </div>
         </div>
         <!-- End of Dropdown menu -->
@@ -526,9 +526,9 @@ button[type="submit"] {
         <a href="superadmin_bulletin_feed.php">Bulletin Feed</a>
         <a href="superadmin_bulletin.php">Bulletin Board</a>
         <a href="superadmin_upload.php">Uploads</a>
-        <a href="superadmin_approved_post.php">Approved</a>
+        <!-- <a href="superadmin_approved_post.php">Approved</a>
         <a href="superadmin_for_approval.php">For Approval</a>
-        <a href="superadmin_rejected.php">Rejected</a>
+        <a href="superadmin_rejected.php">Rejected</a> -->
         <a href="superadmin_archive.php">Archive</a>
         <a href="superadmin_profile_settings.php">Profile</a>
         <a href="logout.php">Logout</a>
@@ -562,56 +562,84 @@ button[type="submit"] {
 
     <div class="container">
 
-    <h2>User Management</h2>
-    <?php if (!empty($users)) : ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>TUP ID</th>
-                    <th>Current Role</th>
-                    <th>New Role</th> <!-- Updated column heading -->
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-    <?php foreach ($users as $user) : ?>
-        <tr>
-            <td><?php echo htmlspecialchars($user['UserID']); ?></td>
-            <td><?php echo htmlspecialchars($user['username']); ?></td>
-            <td><?php echo htmlspecialchars($user['first_name']); ?></td>
-            <td><?php echo htmlspecialchars($user['last_name']); ?></td>
-            <td><?php echo htmlspecialchars($user['email']); ?></td>
-            <td><?php echo htmlspecialchars($user['TUP_id']); ?></td>
-            <td><?php echo htmlspecialchars($user['RoleName']); ?></td>
-            <td>
-                <!-- Display current role or provide a dropdown to change the role -->
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                    <input type="hidden" name="userId" value="<?php echo htmlspecialchars($user['UserID']); ?>">
-                    <select name="role"> <!-- Add the name attribute here -->
-                        <option value="3" <?php if ($user['RoleID'] === 3) echo 'selected'; ?>>User</option>
-                        <option value="2" <?php if ($user['RoleID'] === 2) echo 'selected'; ?>>Admin</option>
-                        <option value="1" <?php if ($user['RoleID'] === 1) echo 'selected'; ?>>Super Admin</option>
-                        <!-- Add more options for additional roles if needed -->
-                    </select>
-                </td>
-                <td>
-                    <button type="submit">Update Role</button> <!-- Move the button here -->
-                </form>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
 
-        </table>
-    <?php else : ?>
-        <p>No users found.</p>
-    <?php endif; ?>
-    </div>
+    <h2>User Management</h2>
+
+    
+    <div>
+    <input type="text" id="searchInput" placeholder="Search for usernames...">
+    <button onclick="searchTable()">Search</button>
+</div>
+
+<?php if (!empty($users)) : ?>
+    <table id="userTable"> <!-- Added id attribute -->
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>TUP ID</th>
+                <th>Current Role</th>
+                <th>New Role</th> <!-- Updated column heading -->
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($users as $user) : ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($user['UserID']); ?></td>
+                    <td><?php echo htmlspecialchars($user['username']); ?></td>
+                    <td><?php echo htmlspecialchars($user['first_name']); ?></td>
+                    <td><?php echo htmlspecialchars($user['last_name']); ?></td>
+                    <td><?php echo htmlspecialchars($user['email']); ?></td>
+                    <td><?php echo htmlspecialchars($user['TUP_id']); ?></td>
+                    <td><?php echo htmlspecialchars($user['RoleName']); ?></td>
+                    <td>
+                        <!-- Display current role or provide a dropdown to change the role -->
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                            <input type="hidden" name="userId" value="<?php echo htmlspecialchars($user['UserID']); ?>">
+                            <select name="role"> <!-- Add the name attribute here -->
+                                <option value="3" <?php if ($user['RoleID'] === 3) echo 'selected'; ?>>User</option>
+                                <option value="2" <?php if ($user['RoleID'] === 2) echo 'selected'; ?>>Admin</option>
+                                <option value="1" <?php if ($user['RoleID'] === 1) echo 'selected'; ?>>Super Admin</option>
+                                <!-- Add more options for additional roles if needed -->
+                            </select>
+                        </td>
+                        <td>
+                            <button type="submit">Update Role</button> <!-- Move the button here -->
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php else : ?>
+    <p>No users found.</p>
+<?php endif; ?>
+</div>
+
+<script>
+    function searchTable() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("userTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // Index 1 for Username column
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
 
 <script>
 document.getElementById('profile-picture').addEventListener('click', function() {
@@ -648,5 +676,7 @@ function closeSideNavbarOnLargeScreen() {
 window.onload = closeSideNavbarOnLargeScreen;
 window.onresize = closeSideNavbarOnLargeScreen;
 </script>
+
+
 </body>
 </html>

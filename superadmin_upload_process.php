@@ -70,6 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $title = $_POST["title"];
         $description = $_POST["description"];
         $schedule = $_POST["schedule"]; // Added to retrieve scheduled date and time
+        $endTime = $_POST["endTime"]; // Added to retrieve end time
 
         // Get uploader's username from session
         session_start();
@@ -99,9 +100,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Attempt to move the uploaded file to the specified directory
                 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $targetPath)) {
                     // Prepare SQL statement to insert file details into the database
-                    $sql = "INSERT INTO bulletin_files (filename, title, description, filetype, schedule, uploader) VALUES (?, ?, ?, ?, ?, ?)";
+                    $sql = "INSERT INTO bulletin_files (filename, title, description, filetype, schedule, end_time, uploader) VALUES (?, ?, ?, ?, ?, ?, ?)";
                     $stmt = $db->prepare($sql);
-                    $stmt->bind_param("ssssss", $uniqueFileName, $title, $description, $fileType, $schedule, $uploader); // Bind uploader parameter
+                    $stmt->bind_param("sssssss", $uniqueFileName, $title, $description, $fileType, $schedule, $endTime, $uploader); // Bind uploader and end time parameters
 
                     // Execute the prepared statement
                     if ($stmt->execute()) {
@@ -123,6 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Sorry, there was an error uploading your file.";
     }
 }
+
 
 // Close database connection
 $db->close();
