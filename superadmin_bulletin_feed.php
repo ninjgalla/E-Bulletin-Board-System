@@ -27,6 +27,9 @@ $username = $_SESSION['username'];
     <!-- Include Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Include FontAwesome for social media icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <title>EBBS</title>
     <style>
 
@@ -383,6 +386,55 @@ $username = $_SESSION['username'];
     font-weight: bold;
 }
 
+.share-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.share-buttons a {
+    text-decoration: none;
+    color: white;
+    background-color: #3b5998; /* Facebook blue */
+    padding: 5px 10px; /* Smaller padding */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-size: 12px; /* Smaller font size */
+}
+
+.share-buttons a i {
+    margin-right: 3px; /* Smaller icon spacing */
+    font-size: 12px; /* Smaller icon size */
+}
+
+.share-buttons a:hover {
+    background-color: #2d4373;
+}
+
+.share-buttons a:nth-child(2) {
+    background-color: #1da1f2; /* Twitter blue */
+}
+
+.share-buttons a:nth-child(2):hover {
+    background-color: #0c85d0;
+}
+
+.share-buttons a:nth-child(3) {
+    background-color: #E4405F; /* Instagram gradient */
+}
+
+.share-buttons a:nth-child(3):hover {
+    background-color: #D62976;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -497,7 +549,16 @@ if (mysqli_num_rows($result) > 0) {
             echo 'Your browser does not support the video tag.';
             echo '</video>';
         }
-        
+
+        // Social media share buttons
+        $postUrl = urlencode('https://www.facebook.com/TUPMCOS' . $row['id']);
+        $postTitle = urlencode($row['title']);
+        echo '<div class="share-buttons">';
+        echo '<a href="https://www.facebook.com/sharer/sharer.php?u=' . $postUrl . '" target="_blank"><i class="fab fa-facebook"></i> Share on Facebook</a>';
+        echo '<a href="https://twitter.com/intent/tweet?text=' . $postTitle . '&url=' . $postUrl . '" target="_blank"><i class="fab fa-twitter"></i> Share on Twitter</a>';
+        echo '<a href="https://www.instagram.com/?url=' . $postUrl . '" target="_blank"><i class="fab fa-instagram"></i> Share on Instagram</a>';
+        echo '</div>';
+
         echo '</div>'; // Close the post container
     }
 } else {
@@ -507,6 +568,7 @@ if (mysqli_num_rows($result) > 0) {
 // Close the database connection
 mysqli_close($conn);
 ?>
+
 
 
 

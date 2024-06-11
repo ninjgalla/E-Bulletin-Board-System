@@ -526,6 +526,7 @@ while ($row = $result->fetch_assoc()) {
         echo '<div class="file-menu">';
         echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
         echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
+        echo '<button type="button" onclick="generatePDF(' . $row["id"] . ')">Generate PDF</button>'; // New Generate PDF option
         echo '</div>';
         echo '</div>';
         echo '</div>'; // Close photo-container
@@ -537,17 +538,19 @@ while ($row = $result->fetch_assoc()) {
         echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>'; // Video element
         // Truncate the title
         echo '<h4>' . truncate_title($row["title"], 50) . '</h4>';
-        // Add menu icon and options
+      // Add menu icon and options
         echo '<div class="file-options">';
         echo '<i class="fas fa-ellipsis-v file-menu-icon" onclick="toggleFileMenu(event)"></i>'; // Menu icon
         echo '<div class="file-menu">';
         echo '<button type="button" onclick="permanentlyDelete(' . $row["id"] . ')">Permanently Delete</button>';
         echo '<button type="button" onclick="restore(' . $row["id"] . ')">Restore</button>';
+        echo '<button type="button" onclick="generatePDF(' . $row["id"] . ')">Generate PDF</button>'; // New Generate PDF option
         echo '</div>';
         echo '</div>';
         echo '</div>'; // Close video-container
         // Add title below the file
         echo '<p>' . truncate_title($row["title"], 20) . '</p>';
+
     }
     echo '</div>'; // Close file-item
     
@@ -736,6 +739,33 @@ function deleteSelected() {
         });
         toggleActionButtons();
     }
+
+    function generatePDF(fileId) {
+    // You can use a library like jsPDF to generate PDFs in the browser.
+    // Alternatively, you can make an AJAX request to your server to generate the PDF server-side.
+
+    // Example AJAX request to the server:
+    fetch('generate_pdf.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: fileId })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'bulletin.pdf'; // Set the desired file name here
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error => console.error('Error generating PDF:', error));
+}
+
 </script>
 
 </body>

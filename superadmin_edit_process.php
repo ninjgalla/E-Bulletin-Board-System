@@ -5,13 +5,14 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Check if all required fields are filled
-    if (isset($_POST["editId"]) && isset($_POST["editTitle"]) && isset($_POST["editDescription"]) && isset($_POST["editSchedule"])) {
+    if (isset($_POST["editId"]) && isset($_POST["editTitle"]) && isset($_POST["editDescription"]) && isset($_POST["editSchedule"]) && isset($_POST["editEndTime"])) {
         
         // Retrieve data from the form and sanitize input
         $id = intval($_POST["editId"]);
         $new_title = htmlspecialchars(trim($_POST["editTitle"]), ENT_QUOTES, 'UTF-8');
         $new_description = htmlspecialchars(trim($_POST["editDescription"]), ENT_QUOTES, 'UTF-8');
         $new_schedule = htmlspecialchars(trim($_POST["editSchedule"]), ENT_QUOTES, 'UTF-8');
+        $new_end_time = htmlspecialchars(trim($_POST["editEndTime"]), ENT_QUOTES, 'UTF-8'); // Fetch end time
         
         // Establish database connection
         $conn = new mysqli("localhost", "root", "", "ebulletin_system");
@@ -44,9 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $fileType = in_array($fileType, $allowedPhotoTypes) ? 'photo' : 'video';
 
                 // Prepare and execute SQL statement to update the item with file
-                $sql = "UPDATE bulletin_files SET title = ?, description = ?, filename = ?, filetype = ?, schedule = ?, edited = 1 WHERE id = ?";
+                $sql = "UPDATE bulletin_files SET title = ?, description = ?, filename = ?, filetype = ?, schedule = ?, end_time = ?, edited = 1 WHERE id = ?";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sssssi", $new_title, $new_description, $fileName, $fileType, $new_schedule, $id);
+                $stmt->bind_param("ssssssi", $new_title, $new_description, $fileName, $fileType, $new_schedule, $new_end_time, $id); // Include end time
             } else {
                 // Error uploading file
                 echo "Error uploading file.";
@@ -54,9 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             // Prepare and execute SQL statement to update the item without file
-            $sql = "UPDATE bulletin_files SET title = ?, description = ?, schedule = ?, edited = 1 WHERE id = ?";
+            $sql = "UPDATE bulletin_files SET title = ?, description = ?, schedule = ?, end_time = ?, edited = 1 WHERE id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssi", $new_title, $new_description, $new_schedule, $id);
+            $stmt->bind_param("ssssi", $new_title, $new_description, $new_schedule, $new_end_time, $id); // Include end time
         }
 
         // Execute SQL statement
@@ -83,4 +84,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: index.php");
     exit();
 }
+
 ?>

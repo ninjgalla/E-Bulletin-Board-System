@@ -529,53 +529,49 @@
 </div>
 
 
-    <?php
-    // Fetch uploaded files from the database
-    $db = new mysqli("localhost", "root", "", "ebulletin_system");
-    if ($db->connect_error) {
-        die("Connection failed: " . $db->connect_error);
-    }
-  // Fetch only approved posts from the database
-  $sql = "SELECT * FROM bulletin_files 
-                WHERE is_archived = 0 
-                ORDER BY upload_time DESC";
-  $result = $db->query($sql);
+<?php
+// Fetch uploaded files from the database
+$db = new mysqli("localhost", "root", "", "ebulletin_system");
+if ($db->connect_error) {
+    die("Connection failed: " . $db->connect_error);
+}
 
-    // Display uploaded files
-    while ($row = $result->fetch_assoc()) {
-        // Fetch start and end times from the database
-        $currentSchedule = isset($row["schedule"]) ? date('Y-m-d\TH:i', strtotime($row["schedule"])) : "";
-        $currentEndTime = isset($row["end_time"]) ? date('Y-m-d\TH:i', strtotime($row["end_time"])) : "";
+// Fetch only approved posts from the database
+$sql = "SELECT * FROM bulletin_files WHERE is_archived = 0 ORDER BY upload_time DESC";
+$result = $db->query($sql);
 
-        // Escape special characters in title and description
-        $title = htmlspecialchars(json_encode($row["title"]), ENT_QUOTES);
-    $description = htmlspecialchars(json_encode($row["description"]), ENT_QUOTES);
-    $filename = htmlspecialchars(json_encode($row["filename"]), ENT_QUOTES);
-    $schedule = htmlspecialchars(json_encode($currentSchedule), ENT_QUOTES);
-    $endTime = htmlspecialchars(json_encode($currentEndTime), ENT_QUOTES);
+// Display uploaded files
+while ($row = $result->fetch_assoc()) {
+    // Fetch start and end times from the database
+    $currentSchedule = isset($row["schedule"]) ? date('Y-m-d\TH:i', strtotime($row["schedule"])) : "";
+    $currentEndTime = isset($row["end_time"]) ? date('Y-m-d\TH:i', strtotime($row["end_time"])) : "";
 
+    // Escape special characters in title and description
+    $title = htmlspecialchars($row["title"], ENT_QUOTES);
+    $description = htmlspecialchars($row["description"], ENT_QUOTES);
+    $filename = htmlspecialchars($row["filename"], ENT_QUOTES);
+
+    // Display file container
     if ($row["filetype"] == "photo") {
         echo '<div class="photo-container">';
         echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
         echo '<img src="uploads/' . $row["filename"] . '" class="file-photo">';
-        echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
-        echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ', ' . $endTime . ')\'><i class="fas fa-edit"></i></span>';
-        // Displaying end time
-        echo '<span class="end-time">' . date('Y-m-d H:i', strtotime($row["end_time"])) . '</span>';
-        echo '</div>';
     } elseif ($row["filetype"] == "video") {
         echo '<div class="video-container">';
-        echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: in line; top: 10px; left: 10px;">';
+        echo '<input type="checkbox" name="fileCheckbox[]" value="' . $row["id"] . '" class="file-checkbox" style="position: absolute; top: 10px; left: 10px;">';
         echo '<video src="uploads/' . $row["filename"] . '" class="file-video" controls></video>';
-        echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
-        echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', ' . $title . ', ' . $description . ', ' . $filename . ', ' . $schedule . ', ' . $endTime . ')\'><i class="fas fa-edit"></i></span>';
-        // Displaying end time
-        echo '<span class="end-time">' . date('Y-m-d H:i', strtotime($row["end_time"])) . '</span>';
-        echo '</div>';
     }
+
+    // Display delete and edit icons
+    echo '<span class="delete-icon" onclick="archiveFile(' . $row["id"] . ')"><i class="fas fa-trash-alt"></i></span>';
+    echo '<span class="edit-icon" onclick=\'openEditForm(' . $row["id"] . ', "' . $title . '", "' . $description . '", "' . $filename . '", "' . $currentSchedule . '", "' . $currentEndTime . '")\'><i class="fas fa-edit"></i></span>';
     
-    }
-    ?>
+    // Display end time
+    echo '<span class="end-time">' . $currentEndTime . '</span>';
+    echo '</div>';
+}
+?>
+
 </div>
 
  
