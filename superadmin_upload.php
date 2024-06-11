@@ -643,12 +643,13 @@ while ($row = $result->fetch_assoc()) {
 
     // Function to open edit form popup
     function openEditForm(id, title, description, fileName, schedule) {
-        console.log("Opening edit form for file:", id, title, description, fileName, schedule);
+        console.log("Opening edit form for file:", id, title, description, fileName, schedule,endTime);
         document.getElementById("editId").value = id; // Set file ID
         document.getElementById("editTitle").value = title; // Set current title
         document.getElementById("editDescription").value = description; // Set current description
         document.getElementById("fileUploaded").value = fileName; // Set current file name
         document.getElementById("editSchedule").value = schedule; // Set current schedule
+        document.getElementById("editEndTime").value = endTime; // Set current schedule
         document.getElementById("editForm").style.display = "block"; // Display edit form
     }
 
